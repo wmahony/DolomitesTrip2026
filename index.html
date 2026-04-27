@@ -86,14 +86,18 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .cell-activity{padding-right:12px;}
 .act-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:400;color:var(--text);line-height:1.3;}
 .act-sub{font-size:11px;color:var(--text-2);margin-top:2px;line-height:1.4;}
-.sleep-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:4px 9px;border-radius:3px;line-height:1;}
+.cell-sleep{overflow:hidden;min-width:0;}
+.sleep-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:4px 9px;border-radius:3px;line-height:1;max-width:100%;overflow:hidden;white-space:nowrap;}
+.sleep-icon{flex-shrink:0;}
+.sleep-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .sleep-hotel{background:var(--green-pale);color:var(--green);}
 .sleep-rifugio{background:var(--purple-pale);color:var(--purple);}
 .sleep-transit{background:var(--stone-pale);color:var(--stone);}
 .sleep-city{background:var(--blue-pale);color:var(--blue);}
-.int-bar{display:flex;gap:3px;margin-bottom:3px;}
-.int-pip{width:16px;height:4px;border-radius:1px;background:var(--border);}
-.int-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);}
+.cell-intensity{display:flex;flex-direction:column;justify-content:center;}
+.int-bar{display:flex;gap:3px;margin-bottom:4px;}
+.int-pip{width:14px;height:3px;border-radius:2px;background:var(--border);}
+.int-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.04em;}
 .int-1 .int-pip:nth-child(-n+1){background:var(--green-light);}
 .int-2 .int-pip:nth-child(-n+2){background:var(--green);}
 .int-3 .int-pip:nth-child(-n+3){background:var(--gold);}
@@ -224,6 +228,62 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .map-popup-stat{font-size:10px;color:var(--text-3);}
 .map-popup-stat span{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--text);}
 
+/* Packing page */
+.packing-page{display:none;overflow-y:auto;height:calc(100vh - var(--topbar-h));grid-column:1/-1;padding:32px 40px;background:var(--bg);}
+.packing-page.visible{display:block;}
+.pack-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;letter-spacing:-.02em;color:var(--text);}
+.pack-progress-wrap{margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;}
+.pack-progress-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;display:flex;justify-content:space-between;}
+.pack-progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.pack-progress-fill{height:100%;background:var(--green);border-radius:3px;transition:width .4s;}
+.pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+.pack-category{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.pack-cat-header{padding:11px 15px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
+.pack-cat-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--text);}
+.pack-cat-count{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.06em;}
+.pack-cat-bar{height:2px;background:var(--border-light);}
+.pack-cat-fill{height:100%;background:var(--green);transition:width .4s;}
+.pack-items{padding:6px 0;}
+.pack-item{display:flex;align-items:flex-start;gap:9px;padding:6px 15px;cursor:pointer;transition:background .1s;}
+.pack-item:hover{background:rgba(0,0,0,.025);}
+.pack-checkbox{width:15px;height:15px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all .12s;}
+.pack-item.checked .pack-checkbox{background:var(--green);border-color:var(--green);color:white;}
+.pack-item-text{font-size:12px;color:var(--text-2);line-height:1.5;transition:color .12s;}
+.pack-item.checked .pack-item-text{text-decoration:line-through;color:var(--text-3);}
+.pack-urgent .pack-item-text{color:var(--red);font-weight:500;}
+.pack-urgent.checked .pack-item-text{color:var(--text-3);font-weight:400;}
+
+/* Budget page */
+.budget-page{display:none;overflow-y:auto;height:calc(100vh - var(--topbar-h));grid-column:1/-1;padding:32px 40px;background:var(--bg);}
+.budget-page.visible{display:block;}
+.budget-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;letter-spacing:-.02em;color:var(--text);margin-bottom:4px;}
+.budget-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.1em;margin-bottom:24px;}
+.budget-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;max-width:640px;}
+.bsumm{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.bsumm-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.bsumm-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;line-height:1;color:var(--text);}
+.bsumm-sub{font-size:10px;color:var(--text-3);margin-top:4px;}
+.budget-section{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.budget-sec-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-light);}
+.budget-sec-label{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;}
+.budget-sec-total{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);}
+.budget-table{width:100%;border-collapse:collapse;}
+.budget-table th{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);padding:7px 16px;text-align:left;border-bottom:1px solid var(--border-light);font-weight:500;}
+.budget-table th.right,.budget-table td.right{text-align:right;}
+.budget-table td{padding:9px 16px;font-size:12px;color:var(--text-2);border-bottom:1px solid var(--border-light);}
+.budget-table tr:last-child td{border-bottom:none;}
+.budget-table tr:hover td{background:rgba(0,0,0,.015);}
+.budget-item-name{font-size:12px;font-weight:500;color:var(--text);}
+.budget-item-note{font-size:10.5px;color:var(--text-3);margin-top:2px;line-height:1.4;}
+.budget-est{font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap;}
+.bpp-tag{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:2px;background:var(--stone-pale);color:var(--stone);white-space:nowrap;}
+.budget-actual-wrap{display:inline-flex;align-items:center;gap:2px;justify-content:flex-end;}
+.budget-actual-prefix{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);}
+.budget-actual-input{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);background:none;border:none;border-bottom:1px dashed var(--border);outline:none;text-align:right;width:72px;padding:1px 2px;cursor:pointer;transition:all .15s;}
+.budget-actual-input:focus{background:var(--surface);border:1px solid var(--green);border-radius:2px;padding:1px 4px;cursor:text;}
+.budget-actual-input::placeholder{color:var(--border);}
+.budget-actual-input.filled{color:var(--green);border-bottom-color:var(--green-pale);}
+
 /* Mobile */
 @media(max-width:860px){
   .app{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr;height:auto;overflow:visible;}
@@ -261,6 +321,8 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <button class="tab-btn active" onclick="switchTab('itinerary',this)">Itinerary</button>
     <button class="tab-btn" onclick="switchTab('map',this)">🗺 Map</button>
     <button class="tab-btn" onclick="switchTab('actions',this)">⚡ Action Items</button>
+    <button class="tab-btn" onclick="switchTab('packing',this)">📦 Packing</button>
+    <button class="tab-btn" onclick="switchTab('budget',this)">💰 Budget</button>
   </div>
   <div class="topbar-pills">
     <div class="topbar-pill">Will · Jack · Jon</div>
@@ -349,6 +411,9 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   <div id="action-sections"></div>
 </div>
 
+<div class="packing-page" id="packing-page"></div>
+<div class="budget-page" id="budget-page"></div>
+
 </div>
 
 <script>
@@ -399,18 +464,20 @@ function intHTML(lvl){
 function sleepHTML(type,label,link){
   const cls={hotel:'sleep-hotel',rifugio:'sleep-rifugio',transit:'sleep-transit',city:'sleep-city'}[type]||'sleep-hotel';
   const icon={hotel:'🏨',rifugio:'⛺',transit:'✈️',city:'🏙'}[type]||'🏨';
-  const inner='<div class="sleep-badge '+cls+'">'+icon+' '+label+'</div>';
+  const inner='<div class="sleep-badge '+cls+'"><span class="sleep-icon">'+icon+'</span><span class="sleep-text">'+label+'</span></div>';
   return link?'<a href="'+link+'" target="_blank" onclick="event.stopPropagation()" style="text-decoration:none;">'+inner+'</a>':inner;
 }
 
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page'),mp=document.getElementById('map-page');
-  sb.style.display='none';m.style.display='none';ap.classList.remove('visible');mp.classList.remove('visible');
+  const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page'),mp=document.getElementById('map-page'),pp=document.getElementById('packing-page'),bp=document.getElementById('budget-page');
+  sb.style.display='none';m.style.display='none';ap.classList.remove('visible');mp.classList.remove('visible');pp.classList.remove('visible');bp.classList.remove('visible');
   if(tab==='itinerary'){sb.style.display='';m.style.display='';}
   else if(tab==='map'){mp.classList.add('visible');setTimeout(()=>{if(window._map)google.maps.event.trigger(window._map,'resize');},50);}
   else if(tab==='actions'){ap.classList.add('visible');}
+  else if(tab==='packing'){pp.classList.add('visible');if(!pp.dataset.rendered){renderPacking();pp.dataset.rendered='1';}}
+  else if(tab==='budget'){bp.classList.add('visible');if(!bp.dataset.rendered){renderBudget();bp.dataset.rendered='1';}}
 }
 
 function renderCards(){
@@ -510,8 +577,8 @@ function renderActions(){
 }
 
 const DAY_COORDS=[
-  [45.4408,12.3155],
-  [45.4408,12.3155],
+  [45.4418,12.3135],
+  [45.4395,12.3175],
   [46.5667,11.5500],
   [46.5319,11.6292],
   [46.6167,11.7167],
@@ -565,11 +632,18 @@ window.initMap=function(){
   const bounds=new google.maps.LatLngBounds();
   const infoWin=new google.maps.InfoWindow({maxWidth:260});
 
-  const routePath=DAY_COORDS.filter((c,i)=>i===0||JSON.stringify(c)!==JSON.stringify(DAY_COORDS[i-1]));
+  const routePath=DAY_COORDS.map(c=>({lat:c[0],lng:c[1]}));
   new google.maps.Polyline({
-    path:routePath.map(c=>({lat:c[0],lng:c[1]})),
-    map,strokeColor:'#3a6644',strokeOpacity:0,strokeWeight:0,
-    icons:[{icon:{path:'M 0,-1 0,1',strokeOpacity:.6,strokeColor:'#3a6644',scale:3},offset:'0',repeat:'14px'}],
+    path:routePath,map,
+    strokeColor:'#3a6644',strokeOpacity:0.18,strokeWeight:3,
+  });
+  new google.maps.Polyline({
+    path:routePath,map,
+    strokeColor:'#3a6644',strokeOpacity:0,strokeWeight:0,
+    icons:[
+      {icon:{path:'M 0,-1 0,1',strokeOpacity:.5,strokeColor:'#3a6644',scale:3},offset:'0',repeat:'12px'},
+      {icon:{path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,strokeColor:'#3a6644',strokeWeight:1,fillColor:'#3a6644',fillOpacity:.5,scale:2.5},offset:'100%',repeat:'80px'},
+    ],
   });
 
   days.forEach((d,i)=>{
@@ -624,6 +698,243 @@ function renderMapDayList(){
     });
     cont.appendChild(el);
   });
+}
+
+// ── PACKING LIST ──────────────────────────────────────────
+const packCats=[
+  {id:'docs',label:'Documents & Money',icon:'📋',items:[
+    {id:'passport',t:'Passport (valid 6+ months past Sep 2026)'},
+    {id:'license',t:'Driving licence — required for rental car'},
+    {id:'insurance',t:'Travel insurance (printed + digital)'},
+    {id:'confirmations',t:'All hotel, rifugio & activity confirmations'},
+    {id:'euros',t:'Cash euros — ~€200pp for rifugio + tips'},
+    {id:'cards',t:'Credit/debit cards (notify bank of travel)'},
+  ]},
+  {id:'clothing',label:'Clothing',icon:'👕',items:[
+    {id:'merino',t:'Merino base layer ×2'},
+    {id:'hpants',t:'Hiking pants ×2'},
+    {id:'fleece',t:'Fleece mid-layer'},
+    {id:'shell-j',t:'Waterproof shell jacket'},
+    {id:'shell-p',t:'Waterproof shell pants'},
+    {id:'down',t:'Down puffy jacket — needed for rifugio night'},
+    {id:'dinner',t:'Smart-casual dinner outfit (Cortina restaurants)'},
+    {id:'undies',t:'Underwear ×5'},
+    {id:'hsocks',t:'Hiking socks ×4'},
+    {id:'csocks',t:'Casual socks ×2'},
+    {id:'sunhat',t:'Sun hat'},
+    {id:'beanie',t:'Warm beanie'},
+    {id:'gloves',t:'Light gloves'},
+    {id:'shades',t:'Sunglasses'},
+    {id:'hboots',t:'Hiking boots — must be broken in before trip'},
+    {id:'cshoes',t:'Casual shoes / sneakers'},
+  ]},
+  {id:'hiking',label:'Hiking & Gear',icon:'🥾',items:[
+    {id:'daypack',t:'Daypack 25–30L'},
+    {id:'rifbag',t:'Small overnight bag for rifugio night'},
+    {id:'poles',t:'Trekking poles'},
+    {id:'headlamp',t:'Headlamp + spare batteries'},
+    {id:'liner',t:'Sleeping bag liner ×3 — MANDATORY at Rifugio Locatelli',u:true},
+    {id:'sunsc',t:'Sunscreen SPF50+'},
+    {id:'lipbalm',t:'Lip balm with SPF'},
+    {id:'first-aid',t:'First aid kit — include moleskin for blisters'},
+    {id:'waterbottle',t:'Water bottle or hydration bladder (1.5L+)'},
+    {id:'snacks',t:'Trail snacks / energy bars'},
+    {id:'offlinemaps',t:'Komoot or Maps.me downloaded offline'},
+  ]},
+  {id:'tech',label:'Tech',icon:'📱',items:[
+    {id:'phone',t:'Phone + charger'},
+    {id:'battery',t:'Portable battery bank (charged)'},
+    {id:'camera',t:'Camera + charger + memory card'},
+    {id:'adapter',t:'EU power adapter (Type F/L — Italy)'},
+    {id:'earbuds',t:'Earbuds / headphones'},
+    {id:'kindle',t:'Kindle or book for the rifugio evening'},
+  ]},
+  {id:'health',label:'Toiletries & Health',icon:'🧴',items:[
+    {id:'teeth',t:'Toothbrush + toothpaste'},
+    {id:'shampoo',t:'Shampoo + conditioner (travel size)'},
+    {id:'deo',t:'Deodorant'},
+    {id:'ibuprof',t:'Ibuprofen / paracetamol'},
+    {id:'antihistamine',t:'Antihistamine'},
+    {id:'bandaids',t:'Band-aids + moleskin blister pads'},
+    {id:'insect',t:'Insect repellent'},
+    {id:'handsan',t:'Hand sanitizer'},
+  ]},
+];
+
+let packDone={};
+try{const s=localStorage.getItem('dolomites-pack-v1');if(s)packDone=JSON.parse(s);}catch(e){}
+const savePack=()=>{try{localStorage.setItem('dolomites-pack-v1',JSON.stringify(packDone));}catch(e){}};
+
+function renderPacking(){
+  const page=document.getElementById('packing-page');
+  const total=packCats.reduce((n,c)=>n+c.items.length,0);
+  page.innerHTML=`<div style="max-width:1100px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+      <div class="pack-title">Packing List</div>
+      <button onclick="resetPacking()" style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:2px;color:var(--text-3);padding:4px 10px;cursor:pointer;margin-left:16px;">Reset all</button>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.1em;margin-bottom:20px;">Sep 14–23, 2026 · Will · Jack · Jon</div>
+    <div class="pack-progress-wrap">
+      <div class="pack-progress-label"><span>Overall progress</span><span id="pack-prog-text">0 / ${total}</span></div>
+      <div class="pack-progress-bar"><div class="pack-progress-fill" id="pack-prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="pack-grid" id="pack-grid"></div>
+  </div>`;
+  const grid=document.getElementById('pack-grid');
+  packCats.forEach(cat=>{
+    const div=document.createElement('div');
+    div.className='pack-category';
+    div.id='pcat-'+cat.id;
+    const doneN=cat.items.filter(i=>packDone[i.id]).length;
+    const pct=Math.round(doneN/cat.items.length*100);
+    div.innerHTML=`
+      <div class="pack-cat-header">
+        <div class="pack-cat-title"><span>${cat.icon}</span><span>${cat.label}</span></div>
+        <div class="pack-cat-count" id="pcc-${cat.id}">${doneN} / ${cat.items.length}</div>
+      </div>
+      <div class="pack-cat-bar"><div class="pack-cat-fill" id="pcf-${cat.id}" style="width:${pct}%"></div></div>
+      <div class="pack-items">${cat.items.map(item=>`
+        <div class="pack-item${packDone[item.id]?' checked':''}${item.u?' pack-urgent':''}" data-pack="${item.id}" onclick="togglePack('${item.id}','${cat.id}')">
+          <div class="pack-checkbox">${packDone[item.id]?'✓':''}</div>
+          <div class="pack-item-text">${item.t}</div>
+        </div>`).join('')}</div>`;
+    grid.appendChild(div);
+  });
+  updatePackProg();
+}
+
+function togglePack(id,catId){
+  packDone[id]=!packDone[id];savePack();
+  const el=document.querySelector(`.pack-item[data-pack="${id}"]`);
+  if(el){el.classList.toggle('checked',!!packDone[id]);el.querySelector('.pack-checkbox').textContent=packDone[id]?'✓':'';}
+  updatePackProg(catId);
+}
+
+function updatePackProg(changedCat){
+  const total=packCats.reduce((n,c)=>n+c.items.length,0);
+  const done=packCats.reduce((n,c)=>n+c.items.filter(i=>packDone[i.id]).length,0);
+  const fill=document.getElementById('pack-prog-fill');
+  const text=document.getElementById('pack-prog-text');
+  if(fill)fill.style.width=Math.round(done/total*100)+'%';
+  if(text)text.textContent=done+' / '+total+' packed';
+  const cats=changedCat?packCats.filter(c=>c.id===changedCat):packCats;
+  cats.forEach(cat=>{
+    const d=cat.items.filter(i=>packDone[i.id]).length;
+    const f=document.getElementById('pcf-'+cat.id);
+    const c=document.getElementById('pcc-'+cat.id);
+    if(f)f.style.width=Math.round(d/cat.items.length*100)+'%';
+    if(c)c.textContent=d+' / '+cat.items.length;
+  });
+}
+
+function resetPacking(){
+  if(!confirm('Reset all packing list items?'))return;
+  packDone={};savePack();renderPacking();
+}
+
+// ── BUDGET TRACKER ────────────────────────────────────────
+const TRIP_PPL=3;
+const budgetData=[
+  {id:'flights',label:'Flights',hex:'#7c6c5c',items:[
+    {id:'f-out',label:'JFK → VCE outbound flights',note:'Sep 14 · coordinate all three travelers',pp:true,est:950},
+    {id:'f-home',label:'MXP → JFK return flights',note:'Sep 22 · Delta / United / Lufthansa via FRA',pp:true,est:950},
+  ]},
+  {id:'accomm',label:'Accommodation',hex:'#3a6644',items:[
+    {id:'a-venice',label:'Venice hotel (2 nights, 2 rooms)',note:'TBD — Dorsoduro or Cannaregio preferred',pp:false,est:700},
+    {id:'a-cav',label:"Cavallino d'Oro, Castelrotto (3 nights)",note:'2 rooms × 3 nights · Sep 16–19',pp:false,est:660},
+    {id:'a-rosa',label:'Rosapetra Spa Resort, Cortina (2 nights)',note:'2 rooms × 2 nights · Sep 19–21',pp:false,est:900},
+    {id:'a-loc',label:'Rifugio Locatelli — half board × 3',note:'~€70pp incl. dinner + breakfast · cash only',pp:false,est:210},
+  ]},
+  {id:'transport',label:'Transport',hex:'#284468',items:[
+    {id:'t-car',label:'Rental car VCE → MXP (9 days)',note:'Incl. one-way fee ~€150 · AutoEurope',pp:false,est:950},
+    {id:'t-fuel',label:'Fuel (estimated)',note:'~900km total driving',pp:false,est:110},
+    {id:'t-venice',label:'Venice water taxi + vaporetto passes',note:'Arrival taxi + day use',pp:true,est:50},
+    {id:'t-park',label:'Tre Cime timed parking (2 × 12hr)',note:'€40/slot · opens late April 2026',pp:false,est:80},
+  ]},
+  {id:'activities',label:'Activities',hex:'#842020',items:[
+    {id:'act-guide',label:'Via ferrata guide, Cinque Torri (3 pax)',note:'Sep 19 · all gear included · Guide Alpine Cortina',pp:false,est:380},
+    {id:'act-lag',label:'Lagazuoi cable car (×3)',note:'Sep 20 · Passo Falzarego',pp:false,est:60},
+    {id:'act-gond',label:'Ortisei / Seceda gondola (×3)',note:'Sep 17 · Alpe di Siusi access',pp:false,est:75},
+  ]},
+  {id:'food',label:'Food & Drink',hex:'#a07818',items:[
+    {id:'food-ven',label:'Venice dining — 2 days',note:'~$80pp/day · incl. Alle Testiere dinner',pp:true,est:160},
+    {id:'food-dol',label:'Dolomites dining — 7 days',note:'~$50pp/day · rifugios, restaurants, lunch stops',pp:true,est:350},
+  ]},
+  {id:'gear',label:'Gear & Extras',hex:'#582870',items:[
+    {id:'g-liners',label:'Sleeping bag liners ×3',note:'Mandatory at Rifugio Locatelli · ~$40ea at REI',pp:false,est:120},
+    {id:'g-misc',label:'Misc gear, clothing & extras',note:'Per person allowance',pp:true,est:100},
+  ]},
+];
+
+let budgetActuals={};
+try{const s=localStorage.getItem('dolomites-budget-v1');if(s)budgetActuals=JSON.parse(s);}catch(e){}
+const saveBudget=()=>{try{localStorage.setItem('dolomites-budget-v1',JSON.stringify(budgetActuals));}catch(e){}};
+
+function calcBudget(){
+  let est=0,actual=0,booked=0,total=0;
+  budgetData.forEach(cat=>cat.items.forEach(item=>{
+    est+=(item.pp?item.est*TRIP_PPL:item.est);total++;
+    const a=budgetActuals[item.id];
+    if(a!==undefined&&a!==''&&!isNaN(parseFloat(a))){actual+=parseFloat(a);booked++;}
+  }));
+  return{est,actual,booked,total};
+}
+
+function renderBudget(){
+  const page=document.getElementById('budget-page');
+  const{est,actual,booked,total}=calcBudget();
+  page.innerHTML=`<div style="max-width:900px">
+    <div class="budget-title">Budget Tracker</div>
+    <div class="budget-sub">3 PEOPLE · SEP 14–23, 2026 · AMOUNTS IN USD (APPROX) · CLICK ACTUAL COLUMN TO ENTER COSTS</div>
+    <div class="budget-summary">
+      <div class="bsumm"><div class="bsumm-label">Total Estimated</div><div class="bsumm-val">$${est.toLocaleString()}</div><div class="bsumm-sub">for 3 people</div></div>
+      <div class="bsumm"><div class="bsumm-label">Per Person</div><div class="bsumm-val">$${Math.round(est/TRIP_PPL).toLocaleString()}</div><div class="bsumm-sub">estimated</div></div>
+      <div class="bsumm"><div class="bsumm-label">Booked / Paid</div><div class="bsumm-val" id="bsum-paid" style="color:var(--green)">$${Math.round(actual).toLocaleString()}</div><div class="bsumm-sub" id="bsum-paid-sub">${booked} of ${total} items</div></div>
+      <div class="bsumm"><div class="bsumm-label">Remaining</div><div class="bsumm-val" id="bsum-rem" style="color:var(--gold)">$${Math.round(est-actual).toLocaleString()}</div><div class="bsumm-sub">to book / pay</div></div>
+    </div>
+    <div id="budget-cats"></div>
+  </div>`;
+  const cont=document.getElementById('budget-cats');
+  budgetData.forEach(cat=>{
+    const catEst=cat.items.reduce((n,i)=>n+(i.pp?i.est*TRIP_PPL:i.est),0);
+    const sec=document.createElement('div');
+    sec.className='budget-section';
+    const rows=cat.items.map(item=>{
+      const e=item.pp?item.est*TRIP_PPL:item.est;
+      const a=budgetActuals[item.id];
+      const hasA=a!==undefined&&a!==''&&!isNaN(parseFloat(a));
+      return `<tr>
+        <td><div class="budget-item-name">${item.label}</div>${item.note?`<div class="budget-item-note">${item.note}</div>`:''}</td>
+        <td>${item.pp?'<span class="bpp-tag">×3 pp</span>':''}</td>
+        <td class="right"><span class="budget-est">$${e.toLocaleString()}</span></td>
+        <td class="right"><div class="budget-actual-wrap"><span class="budget-actual-prefix">$</span><input class="budget-actual-input${hasA?' filled':''}" placeholder="—" value="${hasA?a:''}" data-bid="${item.id}" onchange="onBudgetInput(this)" onblur="onBudgetInput(this)"/></div></td>
+      </tr>`;
+    }).join('');
+    sec.innerHTML=`
+      <div class="budget-sec-header">
+        <div style="width:9px;height:9px;border-radius:2px;background:${cat.hex};flex-shrink:0"></div>
+        <div class="budget-sec-label" style="color:${cat.hex}">${cat.label}</div>
+        <div class="budget-sec-total">Est. $${catEst.toLocaleString()}</div>
+      </div>
+      <table class="budget-table">
+        <thead><tr><th>Item</th><th></th><th class="right">Estimated</th><th class="right">Actual / Paid</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    cont.appendChild(sec);
+  });
+}
+
+function onBudgetInput(input){
+  const id=input.dataset.bid;
+  const raw=input.value.replace(/[^0-9.]/g,'');
+  if(raw===''||isNaN(parseFloat(raw))){delete budgetActuals[id];input.classList.remove('filled');}
+  else{budgetActuals[id]=parseFloat(raw);input.classList.add('filled');input.value=raw;}
+  saveBudget();
+  const{est,actual,booked,total}=calcBudget();
+  const p=document.getElementById('bsum-paid'),r=document.getElementById('bsum-rem'),ps=document.getElementById('bsum-paid-sub');
+  if(p)p.textContent='$'+Math.round(actual).toLocaleString();
+  if(r)r.textContent='$'+Math.round(est-actual).toLocaleString();
+  if(ps)ps.textContent=booked+' of '+total+' items';
 }
 
 renderCards();
