@@ -3,1469 +3,426 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dolomites Trip Planner — Sep 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Dolomites '26 — Trip Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f4f0e8;
-  --surface: #ede9df;
-  --card: #ffffff;
-  --dark: #1a1c18;
-  --dark-2: #2e3028;
-  --green: #3d6b47;
-  --green-light: #5a8f65;
-  --green-pale: #d4e4d8;
-  --stone: #8c7b6b;
-  --stone-light: #c4b5a5;
-  --stone-pale: #ede4d8;
-  --gold: #b8860b;
-  --gold-pale: #f5edcc;
-  --red: #8b2c2c;
-  --red-pale: #f5d4d4;
-  --blue: #2c4a6b;
-  --blue-pale: #d4dff0;
-  --purple: #5a2c6b;
-  --purple-pale: #ead4f0;
-  --border: #d8d0c4;
-  --text: #2a2820;
-  --text-2: #5a5448;
-  --text-3: #8a8278;
+  --bg:#f2ede4;--surface:#e8e2d8;--card:#faf8f4;--dark:#18191a;
+  --border:#d4ccc0;--border-light:#e4dcd4;
+  --green:#3a6644;--green-light:#558060;--green-pale:#cfdfd4;
+  --stone:#7c6c5c;--stone-light:#b0a090;--stone-pale:#e8e0d4;
+  --gold:#a07818;--gold-pale:#f0e4bc;
+  --red:#842020;--red-pale:#f0d0d0;
+  --blue:#284468;--blue-pale:#ccd8ec;
+  --purple:#582870;--purple-pale:#e0ccf0;
+  --text:#201e18;--text-2:#504840;--text-3:#807870;--text-inv:#f2ede4;
+  --radius:5px;--topbar-h:60px;--sidebar-w:256px;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* Shell */
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;height:100vh;overflow:hidden;}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'IBM Plex Sans', sans-serif;
-  min-height: 100vh;
-}
-
-/* Grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 1000;
-  opacity: 0.4;
-}
-
-/* Layout */
-.app {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  grid-template-rows: auto 1fr;
-  min-height: 100vh;
-}
-
-/* Top bar */
-.topbar {
-  grid-column: 1 / -1;
-  background: var(--dark);
-  padding: 0 32px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #333;
-}
-
-/* Tab nav */
-.tab-nav {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  margin-left: 32px;
-}
-
-.tab-btn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  cursor: pointer;
-  background: none;
-  color: #666;
-  transition: all 0.15s ease;
-}
-
-.tab-btn:hover { color: #aaa; border-color: #333; }
-.tab-btn.active { color: #f4f0e8; border-color: var(--green); background: rgba(61,107,71,0.15); }
-
-.topbar-title {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-}
-
-.topbar-title h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  color: #f4f0e8;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-}
-
-.topbar-title span {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: #666;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.topbar-meta {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-}
-
-.meta-pill {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: #999;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  border: 1px solid #333;
-  border-radius: 2px;
-}
-
-.meta-pill.green { border-color: var(--green); color: #7ab885; }
+/* Topbar */
+.topbar{grid-column:1/-1;background:var(--dark);display:flex;align-items:center;padding:0 20px;gap:0;border-bottom:1px solid #2a2a2a;overflow:hidden;}
+.topbar-brand{display:flex;align-items:baseline;gap:10px;flex-shrink:0;margin-right:20px;}
+.topbar-brand h1{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--text-inv);letter-spacing:-0.01em;white-space:nowrap;}
+.topbar-brand span{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#555;letter-spacing:0.18em;text-transform:uppercase;}
+.tab-nav{display:flex;gap:4px;flex-shrink:0;}
+.tab-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border:1px solid transparent;border-radius:3px;background:none;color:#555;transition:all .15s;white-space:nowrap;}
+.tab-btn:hover{color:#999;border-color:#333;}
+.tab-btn.active{color:#c8e0cc;border-color:var(--green);background:rgba(58,102,68,.2);}
+.topbar-pills{display:flex;gap:8px;margin-left:auto;align-items:center;flex-wrap:nowrap;overflow:hidden;}
+.topbar-pill{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#444;letter-spacing:.1em;padding:3px 8px;border:1px solid #2a2a2a;border-radius:2px;white-space:nowrap;flex-shrink:0;}
+.topbar-pill.accent{border-color:var(--green);color:#7aaa80;}
 
 /* Sidebar */
-.sidebar {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  padding: 24px 0;
-  overflow-y: auto;
-  position: sticky;
-  top: 0;
-  height: calc(100vh - 64px);
-}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;height:calc(100vh - var(--topbar-h));display:flex;flex-direction:column;}
+.sidebar-section{padding:14px 14px 0;margin-bottom:18px;}
+.sidebar-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.day-nav{display:flex;flex-direction:column;gap:2px;}
+.day-nav-item{display:flex;align-items:center;gap:8px;padding:6px 7px;border-radius:var(--radius);cursor:pointer;transition:all .12s;border:1px solid transparent;}
+.day-nav-item:hover{background:var(--card);border-color:var(--border-light);}
+.day-nav-item.active{background:var(--card);border-color:var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.day-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.day-nav-text{flex:1;min-width:0;}
+.day-nav-num{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--text-3);letter-spacing:.08em;}
+.day-nav-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;margin-top:1px;}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border-light);font-size:12px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-label{color:var(--text-2);}
+.stat-value{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--text);}
+.legend-items{display:flex;flex-direction:column;gap:5px;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2);}
+.legend-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
 
-.sidebar-section {
-  padding: 0 20px;
-  margin-bottom: 28px;
-}
-
-.sidebar-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-}
-
-/* Day nav */
-.day-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.day-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  border: 1px solid transparent;
-}
-
-.day-nav-item:hover {
-  background: var(--card);
-  border-color: var(--border);
-}
-
-.day-nav-item.active {
-  background: var(--card);
-  border-color: var(--border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-
-.day-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.day-nav-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.day-nav-num {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--text-3);
-  letter-spacing: 0.1em;
-}
-
-.day-nav-name {
-  font-size: 12px;
-  color: var(--text);
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.3;
-}
-
-/* Stats sidebar */
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.stat-row:last-child { border-bottom: none; }
-
-.stat-label {
-  font-size: 11px;
-  color: var(--text-2);
-}
-
-.stat-value {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text);
-}
-
-/* Legend */
-.legend-items {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-2);
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-/* Main content */
-.main {
-  overflow-y: auto;
-  height: calc(100vh - 64px);
-  padding: 32px;
-}
-
-/* Timeline header */
-.timeline-header {
-  display: grid;
-  grid-template-columns: 80px 140px 1fr 120px 100px 80px;
-  gap: 0;
-  margin-bottom: 8px;
-  padding: 0 16px;
-}
-
-.col-header {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  font-weight: 500;
-}
+/* Main */
+.main{overflow-y:auto;height:calc(100vh - var(--topbar-h));padding:22px 24px;background:var(--bg);}
+.col-headers{display:grid;grid-template-columns:72px 148px 1fr 128px 108px 36px;padding:0 16px 0 18px;margin-bottom:5px;}
+.col-header{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);font-weight:500;}
 
 /* Day cards */
-.day-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.day-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.day-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-}
-
-.day-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  transform: translateY(-1px);
-  border-color: var(--stone-light);
-}
-
-.day-card.expanded {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  border-color: var(--stone-light);
-}
-
-.day-card-row {
-  display: grid;
-  grid-template-columns: 80px 140px 1fr 120px 100px 80px;
-  gap: 0;
-  align-items: center;
-  padding: 14px 16px;
-}
-
-.day-num-cell {
-  display: flex;
-  flex-direction: column;
-}
-
-.day-num {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-3);
-  letter-spacing: 0.05em;
-}
-
-.day-date {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--text-3);
-  margin-top: 1px;
-}
-
-.location-cell {
-  display: flex;
-  flex-direction: column;
-}
-
-.location-name {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-  line-height: 1.3;
-}
-
-.location-region {
-  font-size: 10px;
-  color: var(--text-3);
-  margin-top: 1px;
-}
-
-.activity-cell {
-  padding-right: 16px;
-}
-
-.activity-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  color: var(--text);
-  font-weight: 400;
-  line-height: 1.3;
-}
-
-.activity-sub {
-  font-size: 10px;
-  color: var(--text-2);
-  margin-top: 2px;
-  line-height: 1.4;
-}
-
-.sleep-cell {}
-
-.sleep-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 2px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
-
-.intensity-cell {}
-
-.intensity-bar {
-  display: flex;
-  gap: 3px;
-  align-items: center;
-  margin-bottom: 3px;
-}
-
-.intensity-pip {
-  width: 14px;
-  height: 4px;
-  border-radius: 1px;
-  background: var(--border);
-}
-
-.intensity-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--text-3);
-  letter-spacing: 0.05em;
-}
-
-.expand-cell {
-  text-align: right;
-}
-
-.expand-btn {
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: var(--text-3);
-  transition: all 0.2s ease;
-  background: none;
-  cursor: pointer;
-}
-
-.day-card.expanded .expand-btn {
-  background: var(--dark);
-  color: white;
-  border-color: var(--dark);
-  transform: rotate(45deg);
-}
-
-/* Expanded panel */
-.day-detail {
-  display: none;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
-}
-
-.day-card.expanded .day-detail {
-  display: block;
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0;
-}
-
-.detail-section {
-  padding: 20px 20px;
-  border-right: 1px solid var(--border);
-}
-
-.detail-section:last-child {
-  border-right: none;
-}
-
-.detail-section-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.detail-body {
-  font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.7;
-}
-
-.detail-stat {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 11px;
-}
-
-.detail-stat:last-child { border-bottom: none; }
-
-.detail-stat-label { color: var(--text-2); }
-.detail-stat-value {
-  font-family: 'IBM Plex Mono', monospace;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 8px;
-}
-
-.tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 7px;
-  border-radius: 2px;
-  font-weight: 500;
-}
-
-/* Type colors */
-.type-travel   { --t-bg: var(--stone-pale); --t-color: var(--stone); --t-dot: var(--stone); }
-.type-hike     { --t-bg: var(--green-pale); --t-color: var(--green); --t-dot: var(--green); }
-.type-via      { --t-bg: var(--red-pale);   --t-color: var(--red);   --t-dot: var(--red); }
-.type-culture  { --t-bg: var(--blue-pale);  --t-color: var(--blue);  --t-dot: var(--blue); }
-.type-rifugio  { --t-bg: var(--purple-pale);--t-color: var(--purple);--t-dot: var(--purple); }
-.type-depart   { --t-bg: var(--gold-pale);  --t-color: var(--gold);  --t-dot: var(--gold); }
-.type-city     { --t-bg: var(--blue-pale);  --t-color: var(--blue);  --t-dot: var(--blue); }
-
-.day-card.type-travel::before  { background: var(--stone); }
-.day-card.type-hike::before    { background: var(--green); }
-.day-card.type-via::before     { background: var(--red); }
-.day-card.type-culture::before { background: var(--blue); }
-.day-card.type-rifugio::before { background: var(--purple); }
-.day-card.type-depart::before  { background: var(--gold); }
-.day-card.type-city::before    { background: var(--blue); }
-
-/* Intensity colors */
-.int-0 .intensity-pip { background: var(--border); }
-.int-1 .intensity-pip:nth-child(-n+1) { background: var(--green-light); }
-.int-2 .intensity-pip:nth-child(-n+2) { background: var(--green); }
-.int-3 .intensity-pip:nth-child(-n+3) { background: var(--gold); }
-.int-4 .intensity-pip:nth-child(-n+4) { background: var(--red); }
-
-/* Sleep badges */
-.sleep-hotel   { background: var(--green-pale); color: var(--green); }
-.sleep-rifugio { background: var(--purple-pale); color: var(--purple); }
-.sleep-transit { background: var(--stone-pale); color: var(--stone); }
-.sleep-city    { background: var(--blue-pale); color: var(--blue); }
-
-/* Tags */
-.tag-green  { background: var(--green-pale);  color: var(--green); }
-.tag-red    { background: var(--red-pale);    color: var(--red); }
-.tag-gold   { background: var(--gold-pale);   color: var(--gold); }
-.tag-blue   { background: var(--blue-pale);   color: var(--blue); }
-.tag-purple { background: var(--purple-pale); color: var(--purple); }
-.tag-stone  { background: var(--stone-pale);  color: var(--stone); }
-
-/* Mountain silhouette decoration */
-.mountain-bar {
-  height: 40px;
-  background: var(--dark);
-  grid-column: 1 / -1;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 0;
-}
-
-.mountain-bar svg {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.3;
-}
-
-/* Action items page */
-.action-page {
-  display: none;
-  padding: 32px;
-  overflow-y: auto;
-  height: calc(100vh - 64px);
-}
-
-.action-page.visible { display: block; }
-
-.action-page-header {
-  margin-bottom: 32px;
-}
-
-.action-page-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
-  font-weight: 400;
-  color: var(--text);
-  letter-spacing: -0.01em;
-  margin-bottom: 6px;
-}
-
-.action-page-sub {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: 0.1em;
-}
-
-.action-summary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.action-stat {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 16px;
-  text-align: center;
-}
-
-.action-stat-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 32px;
-  font-weight: 400;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.action-stat-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-
-.action-stat.urgent .action-stat-num { color: var(--red); }
-.action-stat.soon .action-stat-num { color: var(--gold); }
-.action-stat.done-stat .action-stat-num { color: var(--green); }
-.action-stat.total .action-stat-num { color: var(--text); }
-
-.action-section {
-  margin-bottom: 28px;
-}
-
-.action-section-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-
-.action-section-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.action-section-count {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--text-3);
-}
-
-.action-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.action-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 14px 16px;
-  display: grid;
-  grid-template-columns: 24px 1fr auto;
-  gap: 12px;
-  align-items: start;
-  transition: all 0.15s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.action-item::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-}
-
-.action-item.urgent::before { background: var(--red); }
-.action-item.soon::before { background: var(--gold); }
-.action-item.plan::before { background: var(--blue); }
-.action-item.done { opacity: 0.5; }
-.action-item.done::before { background: var(--green); }
-
-.action-item:hover {
-  border-color: var(--stone-light);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.action-checkbox {
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid var(--border);
-  border-radius: 3px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-  transition: all 0.15s ease;
-  font-size: 11px;
-  color: transparent;
-  background: transparent;
-}
-
-.action-item.done .action-checkbox {
-  background: var(--green);
-  border-color: var(--green);
-  color: white;
-}
-
-.action-content {}
-
-.action-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 3px;
-  line-height: 1.3;
-}
-
-.action-item.done .action-title {
-  text-decoration: line-through;
-  color: var(--text-3);
-}
-
-.action-detail {
-  font-size: 11px;
-  color: var(--text-2);
-  line-height: 1.5;
-  margin-bottom: 4px;
-}
-
-.action-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-}
-
-.action-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  padding: 2px 7px;
-  border-radius: 2px;
-}
-
-.action-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.action-day {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--text-3);
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-}
-
-.action-link {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--green);
-  text-decoration: none;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--green-pale);
-  padding-bottom: 1px;
-  white-space: nowrap;
-}
-
-.action-link:hover { color: var(--green-light); border-color: var(--green-light); }
-
-.action-cost {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--text-2);
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .app { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .day-card-row { grid-template-columns: 60px 1fr auto; }
-  .timeline-header { grid-template-columns: 60px 1fr auto; }
-  .location-cell, .sleep-cell, .intensity-cell { display: none; }
+.day-cards{display:flex;flex-direction:column;gap:5px;}
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:box-shadow .15s,border-color .15s,transform .15s;position:relative;}
+.day-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:var(--radius) 0 0 var(--radius);}
+.day-card:hover{border-color:var(--stone-light);box-shadow:0 2px 12px rgba(0,0,0,.07);transform:translateY(-1px);}
+.day-card.expanded{border-color:var(--stone-light);box-shadow:0 4px 20px rgba(0,0,0,.09);}
+.type-city::before,.type-culture::before{background:var(--blue);}
+.type-travel::before{background:var(--stone);}
+.type-hike::before{background:var(--green);}
+.type-via::before{background:var(--red);}
+.type-rifugio::before{background:var(--purple);}
+.type-depart::before{background:var(--gold);}
+
+/* Card row */
+.card-row{display:grid;grid-template-columns:72px 148px 1fr 128px 108px 36px;align-items:center;padding:13px 16px 13px 18px;}
+.day-num{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.06em;}
+.day-date{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);margin-top:2px;}
+.loc-name{font-size:12px;font-weight:600;color:var(--text);line-height:1.3;}
+.loc-region{font-size:10px;color:var(--text-3);margin-top:1px;}
+.cell-activity{padding-right:12px;}
+.act-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:400;color:var(--text);line-height:1.3;}
+.act-sub{font-size:11px;color:var(--text-2);margin-top:2px;line-height:1.4;}
+.sleep-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:4px 9px;border-radius:3px;line-height:1;}
+.sleep-hotel{background:var(--green-pale);color:var(--green);}
+.sleep-rifugio{background:var(--purple-pale);color:var(--purple);}
+.sleep-transit{background:var(--stone-pale);color:var(--stone);}
+.sleep-city{background:var(--blue-pale);color:var(--blue);}
+.int-bar{display:flex;gap:3px;margin-bottom:3px;}
+.int-pip{width:16px;height:4px;border-radius:1px;background:var(--border);}
+.int-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);}
+.int-1 .int-pip:nth-child(-n+1){background:var(--green-light);}
+.int-2 .int-pip:nth-child(-n+2){background:var(--green);}
+.int-3 .int-pip:nth-child(-n+3){background:var(--gold);}
+.int-4 .int-pip:nth-child(-n+4){background:var(--red);}
+.expand-btn{width:22px;height:22px;border:1px solid var(--border);border-radius:50%;background:none;color:var(--text-3);font-size:14px;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;}
+.day-card.expanded .expand-btn{background:var(--dark);color:var(--text-inv);border-color:var(--dark);transform:rotate(45deg);}
+
+/* Detail panel */
+.card-detail{display:none;border-top:1px solid var(--border-light);background:var(--bg);}
+.day-card.expanded .card-detail{display:block;}
+.detail-inner{display:grid;grid-template-columns:1fr 220px 260px;}
+.detail-col{padding:20px 22px;border-right:1px solid var(--border-light);}
+.detail-col:last-child{border-right:none;}
+.detail-col-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;}
+.detail-body{font-size:13px;color:var(--text-2);line-height:1.8;}
+.detail-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}
+.dtag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-weight:500;}
+.dtag-green{background:var(--green-pale);color:var(--green);}
+.dtag-red{background:var(--red-pale);color:var(--red);}
+.dtag-gold{background:var(--gold-pale);color:var(--gold);}
+.dtag-blue{background:var(--blue-pale);color:var(--blue);}
+.dtag-purple{background:var(--purple-pale);color:var(--purple);}
+.dtag-stone{background:var(--stone-pale);color:var(--stone);}
+.highlight-item{display:flex;gap:10px;margin-bottom:8px;font-size:12px;color:var(--text-2);line-height:1.5;}
+.hi-arrow{color:var(--green);flex-shrink:0;font-size:11px;margin-top:2px;}
+.stat-item{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border-light);font-size:12px;}
+.stat-item:last-child{border-bottom:none;}
+.stat-item-lbl{color:var(--text-2);}
+.stat-item-val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--text);}
+.booking-item{padding:10px 0;border-bottom:1px solid var(--border-light);}
+.booking-item:first-child{padding-top:0;}
+.booking-item:last-child{border-bottom:none;}
+.booking-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3;}
+.booking-note{font-size:11.5px;color:var(--text-2);line-height:1.6;}
+.booking-link{display:inline-block;margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);border-bottom:1px solid var(--green-pale);padding-bottom:1px;letter-spacing:.04em;}
+.booking-link:hover{color:var(--green-light);border-color:var(--green-light);}
+.no-bookings{font-size:12px;color:var(--text-3);font-style:italic;}
+
+/* Action page */
+.action-page{display:none;overflow-y:auto;height:calc(100vh - var(--topbar-h));grid-column:1/-1;padding:32px 40px;background:var(--bg);}
+.action-page.visible{display:block;}
+.action-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;letter-spacing:-.02em;color:var(--text);margin-bottom:4px;}
+.action-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.1em;margin-bottom:28px;}
+.action-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px;max-width:560px;}
+.asumm{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;}
+.asumm-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;line-height:1;margin-bottom:5px;}
+.asumm-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);}
+.s-urgent .asumm-num{color:var(--red);}
+.s-soon .asumm-num{color:var(--gold);}
+.s-done .asumm-num{color:var(--green);}
+.s-total .asumm-num{color:var(--text);}
+.action-section{margin-bottom:28px;}
+.action-section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.action-section-label{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;}
+.action-section-sub{font-size:11px;color:var(--text-3);}
+.action-list{display:flex;flex-direction:column;gap:7px;}
+.aitem{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);display:grid;grid-template-columns:20px 1fr auto;gap:14px;align-items:start;padding:14px 16px;cursor:pointer;transition:all .12s;position:relative;overflow:hidden;}
+.aitem::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.aitem.urgent::before{background:var(--red);}
+.aitem.soon::before{background:var(--gold);}
+.aitem.plan::before{background:var(--blue);}
+.aitem.done{opacity:.45;}
+.aitem.done::before{background:var(--green);}
+.aitem:hover{border-color:var(--stone-light);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.acheck{width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:10px;color:transparent;transition:all .12s;}
+.aitem.done .acheck{background:var(--green);border-color:var(--green);color:white;}
+.aitem-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.aitem.done .aitem-title{text-decoration:line-through;color:var(--text-3);}
+.aitem-detail{font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:7px;}
+.aitem-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.atag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:500;}
+.atag-red{background:var(--red-pale);color:var(--red);}
+.atag-gold{background:var(--gold-pale);color:var(--gold);}
+.atag-blue{background:var(--blue-pale);color:var(--blue);}
+.atag-green{background:var(--green-pale);color:var(--green);}
+.atag-stone{background:var(--stone-pale);color:var(--stone);}
+.atag-purple{background:var(--purple-pale);color:var(--purple);}
+.aitem-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;min-width:120px;}
+.aitem-day{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.08em;white-space:nowrap;text-align:right;}
+.aitem-cost{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text-2);white-space:nowrap;}
+.aitem-link{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);border-bottom:1px solid var(--green-pale);padding-bottom:1px;letter-spacing:.04em;white-space:nowrap;}
+.aitem-link:hover{color:var(--green-light);}
+
+/* Mobile */
+@media(max-width:860px){
+  .app{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr;height:auto;overflow:visible;}
+  .sidebar{display:none;}
+  .main{height:auto;overflow:visible;padding:14px;grid-column:1;}
+  .col-headers{display:none;}
+  .card-row{grid-template-columns:60px 1fr;grid-template-rows:auto auto;gap:5px 10px;padding:12px 14px 12px 16px;}
+  .cell-location{grid-column:2;}
+  .cell-activity{grid-column:1/-1;padding-right:0;}
+  .cell-sleep,.cell-intensity,.cell-expand{display:none;}
+  .act-name{font-size:14px;}
+  .detail-inner{grid-template-columns:1fr;}
+  .detail-col{border-right:none;border-bottom:1px solid var(--border-light);padding:16px;}
+  .detail-col:last-child{border-bottom:none;}
+  .topbar-pills{display:none;}
+  .action-page{padding:16px;}
+  .action-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
+  .aitem{grid-template-columns:20px 1fr;}
+  .aitem-right{display:none;}
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- Top bar -->
-  <div class="topbar">
-    <div class="topbar-title">
-      <h1>Dolomites '26</h1>
-      <span>Trip Planner</span>
-    </div>
-    <div class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('itinerary', this)">Itinerary</button>
-      <button class="tab-btn" onclick="switchTab('actions', this)">⚡ Action Items</button>
-    </div>
-    <div class="topbar-meta">
-      <div class="meta-pill">Will · Jack · Jon</div>
-      <div class="meta-pill">Sep 14–23, 2026</div>
-      <div class="meta-pill">9 nights</div>
-      <div class="meta-pill green">Venice → Dolomites → Milan</div>
+<div class="topbar">
+  <div class="topbar-brand"><h1>Dolomites '26</h1><span>Trip Planner</span></div>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('itinerary',this)">Itinerary</button>
+    <button class="tab-btn" onclick="switchTab('actions',this)">⚡ Action Items</button>
+  </div>
+  <div class="topbar-pills">
+    <div class="topbar-pill">Will · Jack · Jon</div>
+    <div class="topbar-pill">Sep 14–23, 2026</div>
+    <div class="topbar-pill">9 nights</div>
+    <div class="topbar-pill accent">VCE → Dolomites → MXP</div>
+  </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section" style="margin-top:8px">
+    <div class="sidebar-label">Days</div>
+    <div class="day-nav" id="day-nav"></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Trip Stats</div>
+    <div class="stat-row"><span class="stat-label">Total nights</span><span class="stat-value">9</span></div>
+    <div class="stat-row"><span class="stat-label">Venice</span><span class="stat-value">2 nights</span></div>
+    <div class="stat-row"><span class="stat-label">Dolomites</span><span class="stat-value">6 nights</span></div>
+    <div class="stat-row"><span class="stat-label">Rifugio night</span><span class="stat-value">1</span></div>
+    <div class="stat-row"><span class="stat-label">Hiking days</span><span class="stat-value">6</span></div>
+    <div class="stat-row"><span class="stat-label">Via ferrata</span><span class="stat-value">1 guided day</span></div>
+    <div class="stat-row"><span class="stat-label">Max elevation</span><span class="stat-value">2,835m</span></div>
+    <div class="stat-row"><span class="stat-label">Fly in / out</span><span class="stat-value">VCE / MXP</span></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Legend</div>
+    <div class="legend-items">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>City</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--stone)"></div>Travel / drive</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Hike</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Via ferrata</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Rifugio night</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Departure</div>
     </div>
   </div>
+</div>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Days</div>
-      <div class="day-nav" id="day-nav"></div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Trip Stats</div>
-      <div class="stat-row">
-        <span class="stat-label">Total nights</span>
-        <span class="stat-value">9</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Venice</span>
-        <span class="stat-value">2 nights</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Dolomites</span>
-        <span class="stat-value">6 nights</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Rifugio nights</span>
-        <span class="stat-value">1</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Hiking days</span>
-        <span class="stat-value">6</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Via ferrata</span>
-        <span class="stat-value">1 day</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Max elevation</span>
-        <span class="stat-value">2,835m</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">Depart / return</span>
-        <span class="stat-value">JFK → VCE / MXP → JFK</span>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Legend</div>
-      <div class="legend-items">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>City day</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--stone)"></div>Travel / drive</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Hike day</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Via ferrata</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Rifugio night</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Departure</div>
-      </div>
-    </div>
-
+<div class="main" id="main">
+  <div class="col-headers">
+    <div class="col-header">Day</div>
+    <div class="col-header">Location</div>
+    <div class="col-header">Activity</div>
+    <div class="col-header">Sleep</div>
+    <div class="col-header">Intensity</div>
+    <div class="col-header"></div>
   </div>
+  <div class="day-cards" id="day-cards"></div>
+</div>
 
-  <!-- Main -->
-  <div class="main">
-    <div class="timeline-header">
-      <div class="col-header">Day</div>
-      <div class="col-header">Location</div>
-      <div class="col-header">Activity</div>
-      <div class="col-header">Sleep</div>
-      <div class="col-header">Intensity</div>
-      <div class="col-header"></div>
-    </div>
-
-    <div class="day-cards" id="day-cards"></div>
+<div class="action-page" id="action-page">
+  <div class="action-title">Will's Action Items</div>
+  <div class="action-sub">Everything to book, confirm, or buy · Click any item to mark complete</div>
+  <div class="action-summary">
+    <div class="asumm s-urgent"><div class="asumm-num" id="c-urgent">0</div><div class="asumm-label">Book Now</div></div>
+    <div class="asumm s-soon"><div class="asumm-num" id="c-soon">0</div><div class="asumm-label">Book Soon</div></div>
+    <div class="asumm s-done"><div class="asumm-num" id="c-done">0</div><div class="asumm-label">Done</div></div>
+    <div class="asumm s-total"><div class="asumm-num" id="c-total">0</div><div class="asumm-label">Total</div></div>
   </div>
-
-  <!-- Action Items Page -->
-  <div class="action-page" id="action-page">
-    <div class="action-page-header">
-      <div class="action-page-title">Will's Action Items</div>
-      <div class="action-page-sub">Everything that needs to be booked, confirmed, or researched · Click to mark complete</div>
-    </div>
-
-    <div class="action-summary">
-      <div class="action-stat urgent">
-        <div class="action-stat-num" id="count-urgent">0</div>
-        <div class="action-stat-label">Book Now</div>
-      </div>
-      <div class="action-stat soon">
-        <div class="action-stat-num" id="count-soon">0</div>
-        <div class="action-stat-label">Book Soon</div>
-      </div>
-      <div class="action-stat done-stat">
-        <div class="action-stat-num" id="count-done">0</div>
-        <div class="action-stat-label">Done</div>
-      </div>
-      <div class="action-stat total">
-        <div class="action-stat-num" id="count-total">0</div>
-        <div class="action-stat-label">Total Items</div>
-      </div>
-    </div>
-
-    <div id="action-sections"></div>
-  </div>
+  <div id="action-sections"></div>
+</div>
 
 </div>
 
 <script>
-const days = [
-  {
-    day: 1, date: "Sep 14", type: "city",
-    location: "Venice", region: "Veneto, Italy",
-    activity: "Arrive Venice",
-    activitySub: "Check in, aperitivo, wander Dorsoduro",
-    sleep: "hotel", sleepLabel: "Hotel TBD",
-    intensity: 0, intensityLabel: "—",
-    hours: "—", elevation: "—",
-    notes: "Fly into Marco Polo. Water taxi to the hotel — worth the splurge over the bus on arrival day. Drop bags, find a bar, don't sleep until 10pm local time. Dorsoduro neighborhood for aperitivo — less touristy than San Marco. Dinner at a proper cicchetti bar.",
-    highlights: ["First night · acclimate to timezone", "Arrive afternoon, full evening free", "Dorsoduro for drinks, less touristy"],
-    tags: [{ label: "City", cls: "tag-blue" }, { label: "Arrival", cls: "tag-stone" }],
-    bookings: ["Hotel Venice (TBD)", "Water taxi from airport"],
-  },
-  {
-    day: 2, date: "Sep 15", type: "city",
-    location: "Venice", region: "Veneto, Italy",
-    activity: "Full day Venice",
-    activitySub: "Rialto market, Grand Canal, evening meal",
-    sleep: "city", sleepLabel: "Hotel Venice",
-    intensity: 1, intensityLabel: "Easy",
-    hours: "~4 hrs walking", elevation: "Flat",
-    notes: "Rialto fish market in the morning (opens 7am, done by noon). Vaporetto down the Grand Canal. Avoid San Marco Piazza midday — go at dusk or dawn. Lunch at Osteria alle Testiere (book ahead, tiny, exceptional). Afternoon: wander Cannaregio. Final dinner in Venice — make it count.",
-    highlights: ["Rialto market 7–9am", "Grand Canal vaporetto", "Osteria alle Testiere for lunch"],
-    tags: [{ label: "City", cls: "tag-blue" }, { label: "Full Day", cls: "tag-stone" }],
-    bookings: ["Osteria alle Testiere (book ahead — essential)"],
-  },
-  {
-    day: 3, date: "Sep 16", type: "travel",
-    location: "Venice → Castelrotto", region: "Val Gardena, South Tyrol",
-    activity: "Drive to Dolomites",
-    activitySub: "~2.5 hrs · Arrive early afternoon",
-    sleep: "hotel", sleepLabel: "Cavallino d'Oro, Castelrotto",
-    intensity: 0, intensityLabel: "—",
-    hours: "2.5 hr drive", elevation: "—",
-    notes: "Pick up rental car at Venice airport (pre-book, specify automatic). Drive A27 north toward Belluno, then into South Tyrol. Stop at a roadside Autogrill — part of the Italian road trip experience. Arrive Castelrotto early afternoon. Check into Cavallino d'Oro on the village square. Explore the village on foot, get your bearings. Early dinner — you have a big day tomorrow.",
-    highlights: ["Pick up car at VCE airport", "Stop at Autogrill on the way", "Arrive Castelrotto, explore village"],
-    tags: [{ label: "Drive", cls: "tag-stone" }, { label: "Base 1 Check-in", cls: "tag-green" }],
-    bookings: ["Rental car — Venice airport", "Hotel Cavallino d'Oro, Castelrotto"],
-  },
-  {
-    day: 4, date: "Sep 17", type: "hike",
-    location: "Alpe di Siusi", region: "Val Gardena, South Tyrol",
-    activity: "Alpe di Siusi Full Traverse",
-    activitySub: "Europe's largest high-altitude Alpine meadow",
-    sleep: "hotel", sleepLabel: "Cavallino d'Oro, Castelrotto",
-    intensity: 2, intensityLabel: "Moderate",
-    hours: "~5–6 hrs", elevation: "~600m",
-    notes: "Take the Ortisei gondola up to the plateau. Walk the full traverse west to east across the Alpe di Siusi with the Sassolungo massif directly in front of you all day. September light is golden and the summer crowds are gone. Lunch at Rifugio Compatsch — order the Schlutzkrapfen (local pasta). Gondola back down or taxi return. Best views: early morning before any haze builds.",
-    highlights: ["Sassolungo massif views all day", "Lunch at Rifugio Compatsch", "September light — golden, uncrowded"],
-    tags: [{ label: "Hike", cls: "tag-green" }, { label: "Gondola Assisted", cls: "tag-stone" }],
-    bookings: ["Ortisei gondola — check hours"],
-  },
-  {
-    day: 5, date: "Sep 18", type: "hike",
-    location: "Val di Funes", region: "Odle / Puez area, South Tyrol",
-    activity: "Val di Funes + Rifugio Brogles",
-    activitySub: "Odle peaks overhead, real elevation gain",
-    sleep: "hotel", sleepLabel: "Cavallino d'Oro, Castelrotto",
-    intensity: 3, intensityLabel: "Solid",
-    hours: "~6 hrs", elevation: "~900m",
-    notes: "Early start — drive to Santa Maddalena before 8am to beat day-trippers. The meadow below the Odle/Geisler peaks at dawn is the most photographed landscape in the Dolomites. Loop up through forest and open alpine terrain toward Rifugio Brogles with the Odle walls directly above you. This is the hardest day of Base 1 — real elevation, real legs required. Pack bags this afternoon for the Cortina move tomorrow.",
-    highlights: ["Santa Maddalena before 8am — no crowds", "Odle north walls directly overhead", "Pack bags tonight for Cortina move"],
-    tags: [{ label: "Hike", cls: "tag-green" }, { label: "Early Start", cls: "tag-gold" }, { label: "Hardest Day Base 1", cls: "tag-red" }],
-    bookings: [],
-  },
-  {
-    day: 6, date: "Sep 19", type: "via",
-    location: "Cinque Torri → Cortina", region: "Ampezzano Dolomites",
-    activity: "Via Ferrata Averau + Scenic Drive",
-    activitySub: "Guided via ferrata · Sella & Pordoi passes",
-    sleep: "hotel", sleepLabel: "Rosapetra, Cortina",
-    intensity: 3, intensityLabel: "Moderate+",
-    hours: "~3–4 hrs climbing", elevation: "~500m",
-    notes: "Drive the Sella Pass and Pordoi Pass in the morning — stop at Pordoi summit for coffee and the Marmolada glacier view. Continue to Cinque Torri area. Afternoon: guided Via Ferrata Averau — rated easy-to-moderate (F/D Italian grading), ~3-4 hours, harness and helmet provided by guide. Book through Scuola di Alpinismo Cortina, request English-speaking guide, ~€300-400 for three. Check into Rosapetra, shower, dinner at El Toulà.",
-    highlights: ["Pordoi Pass stop — Marmolada view", "Via Ferrata Averau with guide", "El Toulà dinner — old Cortina elegance"],
-    tags: [{ label: "Via Ferrata", cls: "tag-red" }, { label: "Guided", cls: "tag-gold" }, { label: "Base 2 Check-in", cls: "tag-green" }],
-    bookings: ["Scuola di Alpinismo Cortina — guide booking (~€300–400)", "Rosapetra hotel, Cortina", "El Toulà restaurant (book ahead)"],
-  },
-  {
-    day: 7, date: "Sep 20", type: "culture",
-    location: "Passo Falzarego → Cortina", region: "Ampezzano Dolomites",
-    activity: "Lagazuoi Ridge + WWI Tunnels",
-    activitySub: "Cable car up · Horse carriage descent · History in the rock",
-    sleep: "hotel", sleepLabel: "Rosapetra, Cortina",
-    intensity: 2, intensityLabel: "Moderate",
-    hours: "~5–6 hrs", elevation: "~800m descent",
-    notes: "Cable car up from Passo Falzarego to Lagazuoi at 2,835m — the highest point of the trip. Walk the southern ridge with WWI tunnels cut directly into the rock, original trenches and artillery positions still intact. Descend via the long southern ridge to the Armentarola valley floor where a horse-drawn carriage takes you back. Nobody forgets this day. Lunch at Rifugio Lagazuoi at the summit — get the goulash soup.",
-    highlights: ["Cable car to 2,835m — highest point of trip", "WWI tunnels cut into the rock face", "Horse-drawn carriage descent — unique"],
-    tags: [{ label: "Culture", cls: "tag-blue" }, { label: "Cable Car", cls: "tag-stone" }, { label: "WWI History", cls: "tag-blue" }],
-    bookings: ["Lagazuoi cable car — check hours/booking", "Horse carriage — usually walk-up but confirm"],
-  },
-  {
-    day: 8, date: "Sep 21", type: "rifugio",
-    location: "Tre Cime di Lavaredo", region: "Sesto Dolomites",
-    activity: "Tre Cime Loop + Rifugio Locatelli",
-    activitySub: "The night. North walls at sunset.",
-    sleep: "rifugio", sleepLabel: "Rifugio Locatelli (2,405m)",
-    intensity: 2, intensityLabel: "Easy–Moderate",
-    hours: "~5 hrs total", elevation: "~400m",
-    notes: "Slow morning at Rosapetra. Pack rifugio bag only — sleeping bag liner, down layer, one change of clothes, toiletries. Drive to Rifugio Auronzo (timed entry pre-booked, ~€35/car, mandatory). Walk 1.5hrs to Rifugio Locatelli, drop packs. Do the full Tre Cime loop (3hrs). Back for dinner at 7pm sharp. Then go outside and stay there until dark. The north faces at sunset are the moment of the entire trip. ~€70pp half board.",
-    highlights: ["Timed entry pre-booked — mandatory", "Full Tre Cime loop 3hrs", "North faces at sunset — the moment"],
-    tags: [{ label: "Rifugio Night", cls: "tag-purple" }, { label: "Iconic", cls: "tag-gold" }, { label: "Book First", cls: "tag-red" }],
-    bookings: ["Rifugio Locatelli — book immediately, fills months ahead", "Tre Cime timed entry — ~€35/car, book online before departure"],
-  },
-  {
-    day: 9, date: "Sep 22", type: "depart",
-    location: "Lago di Braies → Milan", region: "Alto Adige → Lombardy",
-    activity: "Lago di Braies + Drive to Milan",
-    activitySub: "Dawn on the lake · ~3.5 hrs to Malpensa",
-    sleep: "transit", sleepLabel: "Flight home",
-    intensity: 1, intensityLabel: "Easy",
-    hours: "~1 hr walk", elevation: "Flat",
-    notes: "Set alarm for 6am — sunrise on the Tre Cime north walls, then breakfast at 7:30am. Descend to car by 9:30am. Drive 45 mins to Lago di Braies — arrive by 10:30 before day-trippers. Walk the 3.8km lake loop (flat, 1hr), rent a rowboat if time allows. One of the most beautiful spots in the Alps as a final morning. On the road to Milan Malpensa by noon. 3.5 hrs to airport — plenty of buffer. Drop rental car at MXP.",
-    highlights: ["Sunrise on Tre Cime north walls — 6am", "Lago di Braies walk 10:30am", "On road to Milan by noon"],
-    tags: [{ label: "Departure Day", cls: "tag-gold" }, { label: "Lago di Braies", cls: "tag-blue" }],
-    bookings: ["Drop rental car — Milan Malpensa (MXP)", "Flight home from MXP"],
-  },
+const TYPE_COLOR={city:'blue',travel:'stone',hike:'green',via:'red',culture:'blue',rifugio:'purple',depart:'gold'};
+
+const days=[
+  {day:1,date:'Sep 14',type:'city',location:'Venice',region:'Veneto, Italy',activity:'Arrive Venice',activitySub:'Check in · aperitivo · wander Dorsoduro',sleep:'city',sleepLabel:'Hotel TBD',intensity:0,intensityLabel:'—',hours:'—',elevation:'—',notes:'Fly into Marco Polo. Water taxi to hotel — worth the splurge on arrival day. Drop bags, find a bar, don\'t sleep until 10pm local time. Dorsoduro neighborhood for aperitivo — far less touristy than San Marco. Dinner at a cicchetti bar. Goal: stay awake, eat well, acclimate.',highlights:['Arrive afternoon — full evening free','Dorsoduro for drinks, less touristy','Cicchetti bar for dinner'],tags:[{l:'City',c:'dtag-blue'},{l:'Arrival',c:'dtag-stone'}],bookings:[{title:'Venice hotel',note:'TBD — 3 people, 2 rooms. Dorsoduro or Cannaregio preferred. Budget TBD.',link:'',linkLabel:''},{title:'Water taxi from airport',note:'Book in advance or arrange on arrival. Worth it on day one.',link:'',linkLabel:''}]},
+  {day:2,date:'Sep 15',type:'city',location:'Venice',region:'Veneto, Italy',activity:'Full Day Venice',activitySub:'Rialto market · Grand Canal · dinner at Alle Testiere',sleep:'city',sleepLabel:'Hotel Venice',intensity:1,intensityLabel:'Easy',hours:'~4 hrs walking',elevation:'Flat',notes:'Rialto fish market in the morning — opens 7am, winds down by noon. Vaporetto down the Grand Canal. Avoid San Marco Piazza midday — go at dusk instead. Lunch at Osteria alle Testiere (only 11 tables, Michelin-listed, reservation only — book well ahead). Afternoon: wander Cannaregio. Final dinner in Venice — make it count.',highlights:['Rialto market 7–9am before crowds','Grand Canal vaporetto ride','Alle Testiere lunch — book in advance'],tags:[{l:'City',c:'dtag-blue'},{l:'Full Day',c:'dtag-stone'}],bookings:[{title:'Osteria alle Testiere',note:'Call +39 041 522 7220. Request 21:30 dinner slot Sep 15. Only 11 tables, no walk-ins ever.',link:'tel:+390415227220',linkLabel:'+39 041 522 7220'}]},
+  {day:3,date:'Sep 16',type:'travel',location:'Venice → Castelrotto',region:'Val Gardena, South Tyrol',activity:'Drive to the Dolomites',activitySub:'~2.5 hrs · A27 north · arrive early afternoon',sleep:'hotel',sleepLabel:"Cavallino d'Oro, Castelrotto",intensity:0,intensityLabel:'—',hours:'2.5 hr drive',elevation:'—',notes:'Pick up rental car at Venice Marco Polo airport. Drive A27 north toward Belluno then into South Tyrol. Stop at a roadside Autogrill — part of the Italian road trip experience. Arrive Castelrotto early afternoon. Check into Cavallino d\'Oro on the village square. Explore on foot, have an espresso, get your bearings. Early dinner tonight — big day tomorrow.',highlights:['Pick up car at VCE — confirm automatic','Stop at Autogrill on the drive','Arrive Castelrotto, explore the village'],tags:[{l:'Drive',c:'dtag-stone'},{l:'Base 1 Check-in',c:'dtag-green'}],bookings:[{title:'Rental car — VCE pickup, MXP drop-off',note:'AutoEurope or Rentalcars.com. Automatic. Pick up VCE Sep 14, drop MXP Sep 23. One-way fee ~€150 extra. Book now.',link:'https://www.autoeurope.com',linkLabel:'autoeurope.com'},{title:"Hotel Cavallino d'Oro, Castelrotto",note:'3 nights Sep 16–19. Request 2 rooms: 1 twin + 1 single. Twin = two separate beds.',link:'https://www.cavallino.it',linkLabel:'cavallino.it'}]},
+  {day:4,date:'Sep 17',type:'hike',location:'Alpe di Siusi',region:'Val Gardena, South Tyrol',activity:'Alpe di Siusi Full Traverse',activitySub:"Europe's largest high-altitude Alpine meadow",sleep:'hotel',sleepLabel:"Cavallino d'Oro, Castelrotto",intensity:2,intensityLabel:'Moderate',hours:'~5–6 hrs',elevation:'~600m',notes:'Take the Ortisei gondola up to the plateau. Walk the full traverse west to east with the Sassolungo massif in front of you all day. September light is golden and the summer crowds are gone. Lunch at Rifugio Compatsch on the plateau — order the Schlutzkrapfen (local filled pasta, a Ladin specialty). Gondola back down or taxi return to Castelrotto.',highlights:['Sassolungo massif views the entire day','Lunch at Rifugio Compatsch — Schlutzkrapfen','September light — golden, uncrowded'],tags:[{l:'Hike',c:'dtag-green'},{l:'Gondola Assisted',c:'dtag-stone'}],bookings:[{title:'Ortisei / Seceda gondola',note:'Confirm September operating hours and first gondola time. Usually opens by 8am.',link:'https://www.funivie-seceda.com',linkLabel:'funivie-seceda.com'}]},
+  {day:5,date:'Sep 18',type:'hike',location:'Val di Funes',region:'Odle / Puez area, South Tyrol',activity:'Val di Funes + Rifugio Brogles',activitySub:'Odle peaks overhead · real elevation · early start required',sleep:'hotel',sleepLabel:"Cavallino d'Oro, Castelrotto",intensity:3,intensityLabel:'Solid',hours:'~6 hrs',elevation:'~900m',notes:'Early start — drive to Santa Maddalena before 8am to beat day-trippers. The meadow below the Odle/Geisler peaks at dawn is the most photographed landscape in the Dolomites and you will understand immediately why. Loop up through forest and open alpine terrain toward Rifugio Brogles with the vertical Odle walls directly above you. Hardest day of Base 1. Pack bags tonight for the move to Cortina tomorrow.',highlights:['Santa Maddalena before 8am — no crowds','Odle north walls directly overhead','Pack bags tonight for Cortina move'],tags:[{l:'Hike',c:'dtag-green'},{l:'Early Start',c:'dtag-gold'},{l:'Hardest Day Base 1',c:'dtag-red'}],bookings:[]},
+  {day:6,date:'Sep 19',type:'via',location:'Cinque Torri → Cortina',region:'Ampezzano Dolomites',activity:'Via Ferrata Averau + Scenic Drive',activitySub:'Guided via ferrata · Sella & Pordoi passes en route',sleep:'hotel',sleepLabel:'Rosapetra, Cortina',intensity:3,intensityLabel:'Moderate+',hours:'~3–4 hrs climbing',elevation:'~500m',notes:'Drive the Sella Pass and Pordoi Pass in the morning — stop at the Pordoi summit for coffee and a view of the Marmolada glacier. Continue to Cinque Torri area. Afternoon: guided Via Ferrata Averau — rated easy-to-moderate (F/D), 3–4 hours, all gear (harness, helmet, carabiners) provided by guide. Check into Rosapetra, long shower, dinner at El Toulà.',highlights:['Pordoi Pass stop — Marmolada glacier view','Via Ferrata Averau with English-speaking guide','El Toulà dinner — old Cortina elegance'],tags:[{l:'Via Ferrata',c:'dtag-red'},{l:'Guided',c:'dtag-gold'},{l:'Base 2 Check-in',c:'dtag-green'}],bookings:[{title:'Guide Alpine Cortina — via ferrata',note:'Email info@guidecortina.com. 3 people, beginners, English guide, Sep 19. Ask for Via Ferrata Averau or similar easy-moderate route. Book 6–8 weeks ahead.',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com'},{title:'Rosapetra Spa Resort, Cortina',note:'2 nights Sep 19–21. Request 2 rooms: 1 twin + 1 single. Secluded, mountain-facing, CNT Readers Choice 2025.',link:'https://www.rosapetra.it',linkLabel:'rosapetra.it'},{title:'El Toulà restaurant',note:'Dinner Sep 19. Classic Cortina dining, local game. Book via website or call ahead.',link:'https://www.eltoula.it',linkLabel:'eltoula.it'}]},
+  {day:7,date:'Sep 20',type:'culture',location:'Passo Falzarego → Cortina',region:'Ampezzano Dolomites',activity:'Lagazuoi Ridge + WWI Tunnels',activitySub:'Cable car to 2,835m · tunnels in the rock · horse carriage descent',sleep:'hotel',sleepLabel:'Rosapetra, Cortina',intensity:2,intensityLabel:'Moderate',hours:'~5–6 hrs',elevation:'~800m descent',notes:'Cable car from Passo Falzarego up to Lagazuoi at 2,835m — the highest point of the trip. Walk the southern ridge with WWI tunnels cut directly into the rock face, original trenches and artillery positions still intact. Descend to the Armentarola valley floor where a horse-drawn carriage takes you back. Nobody forgets this day. Lunch at Rifugio Lagazuoi — get the goulash soup.',highlights:['Cable car to 2,835m — highest point of trip','WWI tunnels cut into the rock face','Horse-drawn carriage descent — unique'],tags:[{l:'Culture',c:'dtag-blue'},{l:'Cable Car',c:'dtag-stone'},{l:'WWI History',c:'dtag-blue'}],bookings:[{title:'Lagazuoi cable car',note:'Confirm September operating hours and whether advance booking is required.',link:'https://www.lagazuoi5torri.it',linkLabel:'lagazuoi5torri.it'},{title:'Horse carriage descent, Armentarola',note:'Usually walk-up but confirm it is operating in September.',link:'',linkLabel:''}]},
+  {day:8,date:'Sep 21',type:'rifugio',location:'Tre Cime di Lavaredo',region:'Sesto Dolomites',activity:'Tre Cime Loop + Rifugio Locatelli',activitySub:'The night · north walls at sunset · dawn on the peaks',sleep:'rifugio',sleepLabel:'Rifugio Locatelli (2,405m)',intensity:2,intensityLabel:'Easy–Moderate',hours:'~5 hrs total',elevation:'~400m',notes:'Slow morning at Rosapetra. Pack rifugio bag only: sleeping bag liner (mandatory), down jacket, one change of clothes, toiletries. Drive to Rifugio Auronzo (timed entry pre-booked, mandatory). Walk 1.5hrs to Rifugio Locatelli. Drop packs. Do the full Tre Cime loop (3hrs). Back for dinner at 7pm sharp — it is served at a fixed time. Then go outside and stay there until dark. The north faces at sunset are the moment of the entire trip. Cash only at the rifugio.',highlights:['Timed parking entry pre-booked — do not forget','Full Tre Cime loop 3hrs','North faces at sunset — the moment of the trip'],tags:[{l:'Rifugio Night',c:'dtag-purple'},{l:'Iconic',c:'dtag-gold'},{l:'Book First',c:'dtag-red'}],bookings:[{title:'Rifugio Locatelli — overnight',note:'Book at dreizinnenhuette.com. 3 people, half board, Sep 21. €40pp non-refundable deposit. Fills months ahead — book today.',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com'},{title:'Tre Cime parking — 2 reservations',note:'Need TWO back-to-back 12hr slots (overnighting). €40/car each at auronzo.info. Opens late April/May. Can update rental plate until night before.',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info'}]},
+  {day:9,date:'Sep 22',type:'depart',location:'Lago di Braies → Milan',region:'Alto Adige → Lombardy',activity:'Lago di Braies + Drive to Milan',activitySub:'Dawn on the lake · ~3.5 hrs to Malpensa',sleep:'transit',sleepLabel:'Flight home',intensity:1,intensityLabel:'Easy',hours:'~1 hr walk',elevation:'Flat',notes:'Set alarm for 6am — sunrise on the Tre Cime north walls first. Breakfast at Rifugio Locatelli 7:30am. Descend to car by 9:30am. Drive 45 mins to Lago di Braies — arrive by 10:30 before day-trippers. Walk the 3.8km lake loop (flat, 1hr), rent a rowboat if time allows. On the road to Milan Malpensa by noon. 3.5 hrs to the airport. Drop rental car at MXP.',highlights:['Sunrise on Tre Cime north walls — 6am','Lago di Braies 10:30am before crowds','On road to Milan by noon'],tags:[{l:'Departure',c:'dtag-gold'},{l:'Lago di Braies',c:'dtag-blue'}],bookings:[{title:'Drop rental car at Milan Malpensa',note:'Confirm drop-off location and procedures when booking the car.',link:'',linkLabel:''},{title:'Flights home from MXP',note:'Sep 22 MXP → JFK. Coordinate all three. Delta, United, Lufthansa via Frankfurt.',link:'https://www.google.com/flights',linkLabel:'google.com/flights'}]},
 ];
 
-function intensityPips(level) {
-  let html = `<div class="intensity-bar int-${level}">`;
-  for (let i = 0; i < 4; i++) html += `<div class="intensity-pip"></div>`;
-  html += `</div>`;
-  html += `<div class="intensity-label">${['—','Easy','Moderate','Solid','Hard'][level]}</div>`;
-  return html;
+const actionItems=[
+  {id:'locatelli',priority:'urgent',title:'Rifugio Locatelli — overnight booking',detail:'Most in-demand rifugio in the Dolomites. 3 people, half board, night of Sep 21. Specify beds or dorm + alternative preference. €40pp non-refundable deposit. Cash only at the hut.',day:'Day 8 · Sep 21',cost:'~€70pp half board',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com',tags:[{l:'Book Today',c:'atag-red'},{l:'Rifugio',c:'atag-purple'}]},
+  {id:'guide',priority:'urgent',title:'Guide Alpine Cortina — via ferrata guide',detail:'Email info@guidecortina.com — 3 people, beginners, English-speaking guide, Sep 19, Via Ferrata Averau or similar easy-moderate route. All gear provided. Alternative: Enrico Maioni at guidedolomiti.com — born in Cortina, IFMGA certified, fluent English.',day:'Day 6 · Sep 19',cost:'~€300–400 total',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com',tags:[{l:'Book Now',c:'atag-red'},{l:'Via Ferrata',c:'atag-red'}]},
+  {id:'testiere',priority:'urgent',title:'Osteria alle Testiere — Venice dinner',detail:'Only 11 tables. Reservation only — no walk-ins. Call +39 041 522 7220. Open Tue–Sat. Request 21:30 slot on Sep 15. Seafood-only menu, changes daily.',day:'Day 2 · Sep 15',cost:'~€70–80pp',link:'tel:+390415227220',linkLabel:'+39 041 522 7220',tags:[{l:'Call to Book',c:'atag-red'},{l:'Venice',c:'atag-blue'}]},
+  {id:'rentalcar',priority:'urgent',title:'Rental car — VCE pickup → MXP drop-off',detail:'AutoEurope or Rentalcars.com. Automatic. Pick up Venice Marco Polo Sep 14, drop off Milan Malpensa Sep 23. One-way fee ~€100–150 extra. September books out early.',day:'Sep 14–23',cost:'TBD + ~€150 one-way',link:'https://www.autoeurope.com',linkLabel:'autoeurope.com',tags:[{l:'Book Now',c:'atag-red'},{l:'Logistics',c:'atag-stone'}]},
+  {id:'cavallino',priority:'soon',title:"Hotel Cavallino d'Oro — Castelrotto (Base 1)",detail:'3 nights Sep 16–19. Request 2 rooms: 1 twin + 1 single. Specify twin (two separate beds) not double. Book directly.',day:'Days 3–5 · Sep 16–19',cost:'~$180–250/night',link:'https://www.cavallino.it',linkLabel:'cavallino.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Base 1',c:'atag-green'}]},
+  {id:'rosapetra',priority:'soon',title:'Rosapetra Spa Resort — Cortina (Base 2)',detail:'2 nights Sep 19–21. Request 2 rooms: 1 twin + 1 single. Secluded, all rooms mountain-facing. CNT Readers\' Choice 2025.',day:'Days 6–7 · Sep 19–21',cost:'~$350–500/night',link:'https://www.rosapetra.it',linkLabel:'rosapetra.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Base 2',c:'atag-green'}]},
+  {id:'venice-hotel',priority:'soon',title:'Venice hotel — 2 nights (TBD)',detail:'Still need to select. 2 nights Sep 14–16, 3 people, 2 rooms. Dorsoduro or Cannaregio preferred.',day:'Days 1–2 · Sep 14–16',cost:'TBD',link:'',linkLabel:'',tags:[{l:'Decide First',c:'atag-gold'},{l:'Venice',c:'atag-blue'}]},
+  {id:'eltoula',priority:'soon',title:'El Toulà — Cortina dinner reservation',detail:'Classic Cortina dining, white tablecloths, exceptional local game. Dinner Sep 19 — arrival night. Book via website or call ahead.',day:'Day 6 · Sep 19',cost:'~€60–80pp',link:'https://www.eltoula.it',linkLabel:'eltoula.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Cortina',c:'atag-green'}]},
+  {id:'parking',priority:'plan',title:'Tre Cime parking — 2 × 12hr reservations',detail:'Book at auronzo.info — opens late April/May 2026. Need two back-to-back slots (overnighting = 24hrs). €40/car each. Can update rental plate until 11:59pm night before. Tip: set device to Milan timezone when booking.',day:'Day 8 · Sep 21',cost:'€40 × 2 = €80',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info',tags:[{l:'Opens Late April',c:'atag-blue'},{l:'Mandatory',c:'atag-red'}]},
+  {id:'lagazuoi',priority:'plan',title:'Lagazuoi cable car — confirm booking',detail:'Confirm September operating dates and whether advance booking is required. Also confirm horse-drawn carriage descent from Armentarola is running in September.',day:'Day 7 · Sep 20',cost:'~€15–20pp',link:'https://www.lagazuoi5torri.it',linkLabel:'lagazuoi5torri.it',tags:[{l:'Confirm',c:'atag-blue'},{l:'Day 7',c:'atag-stone'}]},
+  {id:'gondola',priority:'plan',title:'Ortisei / Seceda gondola — confirm dates',detail:'Confirm Seceda gondola is running mid-September 2026 and check first gondola time. Also confirm Alpe di Siusi gondola for Day 4.',day:'Days 4–5 · Sep 17–18',cost:'~€20–25pp',link:'https://www.funivie-seceda.com',linkLabel:'funivie-seceda.com',tags:[{l:'Confirm',c:'atag-blue'},{l:'Base 1',c:'atag-green'}]},
+  {id:'liners',priority:'plan',title:'Sleeping bag liners × 3',detail:'Mandatory at Rifugio Locatelli. Lightweight silk or cotton. Cocoon or Sea to Summit are standard. Buy at REI before departure.',day:'Pre-trip',cost:'~$30–50 each',link:'https://www.rei.com/search?q=sleeping+bag+liner',linkLabel:'rei.com',tags:[{l:'Buy Pre-trip',c:'atag-blue'},{l:'Gear',c:'atag-stone'}]},
+  {id:'flights',priority:'plan',title:'Flights — JFK → VCE and MXP → JFK',detail:'Sep 14 outbound JFK → Venice Marco Polo (VCE). Sep 22 return Milan Malpensa (MXP) → JFK. Coordinate all three. Delta, United, Lufthansa via Frankfurt are main options.',day:'Sep 14 & Sep 22',cost:'TBD',link:'https://www.google.com/flights',linkLabel:'google.com/flights',tags:[{l:'Coordinate Group',c:'atag-blue'},{l:'Logistics',c:'atag-stone'}]},
+];
+
+const GROUPS=[
+  {key:'urgent',label:'Book Now',sub:'These fill up fast — act immediately',color:'var(--red)'},
+  {key:'soon',label:'Book Soon',sub:'Within the next few weeks',color:'var(--gold)'},
+  {key:'plan',label:'Plan & Confirm',sub:'Research, coordinate, or purchase pre-trip',color:'var(--blue)'},
+];
+
+let done={};
+try{const s=localStorage.getItem('dolomites-done-v3');if(s)done=JSON.parse(s);}catch(e){}
+const save=()=>{try{localStorage.setItem('dolomites-done-v3',JSON.stringify(done));}catch(e){}};
+
+function intHTML(lvl){
+  return '<div class="int-bar int-'+lvl+'">'+'<div class="int-pip"></div>'.repeat(4)+'</div>'
+    +'<div class="int-label">'+['—','Easy','Moderate','Solid','Hard'][lvl]+'</div>';
+}
+function sleepHTML(type,label){
+  const cls={hotel:'sleep-hotel',rifugio:'sleep-rifugio',transit:'sleep-transit',city:'sleep-city'}[type]||'sleep-hotel';
+  const icon={hotel:'🏨',rifugio:'⛺',transit:'✈️',city:'🏙'}[type]||'🏨';
+  return '<div class="sleep-badge '+cls+'">'+icon+' '+label+'</div>';
 }
 
-function sleepBadge(type, label) {
-  const cls = { hotel: 'sleep-hotel', rifugio: 'sleep-rifugio', transit: 'sleep-transit', city: 'sleep-city' }[type] || 'sleep-hotel';
-  const icon = { hotel: '🏨', rifugio: '⛺', transit: '✈️', city: '🏙' }[type] || '🏨';
-  return `<div class="sleep-badge ${cls}">${icon} ${label}</div>`;
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page');
+  if(tab==='itinerary'){sb.style.display='';m.style.display='';ap.classList.remove('visible');}
+  else{sb.style.display='none';m.style.display='none';ap.classList.add('visible');}
 }
 
-function renderCards() {
-  const container = document.getElementById('day-cards');
-  const nav = document.getElementById('day-nav');
+function renderCards(){
+  const cont=document.getElementById('day-cards'),nav=document.getElementById('day-nav');
+  days.forEach((d,i)=>{
+    const col=TYPE_COLOR[d.type]||'stone';
+    const navEl=document.createElement('div');
+    navEl.className='day-nav-item';
+    navEl.innerHTML='<div class="day-dot" style="background:var(--'+col+')"></div><div class="day-nav-text"><div class="day-nav-num">DAY '+d.day+' · '+d.date+'</div><div class="day-nav-name">'+d.location+'</div></div>';
+    navEl.addEventListener('click',()=>scrollTo(i));
+    nav.appendChild(navEl);
 
-  days.forEach((d, i) => {
-    // Nav item
-    const navItem = document.createElement('div');
-    navItem.className = `day-nav-item`;
-    navItem.dataset.idx = i;
-    navItem.innerHTML = `
-      <div class="day-dot" style="background:var(--${
-        {city:'blue',travel:'stone',hike:'green',via:'red',culture:'blue',rifugio:'purple',depart:'gold'}[d.type]
-      })"></div>
-      <div class="day-nav-text">
-        <div class="day-nav-num">DAY ${d.day} · ${d.date}</div>
-        <div class="day-nav-name">${d.location}</div>
-      </div>`;
-    navItem.addEventListener('click', () => scrollToCard(i));
-    nav.appendChild(navItem);
+    const tagsHTML=d.tags.map(t=>'<span class="dtag '+t.c+'">'+t.l+'</span>').join('');
+    const hlHTML=d.highlights.map(h=>'<div class="highlight-item"><span class="hi-arrow">→</span><span>'+h+'</span></div>').join('');
+    const bkHTML=d.bookings.length
+      ?d.bookings.map(b=>'<div class="booking-item"><div class="booking-title">'+b.title+'</div><div class="booking-note">'+b.note+'</div>'+(b.link?'<a href="'+b.link+'" target="_blank" class="booking-link" onclick="event.stopPropagation()">'+b.linkLabel+' ↗</a>':'')+'</div>').join('')
+      :'<div class="no-bookings">No advance bookings required</div>';
 
-    // Card
-    const card = document.createElement('div');
-    card.className = `day-card type-${d.type}`;
-    card.id = `card-${i}`;
+    const card=document.createElement('div');
+    card.className='day-card type-'+d.type;
+    card.id='card-'+i;
+    card.innerHTML=
+      '<div class="card-row">'
+      +'<div class="cell-day"><div class="day-num">DAY '+d.day+'</div><div class="day-date">'+d.date+'</div></div>'
+      +'<div class="cell-location"><div class="loc-name">'+d.location+'</div><div class="loc-region">'+d.region+'</div></div>'
+      +'<div class="cell-activity"><div class="act-name">'+d.activity+'</div><div class="act-sub">'+d.activitySub+'</div></div>'
+      +'<div class="cell-sleep">'+sleepHTML(d.sleep,d.sleepLabel)+'</div>'
+      +'<div class="cell-intensity">'+intHTML(d.intensity)+'</div>'
+      +'<div class="cell-expand"><button class="expand-btn">+</button></div>'
+      +'</div>'
+      +'<div class="card-detail"><div class="detail-inner">'
+      +'<div class="detail-col"><div class="detail-col-label">Overview</div><div class="detail-body">'+d.notes+'</div><div class="detail-tags">'+tagsHTML+'</div></div>'
+      +'<div class="detail-col"><div class="detail-col-label">Highlights</div>'+hlHTML+'<div class="detail-col-label" style="margin-top:16px">Stats</div>'
+      +'<div class="stat-item"><span class="stat-item-lbl">Duration</span><span class="stat-item-val">'+d.hours+'</span></div>'
+      +'<div class="stat-item"><span class="stat-item-lbl">Elevation</span><span class="stat-item-val">'+d.elevation+'</span></div>'
+      +'<div class="stat-item"><span class="stat-item-lbl">Intensity</span><span class="stat-item-val">'+d.intensityLabel+'</span></div>'
+      +'<div class="stat-item"><span class="stat-item-lbl">Sleep</span><span class="stat-item-val">'+d.sleepLabel+'</span></div>'
+      +'</div>'
+      +'<div class="detail-col"><div class="detail-col-label">Bookings & Notes</div>'+bkHTML+'</div>'
+      +'</div></div>';
 
-    const tags = d.tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join('');
-    const bookings = d.bookings.length
-      ? d.bookings.map(b => `<div class="detail-stat"><span class="detail-stat-label">📌 ${b}</span></div>`).join('')
-      : `<div class="detail-stat"><span class="detail-stat-label" style="color:var(--text-3)">No bookings required</span></div>`;
-
-    const highlights = d.highlights.map(h => `<div style="display:flex;gap:8px;margin-bottom:6px"><span style="color:var(--green);flex-shrink:0">→</span><span>${h}</span></div>`).join('');
-
-    card.innerHTML = `
-      <div class="day-card-row">
-        <div class="day-num-cell">
-          <div class="day-num">DAY ${d.day}</div>
-          <div class="day-date">${d.date}</div>
-        </div>
-        <div class="location-cell">
-          <div class="location-name">${d.location}</div>
-          <div class="location-region">${d.region}</div>
-        </div>
-        <div class="activity-cell">
-          <div class="activity-name">${d.activity}</div>
-          <div class="activity-sub">${d.activitySub}</div>
-        </div>
-        <div class="sleep-cell">${sleepBadge(d.sleep, d.sleepLabel)}</div>
-        <div class="intensity-cell">${intensityPips(d.intensity)}</div>
-        <div class="expand-cell"><button class="expand-btn">+</button></div>
-      </div>
-      <div class="day-detail">
-        <div class="detail-grid">
-          <div class="detail-section">
-            <div class="detail-section-label">Overview</div>
-            <div class="detail-body">${d.notes}</div>
-            <div class="tag-list">${tags}</div>
-          </div>
-          <div class="detail-section">
-            <div class="detail-section-label">Highlights</div>
-            <div style="margin-bottom:16px">${highlights}</div>
-            <div class="detail-section-label">Stats</div>
-            <div class="detail-stat">
-              <span class="detail-stat-label">Duration</span>
-              <span class="detail-stat-value">${d.hours}</span>
-            </div>
-            <div class="detail-stat">
-              <span class="detail-stat-label">Elevation</span>
-              <span class="detail-stat-value">${d.elevation}</span>
-            </div>
-            <div class="detail-stat">
-              <span class="detail-stat-label">Intensity</span>
-              <span class="detail-stat-value">${d.intensityLabel}</span>
-            </div>
-            <div class="detail-stat">
-              <span class="detail-stat-label">Sleep</span>
-              <span class="detail-stat-value">${d.sleepLabel}</span>
-            </div>
-          </div>
-          <div class="detail-section">
-            <div class="detail-section-label">Bookings & Notes</div>
-            ${bookings}
-          </div>
-        </div>
-      </div>`;
-
-    card.querySelector('.expand-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isExpanded = card.classList.contains('expanded');
-      // Collapse all
-      document.querySelectorAll('.day-card.expanded').forEach(c => c.classList.remove('expanded'));
-      document.querySelectorAll('.day-nav-item.active').forEach(n => n.classList.remove('active'));
-      if (!isExpanded) {
-        card.classList.add('expanded');
-        navItem.classList.add('active');
-      }
-    });
-
-    card.addEventListener('click', () => {
-      card.querySelector('.expand-btn').click();
-    });
-
-    container.appendChild(card);
+    const toggle=(e)=>{
+      if(e)e.stopPropagation();
+      const open=card.classList.contains('expanded');
+      document.querySelectorAll('.day-card.expanded').forEach(c=>c.classList.remove('expanded'));
+      document.querySelectorAll('.day-nav-item.active').forEach(n=>n.classList.remove('active'));
+      if(!open){card.classList.add('expanded');navEl.classList.add('active');}
+    };
+    card.querySelector('.expand-btn').addEventListener('click',toggle);
+    card.addEventListener('click',toggle);
+    cont.appendChild(card);
   });
 }
 
-function scrollToCard(idx) {
-  const card = document.getElementById(`card-${idx}`);
-  if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    card.querySelector('.expand-btn').click();
-  }
+function scrollTo(i){
+  const c=document.getElementById('card-'+i);
+  if(!c)return;
+  c.scrollIntoView({behavior:'smooth',block:'center'});
+  if(!c.classList.contains('expanded'))c.querySelector('.expand-btn').click();
 }
 
-function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const itinerary = document.querySelector('.sidebar');
-  const main = document.querySelector('.main');
-  const actionPage = document.getElementById('action-page');
-  if (tab === 'itinerary') {
-    itinerary.style.display = '';
-    main.style.display = '';
-    actionPage.classList.remove('visible');
-    // action page spans full width
-    actionPage.style.gridColumn = '';
-  } else {
-    itinerary.style.display = 'none';
-    main.style.display = 'none';
-    actionPage.classList.add('visible');
-    actionPage.style.gridColumn = '1 / -1';
-  }
+function updateCounts(){
+  document.getElementById('c-urgent').textContent=actionItems.filter(a=>a.priority==='urgent'&&!done[a.id]).length;
+  document.getElementById('c-soon').textContent=actionItems.filter(a=>a.priority==='soon'&&!done[a.id]).length;
+  document.getElementById('c-done').textContent=actionItems.filter(a=>done[a.id]).length;
+  document.getElementById('c-total').textContent=actionItems.length;
 }
 
-const actionItems = [
-  // BOOK NOW
-  {
-    id: 'locatelli',
-    priority: 'urgent',
-    title: 'Rifugio Locatelli — overnight booking',
-    detail: 'Most in-demand rifugio in the Dolomites. 3 people, half board (dinner + breakfast), night of Sep 21. Specify beds or dorm + alternative preference if first choice unavailable. €40pp non-refundable deposit required at booking.',
-    day: 'Day 8 · Sep 21',
-    cost: '~€70pp half board',
-    link: 'https://www.dreizinnenhuette.com/booking/index_en.php',
-    linkLabel: 'dreizinnenhuette.com',
-    tags: [{ label: 'BOOK TODAY', cls: 'tag-red' }, { label: 'Rifugio', cls: 'tag-purple' }],
-    done: false,
-  },
-  {
-    id: 'guide',
-    priority: 'urgent',
-    title: 'Guide Alpine Cortina — via ferrata guide',
-    detail: 'Email info@guidecortina.com. Tell them: 3 people, via ferrata for beginners, English-speaking guide required, Sep 19 preferred. Ask for Via Ferrata Averau or similar easy-to-moderate route. All gear provided. Alternatively contact Enrico Maioni directly at guidedolomiti.com — born in Cortina, IFMGA certified, fluent English.',
-    day: 'Day 6 · Sep 19',
-    cost: '~€300–400 total',
-    link: 'https://guidecortina.com/en/activities/summer/via-ferratas/',
-    linkLabel: 'guidecortina.com',
-    tags: [{ label: 'BOOK NOW', cls: 'tag-red' }, { label: 'Via Ferrata', cls: 'tag-red' }],
-    done: false,
-  },
-  {
-    id: 'testiere',
-    priority: 'urgent',
-    title: 'Osteria alle Testiere — Venice dinner reservation',
-    detail: 'Only 11 tables, Michelin-listed, reservation-only. Call +39 041 522 7220. Open Tue–Sat. Request the 21:30 dinner slot on Sep 15 (Day 2). Seafood only — let them know if any dietary restrictions. Menu changes daily based on market.',
-    day: 'Day 2 · Sep 15',
-    cost: '~€70–80pp',
-    link: 'tel:+390415227220',
-    linkLabel: '+39 041 522 7220',
-    tags: [{ label: 'CALL TO BOOK', cls: 'tag-red' }, { label: 'Venice', cls: 'tag-blue' }],
-    done: false,
-  },
-  {
-    id: 'rentalcar',
-    priority: 'urgent',
-    title: 'Rental car — Venice VCE → Milan MXP one-way',
-    detail: 'Book through AutoEurope or Rentalcars.com. Specify: automatic transmission, pick up Venice Marco Polo airport Sep 14, drop off Milan Malpensa Sep 23. One-way fee ~€100–150 extra. September books out — do this now.',
-    day: 'Sep 14–23',
-    cost: 'TBD + ~€150 one-way fee',
-    link: 'https://www.autoeurope.com',
-    linkLabel: 'autoeurope.com',
-    tags: [{ label: 'BOOK NOW', cls: 'tag-red' }, { label: 'Logistics', cls: 'tag-stone' }],
-    done: false,
-  },
-
-  // BOOK SOON
-  {
-    id: 'cavallino',
-    priority: 'soon',
-    title: 'Hotel Cavallino d\'Oro — Castelrotto (Base 1)',
-    detail: '3 nights Sep 16–19. Request 2 rooms: 1 twin + 1 single (or 2 twin rooms). Twin = two separate beds, not a double. Village square location in Castelrotto. Book directly on their website.',
-    day: 'Days 3–5 · Sep 16–19',
-    cost: '~$180–250/night',
-    link: 'https://www.cavallino.it',
-    linkLabel: 'cavallino.it',
-    tags: [{ label: 'BOOK SOON', cls: 'tag-gold' }, { label: 'Base 1', cls: 'tag-green' }],
-    done: false,
-  },
-  {
-    id: 'rosapetra',
-    priority: 'soon',
-    title: 'Rosapetra Spa Resort — Cortina (Base 2)',
-    detail: '2 nights Sep 19–21 (night 3 is Rifugio Locatelli). Request 2 rooms: 1 twin + 1 single. Secluded location on outskirts of Cortina, all rooms facing the Dolomites. CNT recommended.',
-    day: 'Days 6–7 · Sep 19–21',
-    cost: '~$350–500/night',
-    link: 'https://www.rosapetra.it',
-    linkLabel: 'rosapetra.it',
-    tags: [{ label: 'BOOK SOON', cls: 'tag-gold' }, { label: 'Base 2', cls: 'tag-green' }],
-    done: false,
-  },
-  {
-    id: 'venice-hotel',
-    priority: 'soon',
-    title: 'Venice hotel — 2 nights (TBD)',
-    detail: 'Still need to select and book. 2 nights Sep 14–16. 3 people, 2 rooms. Dorsoduro or Cannaregio neighborhoods preferred — less touristy than San Marco. Budget range TBD.',
-    day: 'Days 1–2 · Sep 14–16',
-    cost: 'TBD',
-    link: '',
-    linkLabel: '',
-    tags: [{ label: 'DECIDE FIRST', cls: 'tag-gold' }, { label: 'Venice', cls: 'tag-blue' }],
-    done: false,
-  },
-  {
-    id: 'eltoula',
-    priority: 'soon',
-    title: 'El Toulà — Cortina dinner reservation',
-    detail: 'Classic Cortina elegance, white tablecloths, exceptional local game. Book for dinner on Sep 19 (arrival night in Cortina). Book via their website or call ahead.',
-    day: 'Day 6 · Sep 19',
-    cost: '~€60–80pp',
-    link: 'https://www.eltoula.it',
-    linkLabel: 'eltoula.it',
-    tags: [{ label: 'BOOK SOON', cls: 'tag-gold' }, { label: 'Cortina', cls: 'tag-green' }],
-    done: false,
-  },
-
-  // PLAN / RESEARCH
-  {
-    id: 'parking',
-    priority: 'plan',
-    title: 'Tre Cime parking reservation — 2 slots',
-    detail: 'Book at auronzo.info — opens late April/May 2026. Need TWO back-to-back reservations (parking valid 12hrs each) since you\'re overnighting at Locatelli. €40/car each slot. You can update rental car plate until 11:59pm night before. Tip: set device location to Milan, Italy when booking to get correct time slots.',
-    day: 'Day 8 · Sep 21',
-    cost: '€40 × 2 = €80',
-    link: 'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',
-    linkLabel: 'auronzo.info',
-    tags: [{ label: 'OPENS LATE APRIL', cls: 'tag-blue' }, { label: 'Mandatory', cls: 'tag-red' }],
-    done: false,
-  },
-  {
-    id: 'lagazuoi',
-    priority: 'plan',
-    title: 'Lagazuoi cable car — check booking requirements',
-    detail: 'Cable car from Passo Falzarego up to 2,835m. Confirm whether advance booking is required for Sep 20 — some cable cars in the Dolomites require timed entry in peak season. Also confirm horse-drawn carriage descent from Armentarola is operating in September.',
-    day: 'Day 7 · Sep 20',
-    cost: '~€15–20pp return',
-    link: 'https://www.lagazuoi5torri.it',
-    linkLabel: 'lagazuoi5torri.it',
-    tags: [{ label: 'CONFIRM', cls: 'tag-blue' }, { label: 'Day 7', cls: 'tag-stone' }],
-    done: false,
-  },
-  {
-    id: 'ortisei-gondola',
-    priority: 'plan',
-    title: 'Ortisei / Seceda gondola — confirm operating dates',
-    detail: 'Confirm the Seceda gondola (Ortisei) is operating in mid-September 2026. Also check the Alpe di Siusi gondola from Ortisei for Day 4. Most operate through October but worth confirming exact dates and first gondola times.',
-    day: 'Days 4–5 · Sep 17–18',
-    cost: '~€20–25pp return',
-    link: 'https://www.funivie-seceda.com',
-    linkLabel: 'funivie-seceda.com',
-    tags: [{ label: 'CONFIRM', cls: 'tag-blue' }, { label: 'Base 1', cls: 'tag-green' }],
-    done: false,
-  },
-  {
-    id: 'sleepingliner',
-    priority: 'plan',
-    title: 'Sleeping bag liners × 3',
-    detail: 'Required at Rifugio Locatelli — mandatory courtesy item. Lightweight silk or cotton liner. Can buy on Amazon or at REI before trip. Cocoon or Sea to Summit are the standard picks.',
-    day: 'Pre-trip',
-    cost: '~$30–50 each',
-    link: 'https://www.rei.com/search?q=sleeping+bag+liner',
-    linkLabel: 'rei.com',
-    tags: [{ label: 'BUY PRE-TRIP', cls: 'tag-blue' }, { label: 'Gear', cls: 'tag-stone' }],
-    done: false,
-  },
-  {
-    id: 'flights',
-    priority: 'plan',
-    title: 'Flights — JFK → VCE and MXP → JFK',
-    detail: 'Sep 14 departure JFK → Venice Marco Polo (VCE). Sep 23 return Milan Malpensa (MXP) → JFK. Book all three together for consistency. Delta, United, and Lufthansa (via Frankfurt) are the main options.',
-    day: 'Sep 14 & 23',
-    cost: 'TBD',
-    link: 'https://www.google.com/flights',
-    linkLabel: 'google.com/flights',
-    tags: [{ label: 'COORDINATE GROUP', cls: 'tag-blue' }, { label: 'Logistics', cls: 'tag-stone' }],
-    done: false,
-  },
-];
-
-const priorityGroups = [
-  { key: 'urgent', label: 'Book Now', sublabel: 'These fill up fast — act immediately', color: 'var(--red)' },
-  { key: 'soon',   label: 'Book Soon', sublabel: 'Within the next few weeks', color: 'var(--gold)' },
-  { key: 'plan',   label: 'Plan & Confirm', sublabel: 'Research, coordinate, or purchase before departure', color: 'var(--blue)' },
-];
-
-// Load done state from localStorage
-const doneState = {};
-try {
-  const saved = localStorage.getItem('dolomites-actions');
-  if (saved) Object.assign(doneState, JSON.parse(saved));
-} catch(e) {}
-
-function saveState() {
-  try { localStorage.setItem('dolomites-actions', JSON.stringify(doneState)); } catch(e) {}
-}
-
-function updateCounts() {
-  const urgent = actionItems.filter(a => a.priority === 'urgent' && !doneState[a.id]).length;
-  const soon = actionItems.filter(a => a.priority === 'soon' && !doneState[a.id]).length;
-  const done = actionItems.filter(a => doneState[a.id]).length;
-  document.getElementById('count-urgent').textContent = urgent;
-  document.getElementById('count-soon').textContent = soon;
-  document.getElementById('count-done').textContent = done;
-  document.getElementById('count-total').textContent = actionItems.length;
-}
-
-function renderActions() {
-  const container = document.getElementById('action-sections');
-  container.innerHTML = '';
-
-  priorityGroups.forEach(group => {
-    const items = actionItems.filter(a => a.priority === group.key);
-    const section = document.createElement('div');
-    section.className = 'action-section';
-
-    section.innerHTML = `
-      <div class="action-section-header">
-        <div class="action-section-label" style="color:${group.color}">${group.label}</div>
-        <div class="action-section-count">${group.sublabel}</div>
-      </div>
-      <div class="action-items-list" id="list-${group.key}"></div>
-    `;
-    container.appendChild(section);
-
-    const list = section.querySelector(`#list-${group.key}`);
-
-    items.forEach(item => {
-      const isDone = !!doneState[item.id];
-      const el = document.createElement('div');
-      el.className = `action-item ${item.priority}${isDone ? ' done' : ''}`;
-      el.id = `action-${item.id}`;
-
-      const tags = item.tags.map(t => `<span class="action-tag ${t.cls}">${t.label}</span>`).join('');
-      const linkHtml = item.link
-        ? `<a href="${item.link}" target="_blank" class="action-link" onclick="event.stopPropagation()">${item.linkLabel} ↗</a>`
-        : '';
-
-      el.innerHTML = `
-        <div class="action-checkbox">${isDone ? '✓' : ''}</div>
-        <div class="action-content">
-          <div class="action-title">${item.title}</div>
-          <div class="action-detail">${item.detail}</div>
-          <div class="action-meta">${tags}${item.cost ? `<span class="action-tag tag-stone">${item.cost}</span>` : ''}</div>
-        </div>
-        <div class="action-right">
-          <div class="action-day">${item.day}</div>
-          ${linkHtml}
-        </div>
-      `;
-
-      el.addEventListener('click', () => {
-        doneState[item.id] = !doneState[item.id];
-        saveState();
+function renderActions(){
+  const cont=document.getElementById('action-sections');
+  GROUPS.forEach(g=>{
+    const items=actionItems.filter(a=>a.priority===g.key);
+    const sec=document.createElement('div');
+    sec.className='action-section';
+    sec.innerHTML='<div class="action-section-head"><div class="action-section-label" style="color:'+g.color+'">'+g.label+'</div><div class="action-section-sub">'+g.sub+'</div></div><div class="action-list" id="al-'+g.key+'"></div>';
+    cont.appendChild(sec);
+    const list=sec.querySelector('#al-'+g.key);
+    items.forEach(item=>{
+      const isDone=!!done[item.id];
+      const el=document.createElement('div');
+      el.className='aitem '+item.priority+(isDone?' done':'');
+      const tags=item.tags.map(t=>'<span class="atag '+t.c+'">'+t.l+'</span>').join('');
+      el.innerHTML=
+        '<div class="acheck">'+(isDone?'✓':'')+'</div>'
+        +'<div class="aitem-content"><div class="aitem-title">'+item.title+'</div><div class="aitem-detail">'+item.detail+'</div><div class="aitem-tags">'+tags+(item.cost?'<span class="atag atag-stone">'+item.cost+'</span>':'')+'</div></div>'
+        +'<div class="aitem-right"><div class="aitem-day">'+item.day+'</div>'+(item.cost?'<div class="aitem-cost">'+item.cost+'</div>':'')+(item.link?'<a href="'+item.link+'" target="_blank" class="aitem-link" onclick="event.stopPropagation()">'+item.linkLabel+' ↗</a>':'')+'</div>';
+      el.addEventListener('click',()=>{
+        done[item.id]=!done[item.id];save();
         el.classList.toggle('done');
-        el.querySelector('.action-checkbox').textContent = doneState[item.id] ? '✓' : '';
+        el.querySelector('.acheck').textContent=done[item.id]?'✓':'';
         updateCounts();
       });
-
       list.appendChild(el);
     });
   });
-
   updateCounts();
 }
 
