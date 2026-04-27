@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dolomites '26 — Trip Planner</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root {
   --bg:#f2ede4;--surface:#e8e2d8;--card:#faf8f4;--dark:#18191a;
@@ -177,6 +179,53 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .aitem-link{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);border-bottom:1px solid var(--green-pale);padding-bottom:1px;letter-spacing:.04em;white-space:nowrap;}
 .aitem-link:hover{color:var(--green-light);}
 
+/* Map page */
+.map-page{display:none;overflow:hidden;height:calc(100vh - var(--topbar-h));grid-column:1/-1;background:var(--bg);}
+.map-page.visible{display:grid;grid-template-columns:300px 1fr;}
+#map{height:100%;width:100%;z-index:0;}
+.map-sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;height:100%;}
+.map-sidebar-header{padding:18px 16px 12px;border-bottom:1px solid var(--border);}
+.map-sidebar-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--text);margin-bottom:2px;}
+.map-sidebar-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.12em;}
+.map-day-list{padding:10px 10px;display:flex;flex-direction:column;gap:3px;}
+.map-day-item{display:flex;align-items:center;gap:10px;padding:8px 9px;border-radius:var(--radius);cursor:pointer;border:1px solid transparent;transition:all .12s;}
+.map-day-item:hover{background:var(--card);border-color:var(--border-light);}
+.map-day-item.active{background:var(--card);border-color:var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.map-day-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,.4);}
+.map-day-text{flex:1;min-width:0;}
+.map-day-num{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text-3);letter-spacing:.08em;}
+.map-day-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.map-day-act{font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.map-detail-panel{margin:10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none;}
+.map-detail-panel.visible{display:block;}
+.map-detail-header{padding:14px 16px 10px;}
+.map-detail-type{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
+.map-detail-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:400;color:var(--text);line-height:1.3;}
+.map-detail-sub{font-size:11px;color:var(--text-2);margin-top:3px;}
+.map-detail-body{padding:0 16px 14px;font-size:12px;color:var(--text-2);line-height:1.7;border-top:1px solid var(--border-light);padding-top:10px;}
+.map-detail-stats{display:flex;gap:0;border-top:1px solid var(--border-light);}
+.map-stat{flex:1;padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);}
+.map-stat:last-child{border-right:none;}
+.map-stat-val{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text);}
+.map-stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;}
+.map-route-legend{padding:12px 16px;border-top:1px solid var(--border);margin-top:auto;}
+.map-legend-title{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;}
+.map-legend-items{display:flex;flex-direction:column;gap:5px;}
+.map-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2);}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* Leaflet popup override */
+.leaflet-popup-content-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 20px rgba(0,0,0,.15);padding:0;}
+.leaflet-popup-content{margin:0;font-family:'IBM Plex Sans',sans-serif;}
+.leaflet-popup-tip{background:var(--card);}
+.map-popup{padding:14px 16px;}
+.map-popup-day{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
+.map-popup-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:3px;}
+.map-popup-sub{font-size:11px;color:var(--text-2);margin-bottom:8px;}
+.map-popup-stats{display:flex;gap:12px;border-top:1px solid var(--border-light);padding-top:8px;margin-top:4px;}
+.map-popup-stat{font-size:10px;color:var(--text-3);}
+.map-popup-stat span{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--text);}
+
 /* Mobile */
 @media(max-width:860px){
   .app{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr;height:auto;overflow:visible;}
@@ -196,6 +245,12 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   .action-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
   .aitem{grid-template-columns:20px 1fr;}
   .aitem-right{display:none;}
+  .map-page.visible{grid-template-columns:1fr;grid-template-rows:220px 1fr;}
+  .map-sidebar{border-right:none;border-bottom:1px solid var(--border);height:220px;overflow-x:auto;overflow-y:hidden;}
+  .map-day-list{flex-direction:row;padding:8px;gap:4px;}
+  .map-day-item{flex-direction:column;align-items:flex-start;min-width:110px;flex-shrink:0;}
+  .map-route-legend{display:none;}
+  #map{height:100%;}
 }
 </style>
 </head>
@@ -206,6 +261,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   <div class="topbar-brand"><h1>Dolomites '26</h1><span>Trip Planner</span></div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('itinerary',this)">Itinerary</button>
+    <button class="tab-btn" onclick="switchTab('map',this)">🗺 Map</button>
     <button class="tab-btn" onclick="switchTab('actions',this)">⚡ Action Items</button>
   </div>
   <div class="topbar-pills">
@@ -255,6 +311,29 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="col-header"></div>
   </div>
   <div class="day-cards" id="day-cards"></div>
+</div>
+
+<div class="map-page" id="map-page">
+  <div class="map-sidebar">
+    <div class="map-sidebar-header">
+      <div class="map-sidebar-title">Route Map</div>
+      <div class="map-sidebar-sub">Sep 14–23 · VCE → Dolomites → MXP</div>
+    </div>
+    <div class="map-day-list" id="map-day-list"></div>
+    <div class="map-detail-panel" id="map-detail-panel"></div>
+    <div class="map-route-legend">
+      <div class="map-legend-title">Legend</div>
+      <div class="map-legend-items">
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#284468"></div>City</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#7c6c5c"></div>Travel / Drive</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#3a6644"></div>Hike</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#842020"></div>Via Ferrata</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#582870"></div>Rifugio Night</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#a07818"></div>Departure</div>
+      </div>
+    </div>
+  </div>
+  <div id="map"></div>
 </div>
 
 <div class="action-page" id="action-page">
@@ -316,18 +395,21 @@ function intHTML(lvl){
   return '<div class="int-bar int-'+lvl+'">'+'<div class="int-pip"></div>'.repeat(4)+'</div>'
     +'<div class="int-label">'+['—','Easy','Moderate','Solid','Hard'][lvl]+'</div>';
 }
-function sleepHTML(type,label){
+function sleepHTML(type,label,link){
   const cls={hotel:'sleep-hotel',rifugio:'sleep-rifugio',transit:'sleep-transit',city:'sleep-city'}[type]||'sleep-hotel';
   const icon={hotel:'🏨',rifugio:'⛺',transit:'✈️',city:'🏙'}[type]||'🏨';
-  return '<div class="sleep-badge '+cls+'">'+icon+' '+label+'</div>';
+  const inner='<div class="sleep-badge '+cls+'">'+icon+' '+label+'</div>';
+  return link?'<a href="'+link+'" target="_blank" onclick="event.stopPropagation()" style="text-decoration:none;">'+inner+'</a>':inner;
 }
 
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page');
-  if(tab==='itinerary'){sb.style.display='';m.style.display='';ap.classList.remove('visible');}
-  else{sb.style.display='none';m.style.display='none';ap.classList.add('visible');}
+  const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page'),mp=document.getElementById('map-page');
+  sb.style.display='none';m.style.display='none';ap.classList.remove('visible');mp.classList.remove('visible');
+  if(tab==='itinerary'){sb.style.display='';m.style.display='';}
+  else if(tab==='map'){mp.classList.add('visible');setTimeout(()=>{if(window._map)window._map.invalidateSize();},50);}
+  else if(tab==='actions'){ap.classList.add('visible');}
 }
 
 function renderCards(){
@@ -354,7 +436,7 @@ function renderCards(){
       +'<div class="cell-day"><div class="day-num">DAY '+d.day+'</div><div class="day-date">'+d.date+'</div></div>'
       +'<div class="cell-location"><div class="loc-name">'+d.location+'</div><div class="loc-region">'+d.region+'</div></div>'
       +'<div class="cell-activity"><div class="act-name">'+d.activity+'</div><div class="act-sub">'+d.activitySub+'</div></div>'
-      +'<div class="cell-sleep">'+sleepHTML(d.sleep,d.sleepLabel)+'</div>'
+      +'<div class="cell-sleep">'+sleepHTML(d.sleep,d.sleepLabel,SLEEP_LINKS[i])+'</div>'
       +'<div class="cell-intensity">'+intHTML(d.intensity)+'</div>'
       +'<div class="cell-expand"><button class="expand-btn">+</button></div>'
       +'</div>'
@@ -426,8 +508,101 @@ function renderActions(){
   updateCounts();
 }
 
+const DAY_COORDS=[
+  [45.4408,12.3155],
+  [45.4408,12.3155],
+  [46.5667,11.5500],
+  [46.5319,11.6292],
+  [46.6167,11.7167],
+  [46.4953,12.0183],
+  [46.5164,12.0211],
+  [46.6173,12.3014],
+  [46.6944,12.0833],
+];
+
+const SLEEP_LINKS={
+  2:'https://www.cavallino.it',
+  3:'https://www.cavallino.it',
+  4:'https://www.cavallino.it',
+  5:'https://www.rosapetra.it',
+  6:'https://www.rosapetra.it',
+  7:'https://www.dreizinnenhuette.com/booking/index_en.php',
+};
+
+const TYPE_HEX={city:'#284468',travel:'#7c6c5c',hike:'#3a6644',via:'#842020',culture:'#284468',rifugio:'#582870',depart:'#a07818'};
+
+function renderMap(){
+  const map=L.map('map',{zoomControl:true,attributionControl:true});
+  window._map=map;
+
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{
+    attribution:'© OpenTopoMap contributors',
+    maxZoom:17,
+    opacity:0.9
+  }).addTo(map);
+
+  const routeCoords=DAY_COORDS.slice(0,9);
+  const uniqueRoute=routeCoords.filter((c,i)=>i===0||c[0]!==routeCoords[i-1][0]||c[1]!==routeCoords[i-1][1]);
+
+  L.polyline(uniqueRoute,{color:'#3a6644',weight:2.5,opacity:0.6,dashArray:'6,5'}).addTo(map);
+
+  const bounds=[];
+  days.forEach((d,i)=>{
+    const coord=DAY_COORDS[i];
+    if(!coord)return;
+    bounds.push(coord);
+    const hex=TYPE_HEX[d.type]||'#7c6c5c';
+    const icon=L.divIcon({
+      className:'',
+      html:`<div style="width:30px;height:30px;border-radius:50%;background:${hex};border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:white;cursor:pointer;">${d.day}</div>`,
+      iconSize:[30,30],
+      iconAnchor:[15,15],
+      popupAnchor:[0,-18]
+    });
+    const marker=L.marker(coord,{icon}).addTo(map);
+    const sleepLink=SLEEP_LINKS[i];
+    const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;font-size:9px;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:`<span style="font-size:10px;color:#807870;">${d.sleepLabel}</span>`;
+    marker.bindPopup(`<div class="map-popup"><div class="map-popup-day">DAY ${d.day} · ${d.date}</div><div class="map-popup-title">${d.location}</div><div class="map-popup-sub">${d.activity}</div><div style="font-size:11px;color:#504840;margin:6px 0 8px;line-height:1.6;">${d.activitySub}</div><div style="border-top:1px solid #e4dcd4;padding-top:8px;display:flex;justify-content:space-between;align-items:center;">${sleepEl}<span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#807870;">${d.hours}</span></div></div>`,{maxWidth:240,minWidth:200});
+    marker.on('click',()=>highlightMapDay(i));
+  });
+
+  map.fitBounds(bounds,{padding:[40,40]});
+  renderMapDayList();
+}
+
+let _activeMapDay=null;
+function highlightMapDay(i){
+  _activeMapDay=i;
+  document.querySelectorAll('.map-day-item').forEach((el,idx)=>{
+    el.classList.toggle('active',idx===i);
+  });
+  const d=days[i];
+  const panel=document.getElementById('map-detail-panel');
+  const hex=TYPE_HEX[d.type]||'#7c6c5c';
+  const sleepLink=SLEEP_LINKS[i];
+  const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:d.sleepLabel;
+  panel.innerHTML=`<div class="map-detail-header"><div class="map-detail-type" style="color:${hex};">${d.type.toUpperCase()} · DAY ${d.day} · ${d.date}</div><div class="map-detail-title">${d.activity}</div><div class="map-detail-sub">${d.location} — ${d.region}</div></div><div class="map-detail-body">${d.notes.substring(0,180)}…</div><div class="map-detail-stats"><div class="map-stat"><div class="map-stat-val">${d.hours}</div><div class="map-stat-lbl">Duration</div></div><div class="map-stat"><div class="map-stat-val">${d.elevation||'—'}</div><div class="map-stat-lbl">Elevation</div></div><div class="map-stat"><div class="map-stat-val" style="font-size:9px;">${sleepEl}</div><div class="map-stat-lbl">Sleep</div></div></div>`;
+  panel.classList.add('visible');
+}
+
+function renderMapDayList(){
+  const cont=document.getElementById('map-day-list');
+  days.forEach((d,i)=>{
+    const hex=TYPE_HEX[d.type]||'#7c6c5c';
+    const el=document.createElement('div');
+    el.className='map-day-item';
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:7px;width:100%;"><div class="map-day-dot" style="background:${hex};"></div><div class="map-day-text"><div class="map-day-num">DAY ${d.day} · ${d.date}</div><div class="map-day-name">${d.location}</div><div class="map-day-act">${d.activity}</div></div></div>`;
+    el.addEventListener('click',()=>{
+      highlightMapDay(i);
+      if(window._map){window._map.setView(DAY_COORDS[i],12,{animate:true});}
+    });
+    cont.appendChild(el);
+  });
+}
+
 renderCards();
 renderActions();
+renderMap();
 </script>
 </body>
 </html>
