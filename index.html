@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dolomites '26 — Trip Planner</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root {
   --bg:#f2ede4;--surface:#e8e2d8;--card:#faf8f4;--dark:#18191a;
@@ -316,7 +314,10 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 <div class="map-page" id="map-page">
   <div class="map-sidebar">
     <div class="map-sidebar-header">
-      <div class="map-sidebar-title">Route Map</div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;">
+        <div class="map-sidebar-title">Route Map</div>
+        <button onclick="if(window._map&&window._mapBounds)window._map.fitBounds(window._mapBounds,60)" style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:2px;color:var(--text-3);padding:3px 8px;cursor:pointer;">Reset View</button>
+      </div>
       <div class="map-sidebar-sub">Sep 14–23 · VCE → Dolomites → MXP</div>
     </div>
     <div class="map-day-list" id="map-day-list"></div>
@@ -408,7 +409,7 @@ function switchTab(tab,btn){
   const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page'),mp=document.getElementById('map-page');
   sb.style.display='none';m.style.display='none';ap.classList.remove('visible');mp.classList.remove('visible');
   if(tab==='itinerary'){sb.style.display='';m.style.display='';}
-  else if(tab==='map'){mp.classList.add('visible');setTimeout(()=>{if(window._map)window._map.invalidateSize();},50);}
+  else if(tab==='map'){mp.classList.add('visible');setTimeout(()=>{if(window._map)google.maps.event.trigger(window._map,'resize');},50);}
   else if(tab==='actions'){ap.classList.add('visible');}
 }
 
@@ -531,57 +532,82 @@ const SLEEP_LINKS={
 
 const TYPE_HEX={city:'#284468',travel:'#7c6c5c',hike:'#3a6644',via:'#842020',culture:'#284468',rifugio:'#582870',depart:'#a07818'};
 
-function renderMap(){
-  const map=L.map('map',{zoomControl:true,attributionControl:true});
+const MAP_STYLE=[
+  {elementType:'geometry',stylers:[{color:'#f0ebe0'}]},
+  {elementType:'labels.text.fill',stylers:[{color:'#504840'}]},
+  {elementType:'labels.text.stroke',stylers:[{color:'#faf8f4'}]},
+  {featureType:'administrative',elementType:'geometry.stroke',stylers:[{color:'#c9b9a8'}]},
+  {featureType:'landscape.natural',elementType:'geometry',stylers:[{color:'#ddd5c0'}]},
+  {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
+  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#cfdfd4'}]},
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#d6c9b8'}]},
+  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#c4b49e'}]},
+  {featureType:'road.highway',elementType:'geometry.stroke',stylers:[{color:'#b0a090'}]},
+  {featureType:'transit',stylers:[{visibility:'off'}]},
+  {featureType:'water',elementType:'geometry',stylers:[{color:'#a8c4d8'}]},
+  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#284468'}]},
+];
+
+function markerSVG(num,hex){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="${hex}" stroke="white" stroke-width="3"/><text x="17" y="21.5" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="white">${num}</text></svg>`;
+  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+
+window.initMap=function(){
+  const map=new google.maps.Map(document.getElementById('map'),{
+    center:{lat:46.3,lng:11.9},zoom:7,
+    styles:MAP_STYLE,
+    mapTypeControl:false,streetViewControl:false,fullscreenControl:true,
+    zoomControlOptions:{position:google.maps.ControlPosition.RIGHT_TOP},
+  });
   window._map=map;
 
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{
-    attribution:'© OpenTopoMap contributors',
-    maxZoom:17,
-    opacity:0.9
-  }).addTo(map);
+  const bounds=new google.maps.LatLngBounds();
+  const infoWin=new google.maps.InfoWindow({maxWidth:260});
 
-  const routeCoords=DAY_COORDS.slice(0,9);
-  const uniqueRoute=routeCoords.filter((c,i)=>i===0||c[0]!==routeCoords[i-1][0]||c[1]!==routeCoords[i-1][1]);
+  const routePath=DAY_COORDS.filter((c,i)=>i===0||JSON.stringify(c)!==JSON.stringify(DAY_COORDS[i-1]));
+  new google.maps.Polyline({
+    path:routePath.map(c=>({lat:c[0],lng:c[1]})),
+    map,strokeColor:'#3a6644',strokeOpacity:0,strokeWeight:0,
+    icons:[{icon:{path:'M 0,-1 0,1',strokeOpacity:.6,strokeColor:'#3a6644',scale:3},offset:'0',repeat:'14px'}],
+  });
 
-  L.polyline(uniqueRoute,{color:'#3a6644',weight:2.5,opacity:0.6,dashArray:'6,5'}).addTo(map);
-
-  const bounds=[];
   days.forEach((d,i)=>{
     const coord=DAY_COORDS[i];
     if(!coord)return;
-    bounds.push(coord);
+    const pos={lat:coord[0],lng:coord[1]};
+    bounds.extend(pos);
     const hex=TYPE_HEX[d.type]||'#7c6c5c';
-    const icon=L.divIcon({
-      className:'',
-      html:`<div style="width:30px;height:30px;border-radius:50%;background:${hex};border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:white;cursor:pointer;">${d.day}</div>`,
-      iconSize:[30,30],
-      iconAnchor:[15,15],
-      popupAnchor:[0,-18]
+    const marker=new google.maps.Marker({
+      position:pos,map,
+      icon:{url:markerSVG(d.day,hex),scaledSize:new google.maps.Size(34,34),anchor:new google.maps.Point(17,17)},
+      title:d.location,zIndex:d.day,
     });
-    const marker=L.marker(coord,{icon}).addTo(map);
     const sleepLink=SLEEP_LINKS[i];
-    const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;font-size:9px;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:`<span style="font-size:10px;color:#807870;">${d.sleepLabel}</span>`;
-    marker.bindPopup(`<div class="map-popup"><div class="map-popup-day">DAY ${d.day} · ${d.date}</div><div class="map-popup-title">${d.location}</div><div class="map-popup-sub">${d.activity}</div><div style="font-size:11px;color:#504840;margin:6px 0 8px;line-height:1.6;">${d.activitySub}</div><div style="border-top:1px solid #e4dcd4;padding-top:8px;display:flex;justify-content:space-between;align-items:center;">${sleepEl}<span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#807870;">${d.hours}</span></div></div>`,{maxWidth:240,minWidth:200});
-    marker.on('click',()=>highlightMapDay(i));
+    const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;font-size:9px;font-family:monospace;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:`<span style="font-size:10px;color:#807870;">${d.sleepLabel}</span>`;
+    const popup=`<div class="map-popup"><div class="map-popup-day">DAY ${d.day} · ${d.date}</div><div class="map-popup-title">${d.location}</div><div class="map-popup-sub">${d.activity}</div><div style="font-size:11px;color:#504840;margin:6px 0 8px;line-height:1.6;">${d.activitySub}</div><div style="border-top:1px solid #e4dcd4;padding-top:8px;display:flex;justify-content:space-between;align-items:center;">${sleepEl}<span style="font-family:monospace;font-size:9px;color:#807870;">${d.hours}</span></div></div>`;
+    marker.addListener('click',()=>{
+      infoWin.setContent(popup);
+      infoWin.open(map,marker);
+      highlightMapDay(i);
+    });
   });
 
-  map.fitBounds(bounds,{padding:[40,40]});
+  window._mapBounds=bounds;
+  map.fitBounds(bounds,60);
   renderMapDayList();
-}
+};
 
 let _activeMapDay=null;
 function highlightMapDay(i){
   _activeMapDay=i;
-  document.querySelectorAll('.map-day-item').forEach((el,idx)=>{
-    el.classList.toggle('active',idx===i);
-  });
+  document.querySelectorAll('.map-day-item').forEach((el,idx)=>el.classList.toggle('active',idx===i));
   const d=days[i];
   const panel=document.getElementById('map-detail-panel');
   const hex=TYPE_HEX[d.type]||'#7c6c5c';
   const sleepLink=SLEEP_LINKS[i];
   const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:d.sleepLabel;
-  panel.innerHTML=`<div class="map-detail-header"><div class="map-detail-type" style="color:${hex};">${d.type.toUpperCase()} · DAY ${d.day} · ${d.date}</div><div class="map-detail-title">${d.activity}</div><div class="map-detail-sub">${d.location} — ${d.region}</div></div><div class="map-detail-body">${d.notes.substring(0,180)}…</div><div class="map-detail-stats"><div class="map-stat"><div class="map-stat-val">${d.hours}</div><div class="map-stat-lbl">Duration</div></div><div class="map-stat"><div class="map-stat-val">${d.elevation||'—'}</div><div class="map-stat-lbl">Elevation</div></div><div class="map-stat"><div class="map-stat-val" style="font-size:9px;">${sleepEl}</div><div class="map-stat-lbl">Sleep</div></div></div>`;
+  panel.innerHTML=`<div class="map-detail-header"><div class="map-detail-type" style="color:${hex};">${d.type.toUpperCase()} · DAY ${d.day} · ${d.date}</div><div class="map-detail-title">${d.activity}</div><div class="map-detail-sub">${d.location} — ${d.region}</div></div><div class="map-detail-body">${d.notes.substring(0,200)}…</div><div class="map-detail-stats"><div class="map-stat"><div class="map-stat-val">${d.hours}</div><div class="map-stat-lbl">Duration</div></div><div class="map-stat"><div class="map-stat-val">${d.elevation||'—'}</div><div class="map-stat-lbl">Elevation</div></div><div class="map-stat"><div class="map-stat-val" style="font-size:9px;">${sleepEl}</div><div class="map-stat-lbl">Sleep</div></div></div>`;
   panel.classList.add('visible');
 }
 
@@ -594,7 +620,7 @@ function renderMapDayList(){
     el.innerHTML=`<div style="display:flex;align-items:center;gap:7px;width:100%;"><div class="map-day-dot" style="background:${hex};"></div><div class="map-day-text"><div class="map-day-num">DAY ${d.day} · ${d.date}</div><div class="map-day-name">${d.location}</div><div class="map-day-act">${d.activity}</div></div></div>`;
     el.addEventListener('click',()=>{
       highlightMapDay(i);
-      if(window._map){window._map.setView(DAY_COORDS[i],12,{animate:true});}
+      if(window._map){window._map.panTo({lat:DAY_COORDS[i][0],lng:DAY_COORDS[i][1]});window._map.setZoom(13);}
     });
     cont.appendChild(el);
   });
@@ -602,7 +628,7 @@ function renderMapDayList(){
 
 renderCards();
 renderActions();
-renderMap();
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUOLt13uwuTPmpJhCWD1okCY0L1bBczjY&callback=initMap" defer></script>
 </body>
 </html>
