@@ -286,7 +286,16 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 
 /* Mobile */
 @media(max-width:860px){
+  :root{--topbar-h:88px;}
   .app{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr;height:auto;overflow:visible;}
+  .topbar{flex-wrap:wrap;padding:0;overflow:visible;}
+  .topbar-brand{width:100%;height:46px;padding:0 16px;margin-right:0;border-right:none;border-bottom:1px solid #2a2a2a;flex-shrink:0;}
+  .topbar-brand h1{font-size:16px;}
+  .topbar-brand span{display:none;}
+  .tab-nav{width:100%;height:42px;padding:0 12px;gap:4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:center;}
+  .tab-nav::-webkit-scrollbar{display:none;}
+  .tab-btn{flex-shrink:0;font-size:9px;padding:4px 10px;}
+  .topbar-pills{display:none;}
   .sidebar{display:none;}
   .main{height:auto;overflow:visible;padding:14px;grid-column:1;}
   .col-headers{display:none;}
@@ -298,11 +307,15 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   .detail-inner{grid-template-columns:1fr;}
   .detail-col{border-right:none;border-bottom:1px solid var(--border-light);padding:16px;}
   .detail-col:last-child{border-bottom:none;}
-  .topbar-pills{display:none;}
   .action-page{padding:16px;}
   .action-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
   .aitem{grid-template-columns:20px 1fr;}
   .aitem-right{display:none;}
+  .packing-page{padding:16px;}
+  .pack-grid{grid-template-columns:1fr;}
+  .budget-page{padding:16px;}
+  .budget-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
+  .budget-table th:nth-child(2),.budget-table td:nth-child(2){display:none;}
   .map-page.visible{grid-template-columns:1fr;grid-template-rows:220px 1fr;}
   .map-sidebar{border-right:none;border-bottom:1px solid var(--border);height:220px;overflow-x:auto;overflow-y:hidden;}
   .map-day-list{flex-direction:row;padding:8px;gap:4px;}
@@ -326,9 +339,9 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   </div>
   <div class="topbar-pills">
     <div class="topbar-pill">Will · Jack · Jon</div>
-    <div class="topbar-pill">Sep 14–23, 2026</div>
-    <div class="topbar-pill">9 nights</div>
-    <div class="topbar-pill accent">VCE → Dolomites → MXP</div>
+    <div class="topbar-pill">Sep 18–27, 2026</div>
+    <div class="topbar-pill">10 days · 9 nights</div>
+    <div class="topbar-pill accent">VCE · Bologna · Dolomites · VCE</div>
   </div>
 </div>
 
@@ -340,13 +353,14 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   <div class="sidebar-section">
     <div class="sidebar-label">Trip Stats</div>
     <div class="stat-row"><span class="stat-label">Total nights</span><span class="stat-value">9</span></div>
-    <div class="stat-row"><span class="stat-label">Venice</span><span class="stat-value">2 nights</span></div>
-    <div class="stat-row"><span class="stat-label">Dolomites</span><span class="stat-value">6 nights</span></div>
-    <div class="stat-row"><span class="stat-label">Rifugio night</span><span class="stat-value">1</span></div>
-    <div class="stat-row"><span class="stat-label">Hiking days</span><span class="stat-value">6</span></div>
+    <div class="stat-row"><span class="stat-label">Bologna</span><span class="stat-value">2 nights</span></div>
+    <div class="stat-row"><span class="stat-label">Dolomites</span><span class="stat-value">5 nights</span></div>
+    <div class="stat-row"><span class="stat-label">Venice</span><span class="stat-value">1 night</span></div>
+    <div class="stat-row"><span class="stat-label">Rifugio nights</span><span class="stat-value">2 ✓ booked</span></div>
+    <div class="stat-row"><span class="stat-label">Hiking days</span><span class="stat-value">5</span></div>
     <div class="stat-row"><span class="stat-label">Via ferrata</span><span class="stat-value">1 guided day</span></div>
-    <div class="stat-row"><span class="stat-label">Max elevation</span><span class="stat-value">2,835m</span></div>
-    <div class="stat-row"><span class="stat-label">Fly in / out</span><span class="stat-value">VCE / MXP</span></div>
+    <div class="stat-row"><span class="stat-label">Max elevation</span><span class="stat-value">2,519m</span></div>
+    <div class="stat-row"><span class="stat-label">Fly in / out</span><span class="stat-value">VCE / VCE</span></div>
   </div>
   <div class="sidebar-section">
     <div class="sidebar-label">Legend</div>
@@ -401,7 +415,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 
 <div class="action-page" id="action-page">
   <div class="action-title">Will's Action Items</div>
-  <div class="action-sub">Everything to book, confirm, or buy · Click any item to mark complete</div>
+  <div class="action-sub">Bologna · Dolomites · Venice · Sep 18–27 · Click any item to mark complete</div>
   <div class="action-summary">
     <div class="asumm s-urgent"><div class="asumm-num" id="c-urgent">0</div><div class="asumm-label">Book Now</div></div>
     <div class="asumm s-soon"><div class="asumm-num" id="c-soon">0</div><div class="asumm-label">Book Soon</div></div>
@@ -420,31 +434,32 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 const TYPE_COLOR={city:'blue',travel:'stone',hike:'green',via:'red',culture:'blue',rifugio:'purple',depart:'gold'};
 
 const days=[
-  {day:1,date:'Sep 14',type:'city',location:'Venice',region:'Veneto, Italy',activity:'Arrive Venice',activitySub:'Check in · aperitivo · wander Dorsoduro',sleep:'city',sleepLabel:'Hotel TBD',intensity:0,intensityLabel:'—',hours:'—',elevation:'—',notes:'Fly into Marco Polo. Water taxi to hotel — worth the splurge on arrival day. Drop bags, find a bar, don\'t sleep until 10pm local time. Dorsoduro neighborhood for aperitivo — far less touristy than San Marco. Dinner at a cicchetti bar. Goal: stay awake, eat well, acclimate.',highlights:['Arrive afternoon — full evening free','Dorsoduro for drinks, less touristy','Cicchetti bar for dinner'],tags:[{l:'City',c:'dtag-blue'},{l:'Arrival',c:'dtag-stone'}],bookings:[{title:'Venice hotel',note:'TBD — 3 people, 2 rooms. Dorsoduro or Cannaregio preferred. Budget TBD.',link:'',linkLabel:''},{title:'Water taxi from airport',note:'Book in advance or arrange on arrival. Worth it on day one.',link:'',linkLabel:''}]},
-  {day:2,date:'Sep 15',type:'city',location:'Venice',region:'Veneto, Italy',activity:'Full Day Venice',activitySub:'Rialto market · Grand Canal · dinner at Alle Testiere',sleep:'city',sleepLabel:'Hotel Venice',intensity:1,intensityLabel:'Easy',hours:'~4 hrs walking',elevation:'Flat',notes:'Rialto fish market in the morning — opens 7am, winds down by noon. Vaporetto down the Grand Canal. Avoid San Marco Piazza midday — go at dusk instead. Lunch at Osteria alle Testiere (only 11 tables, Michelin-listed, reservation only — book well ahead). Afternoon: wander Cannaregio. Final dinner in Venice — make it count.',highlights:['Rialto market 7–9am before crowds','Grand Canal vaporetto ride','Alle Testiere lunch — book in advance'],tags:[{l:'City',c:'dtag-blue'},{l:'Full Day',c:'dtag-stone'}],bookings:[{title:'Osteria alle Testiere',note:'Call +39 041 522 7220. Request 21:30 dinner slot Sep 15. Only 11 tables, no walk-ins ever.',link:'tel:+390415227220',linkLabel:'+39 041 522 7220'}]},
-  {day:3,date:'Sep 16',type:'travel',location:'Venice → Castelrotto',region:'Val Gardena, South Tyrol',activity:'Drive to the Dolomites',activitySub:'~2.5 hrs · A27 north · arrive early afternoon',sleep:'hotel',sleepLabel:"Cavallino d'Oro, Castelrotto",intensity:0,intensityLabel:'—',hours:'2.5 hr drive',elevation:'—',notes:'Pick up rental car at Venice Marco Polo airport. Drive A27 north toward Belluno then into South Tyrol. Stop at a roadside Autogrill — part of the Italian road trip experience. Arrive Castelrotto early afternoon. Check into Cavallino d\'Oro on the village square. Explore on foot, have an espresso, get your bearings. Early dinner tonight — big day tomorrow.',highlights:['Pick up car at VCE — confirm automatic','Stop at Autogrill on the drive','Arrive Castelrotto, explore the village'],tags:[{l:'Drive',c:'dtag-stone'},{l:'Base 1 Check-in',c:'dtag-green'}],bookings:[{title:'Rental car — VCE pickup, MXP drop-off',note:'AutoEurope or Rentalcars.com. Automatic. Pick up VCE Sep 14, drop MXP Sep 23. One-way fee ~€150 extra. Book now.',link:'https://www.autoeurope.com',linkLabel:'autoeurope.com'},{title:"Hotel Cavallino d'Oro, Castelrotto",note:'3 nights Sep 16–19. Request 2 rooms: 1 twin + 1 single. Twin = two separate beds.',link:'https://www.cavallino.it',linkLabel:'cavallino.it'}]},
-  {day:4,date:'Sep 17',type:'hike',location:'Alpe di Siusi',region:'Val Gardena, South Tyrol',activity:'Alpe di Siusi Full Traverse',activitySub:"Europe's largest high-altitude Alpine meadow",sleep:'hotel',sleepLabel:"Cavallino d'Oro, Castelrotto",intensity:2,intensityLabel:'Moderate',hours:'~5–6 hrs',elevation:'~600m',notes:'Take the Ortisei gondola up to the plateau. Walk the full traverse west to east with the Sassolungo massif in front of you all day. September light is golden and the summer crowds are gone. Lunch at Rifugio Compatsch on the plateau — order the Schlutzkrapfen (local filled pasta, a Ladin specialty). Gondola back down or taxi return to Castelrotto.',highlights:['Sassolungo massif views the entire day','Lunch at Rifugio Compatsch — Schlutzkrapfen','September light — golden, uncrowded'],tags:[{l:'Hike',c:'dtag-green'},{l:'Gondola Assisted',c:'dtag-stone'}],bookings:[{title:'Ortisei / Seceda gondola',note:'Confirm September operating hours and first gondola time. Usually opens by 8am.',link:'https://www.funivie-seceda.com',linkLabel:'funivie-seceda.com'}]},
-  {day:5,date:'Sep 18',type:'hike',location:'Val di Funes',region:'Odle / Puez area, South Tyrol',activity:'Val di Funes + Rifugio Brogles',activitySub:'Odle peaks overhead · real elevation · early start required',sleep:'hotel',sleepLabel:"Cavallino d'Oro, Castelrotto",intensity:3,intensityLabel:'Solid',hours:'~6 hrs',elevation:'~900m',notes:'Early start — drive to Santa Maddalena before 8am to beat day-trippers. The meadow below the Odle/Geisler peaks at dawn is the most photographed landscape in the Dolomites and you will understand immediately why. Loop up through forest and open alpine terrain toward Rifugio Brogles with the vertical Odle walls directly above you. Hardest day of Base 1. Pack bags tonight for the move to Cortina tomorrow.',highlights:['Santa Maddalena before 8am — no crowds','Odle north walls directly overhead','Pack bags tonight for Cortina move'],tags:[{l:'Hike',c:'dtag-green'},{l:'Early Start',c:'dtag-gold'},{l:'Hardest Day Base 1',c:'dtag-red'}],bookings:[]},
-  {day:6,date:'Sep 19',type:'via',location:'Cinque Torri → Cortina',region:'Ampezzano Dolomites',activity:'Via Ferrata Averau + Scenic Drive',activitySub:'Guided via ferrata · Sella & Pordoi passes en route',sleep:'hotel',sleepLabel:'Rosapetra, Cortina',intensity:3,intensityLabel:'Moderate+',hours:'~3–4 hrs climbing',elevation:'~500m',notes:'Drive the Sella Pass and Pordoi Pass in the morning — stop at the Pordoi summit for coffee and a view of the Marmolada glacier. Continue to Cinque Torri area. Afternoon: guided Via Ferrata Averau — rated easy-to-moderate (F/D), 3–4 hours, all gear (harness, helmet, carabiners) provided by guide. Check into Rosapetra, long shower, dinner at El Toulà.',highlights:['Pordoi Pass stop — Marmolada glacier view','Via Ferrata Averau with English-speaking guide','El Toulà dinner — old Cortina elegance'],tags:[{l:'Via Ferrata',c:'dtag-red'},{l:'Guided',c:'dtag-gold'},{l:'Base 2 Check-in',c:'dtag-green'}],bookings:[{title:'Guide Alpine Cortina — via ferrata',note:'Email info@guidecortina.com. 3 people, beginners, English guide, Sep 19. Ask for Via Ferrata Averau or similar easy-moderate route. Book 6–8 weeks ahead.',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com'},{title:'Rosapetra Spa Resort, Cortina',note:'2 nights Sep 19–21. Request 2 rooms: 1 twin + 1 single. Secluded, mountain-facing, CNT Readers Choice 2025.',link:'https://www.rosapetra.it',linkLabel:'rosapetra.it'},{title:'El Toulà restaurant',note:'Dinner Sep 19. Classic Cortina dining, local game. Book via website or call ahead.',link:'https://www.eltoula.it',linkLabel:'eltoula.it'}]},
-  {day:7,date:'Sep 20',type:'culture',location:'Passo Falzarego → Cortina',region:'Ampezzano Dolomites',activity:'Lagazuoi Ridge + WWI Tunnels',activitySub:'Cable car to 2,835m · tunnels in the rock · horse carriage descent',sleep:'hotel',sleepLabel:'Rosapetra, Cortina',intensity:2,intensityLabel:'Moderate',hours:'~5–6 hrs',elevation:'~800m descent',notes:'Cable car from Passo Falzarego up to Lagazuoi at 2,835m — the highest point of the trip. Walk the southern ridge with WWI tunnels cut directly into the rock face, original trenches and artillery positions still intact. Descend to the Armentarola valley floor where a horse-drawn carriage takes you back. Nobody forgets this day. Lunch at Rifugio Lagazuoi — get the goulash soup.',highlights:['Cable car to 2,835m — highest point of trip','WWI tunnels cut into the rock face','Horse-drawn carriage descent — unique'],tags:[{l:'Culture',c:'dtag-blue'},{l:'Cable Car',c:'dtag-stone'},{l:'WWI History',c:'dtag-blue'}],bookings:[{title:'Lagazuoi cable car',note:'Confirm September operating hours and whether advance booking is required.',link:'https://www.lagazuoi5torri.it',linkLabel:'lagazuoi5torri.it'},{title:'Horse carriage descent, Armentarola',note:'Usually walk-up but confirm it is operating in September.',link:'',linkLabel:''}]},
-  {day:8,date:'Sep 21',type:'rifugio',location:'Tre Cime di Lavaredo',region:'Sesto Dolomites',activity:'Tre Cime Loop + Rifugio Locatelli',activitySub:'The night · north walls at sunset · dawn on the peaks',sleep:'rifugio',sleepLabel:'Rifugio Locatelli (2,405m)',intensity:2,intensityLabel:'Easy–Moderate',hours:'~5 hrs total',elevation:'~400m',notes:'Slow morning at Rosapetra. Pack rifugio bag only: sleeping bag liner (mandatory), down jacket, one change of clothes, toiletries. Drive to Rifugio Auronzo (timed entry pre-booked, mandatory). Walk 1.5hrs to Rifugio Locatelli. Drop packs. Do the full Tre Cime loop (3hrs). Back for dinner at 7pm sharp — it is served at a fixed time. Then go outside and stay there until dark. The north faces at sunset are the moment of the entire trip. Cash only at the rifugio.',highlights:['Timed parking entry pre-booked — do not forget','Full Tre Cime loop 3hrs','North faces at sunset — the moment of the trip'],tags:[{l:'Rifugio Night',c:'dtag-purple'},{l:'Iconic',c:'dtag-gold'},{l:'Book First',c:'dtag-red'}],bookings:[{title:'Rifugio Locatelli — overnight',note:'Book at dreizinnenhuette.com. 3 people, half board, Sep 21. €40pp non-refundable deposit. Fills months ahead — book today.',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com'},{title:'Tre Cime parking — 2 reservations',note:'Need TWO back-to-back 12hr slots (overnighting). €40/car each at auronzo.info. Opens late April/May. Can update rental plate until night before.',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info'}]},
-  {day:9,date:'Sep 22',type:'depart',location:'Lago di Braies → Milan',region:'Alto Adige → Lombardy',activity:'Lago di Braies + Drive to Milan',activitySub:'Dawn on the lake · ~3.5 hrs to Malpensa',sleep:'transit',sleepLabel:'Flight home',intensity:1,intensityLabel:'Easy',hours:'~1 hr walk',elevation:'Flat',notes:'Set alarm for 6am — sunrise on the Tre Cime north walls first. Breakfast at Rifugio Locatelli 7:30am. Descend to car by 9:30am. Drive 45 mins to Lago di Braies — arrive by 10:30 before day-trippers. Walk the 3.8km lake loop (flat, 1hr), rent a rowboat if time allows. On the road to Milan Malpensa by noon. 3.5 hrs to the airport. Drop rental car at MXP.',highlights:['Sunrise on Tre Cime north walls — 6am','Lago di Braies 10:30am before crowds','On road to Milan by noon'],tags:[{l:'Departure',c:'dtag-gold'},{l:'Lago di Braies',c:'dtag-blue'}],bookings:[{title:'Drop rental car at Milan Malpensa',note:'Confirm drop-off location and procedures when booking the car.',link:'',linkLabel:''},{title:'Flights home from MXP',note:'Sep 22 MXP → JFK. Coordinate all three. Delta, United, Lufthansa via Frankfurt.',link:'https://www.google.com/flights',linkLabel:'google.com/flights'}]},
+  {day:1,date:'Sep 18',type:'depart',location:'New York City',region:'JFK → VCE',activity:'Fly to Italy',activitySub:'Overnight flight · land Venice Marco Polo Sep 19',sleep:'transit',sleepLabel:'Overnight Flight',intensity:0,intensityLabel:'—',hours:'~9 hrs',elevation:'—',notes:'Overnight flight from JFK to Venice Marco Polo (VCE). Land Saturday morning Sep 19. Clear customs, grab a coffee, take the high-speed Frecciarossa to Bologna (~1hr 15min). Arriving on a Saturday means the city is alive — markets open, restaurants full. Do not sleep until 10pm local time.',highlights:['Overnight flight — arrive Sat Sep 19','Train Venice → Bologna on arrival','Saturday arrival — city is alive'],tags:[{l:'Departure',c:'dtag-gold'},{l:'Travel',c:'dtag-stone'}],bookings:[{title:'Flights JFK → VCE Sep 18',note:'Overnight departure Sep 18, arrive Venice Sep 19. Delta, United, Lufthansa via Frankfurt. Coordinate all three travelers.',link:'https://www.google.com/flights',linkLabel:'google.com/flights'}]},
+  {day:2,date:'Sep 19',type:'city',location:'Bologna',region:'Emilia-Romagna, Italy',activity:'Arrive Bologna',activitySub:'Venice Marco Polo → high-speed train → Bologna · aperitivo · dinner',sleep:'city',sleepLabel:'Hotel Bologna',intensity:1,intensityLabel:'Easy',hours:'~2 hrs walking',elevation:'Flat',notes:'Land at Venice Marco Polo, clear customs. Take the high-speed Frecciarossa to Bologna — 1hr 15min, runs frequently. Arrive late morning. Check in, drop bags. Walk the porticoes (UNESCO site — they go on for miles). Find a bar for aperitivo around 6pm. Bologna is the food capital of Italy. Dinner tonight should be serious — find a proper tortellini in brodo.',highlights:['Frecciarossa Venice → Bologna 1hr 15min','Walk the UNESCO porticoes','Tortellini in brodo for dinner — the real thing'],tags:[{l:'City',c:'dtag-blue'},{l:'Arrival',c:'dtag-stone'}],bookings:[{title:'Hotel Bologna — 2 nights',note:'Sep 19–21. Central — near Piazza Maggiore or Quadrilatero. 3 people, 2 rooms.',link:'',linkLabel:''},{title:'Train VCE → Bologna',note:'Frecciarossa high-speed, ~1hr 15min. Book on Trenitalia. Runs frequently.',link:'https://www.trenitalia.com',linkLabel:'trenitalia.com'}]},
+  {day:3,date:'Sep 20',type:'culture',location:'Bologna',region:'Emilia-Romagna, Italy',activity:'Full Day Bologna',activitySub:'Quadrilatero market · Asinelli Tower · long lunch · porticoes',sleep:'city',sleepLabel:'Hotel Bologna',intensity:1,intensityLabel:'Easy',hours:'~4 hrs walking',elevation:'Flat',notes:'Full Sunday in Bologna. Start at the Quadrilatero — the medieval market district, tightest streets in the city. Mortadella, aged Parmigiano, fresh pasta at every stall. Climb Asinelli Tower for the city panorama (498 steps, worth every one). Long lunch at a proper trattoria — this is what Bologna is for. Afternoon wander through the university district. Jet lag recovery day — do not overdo it.',highlights:['Quadrilatero market — early morning','Asinelli Tower climb — city panorama','Long lunch — this is what Bologna is for'],tags:[{l:'City',c:'dtag-blue'},{l:'Full Day',c:'dtag-stone'}],bookings:[]},
+  {day:4,date:'Sep 21',type:'travel',location:'Bologna → Cortina d\'Ampezzo',region:'Emilia-Romagna → Veneto',activity:'Drive to the Dolomites',activitySub:'~3–4 hrs · pick up rental car · arrive Cortina afternoon',sleep:'hotel',sleepLabel:'Hotel Cortina TBD',intensity:0,intensityLabel:'—',hours:'3.5 hr drive',elevation:'—',notes:'Pick up rental car in Bologna or train back to Venice Marco Polo and pick up there. Drive north through the Veneto. First views of the Dolomites appear around Belluno — prepare for a strong reaction. Arrive Cortina early afternoon. Drop bags at the hotel — you will leave your main bags here for 2 nights while you are at the rifugios (confirm storage with hotel). Walk the corso, have an espresso. Dinner at El Toulà tonight.',highlights:['First views of Dolomites near Belluno','Arrive Cortina — leave main bags here for rifugio nights','El Toulà dinner — old Cortina elegance'],tags:[{l:'Drive',c:'dtag-stone'},{l:'Cortina Base',c:'dtag-green'}],bookings:[{title:'Cortina hotel — 1 night + bag storage',note:'Night of Sep 21. Confirm hotel can store main bags Sep 22–23 while you are at rifugios. 3 people, 2 rooms.',link:'',linkLabel:''},{title:'El Toulà — arrival dinner',note:'Dinner Sep 21. Classic Cortina, white tablecloths, local game. Book in advance.',link:'https://www.eltoula.it',linkLabel:'eltoula.it'}]},
+  {day:5,date:'Sep 22',type:'rifugio',location:'Tre Cime di Lavaredo',region:'Sesto Dolomites',activity:'Tre Cime Loop + Rifugio Locatelli',activitySub:'The night · north walls at sunset · dawn on the peaks',sleep:'rifugio',sleepLabel:'Rifugio Locatelli (2,405m)',intensity:2,intensityLabel:'Easy–Moderate',hours:'~5 hrs total',elevation:'~400m',notes:'Pack rifugio bag only: sleeping bag liner (mandatory), down jacket, one change of clothes, toiletries, cash. Drive to Rifugio Auronzo (timed entry pre-booked — mandatory). Walk 1.5hrs to Rifugio Locatelli. Drop packs. Do the full Tre Cime loop (3hrs). Back for dinner at 7pm sharp — served at a fixed time. Then go outside and stay there until dark. The north faces at sunset are the moment of the entire trip. Cash only at the rifugio.',highlights:['Timed parking entry pre-booked — do not forget','Full Tre Cime loop ~3hrs','North faces at sunset — the moment of the trip'],tags:[{l:'Rifugio Night',c:'dtag-purple'},{l:'Iconic',c:'dtag-gold'},{l:'✓ Booked',c:'dtag-green'}],bookings:[{title:'Rifugio Locatelli — overnight',note:'✅ BOOKED — Sep 22 night. 3 people, half board. Cash only at the hut. Sleeping bag liner mandatory.',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com'},{title:'Tre Cime parking — 2 × 12hr reservations',note:'Need TWO back-to-back 12hr slots (overnighting = 24hrs). Book at auronzo.info — may be open NOW (opens late April/May). €40/car each.',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info'}]},
+  {day:6,date:'Sep 23',type:'rifugio',location:'Lago Federa',region:'Ampezzano Dolomites',activity:'Sunrise at Tre Cime + Lago Federa + Rifugio Croda da Lago',activitySub:'6am sunrise on north walls · glacial lake · 2,046m',sleep:'rifugio',sleepLabel:'Rifugio Croda da Lago (2,046m)',intensity:2,intensityLabel:'Moderate',hours:'~4–6 hrs',elevation:'~600m',notes:'Set alarm for 6am — sunrise on the Tre Cime north walls from outside the rifugio. Breakfast at 7:30am. Descend to car by 9:30am. Drive to Lago Federa trailhead near Cortina (~30 min). Hike up through forest and open terrain to the glacial lake. The Croda da Lago massif rises above you the whole way. Far less crowded than Tre Cime. Arrive Rifugio Croda da Lago by late afternoon. Evening on the terrace.',highlights:['6am sunrise on Tre Cime north walls','Lago Federa — glacial lake, far fewer crowds than Tre Cime','Evening on the terrace at 2,046m'],tags:[{l:'Rifugio Night',c:'dtag-purple'},{l:'✓ Booked',c:'dtag-green'},{l:'Less Crowded',c:'dtag-blue'}],bookings:[{title:'Rifugio Croda da Lago — overnight',note:'✅ BOOKED — Sep 23 night. 3 people, half board.',link:'https://www.rifugiocrodadalago.it',linkLabel:'rifugiocrodadalago.it'}]},
+  {day:7,date:'Sep 24',type:'via',location:'Cinque Torri → Val Gardena',region:'Ampezzano → Val Gardena',activity:'Via Ferrata Averau + Drive to Val Gardena',activitySub:'Guided via ferrata · scenic mountain passes · arrive evening',sleep:'hotel',sleepLabel:'Hotel Val Gardena TBD',intensity:3,intensityLabel:'Moderate+',hours:'~3–4 hrs climbing',elevation:'~500m',notes:'Morning light at Lago Federa then descend. Swing by Cortina hotel to collect main bags. Drive to Cinque Torri area. Guided Via Ferrata Averau — rated easy-to-moderate, 3–4 hours, all gear (harness, helmet, carabiners) provided by guide. Drive the Falzarego, Valparola, and Gardena passes to Val Gardena. Arrive evening. Long shower, dinner, rest.',highlights:['Collect main bags from Cortina hotel','Via Ferrata Averau with English-speaking guide','Scenic drive over mountain passes to Val Gardena'],tags:[{l:'Via Ferrata',c:'dtag-red'},{l:'Guided',c:'dtag-gold'},{l:'Val Gardena Base',c:'dtag-green'}],bookings:[{title:'Guide Alpine Cortina — via ferrata',note:'Email info@guidecortina.com. 3 people, beginners, English guide, Sep 24. Via Ferrata Averau or similar easy-moderate route. All gear provided.',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com'},{title:'Val Gardena hotel — 2 nights',note:'2 nights Sep 24–26. Ortisei or Santa Cristina. 3 people, 2 rooms.',link:'',linkLabel:''}]},
+  {day:8,date:'Sep 25',type:'hike',location:'Val Gardena',region:'Val Gardena, South Tyrol',activity:'Seceda Ridgeline',activitySub:'Lift from Ortisei · Odle peaks overhead · ~4–6 hrs',sleep:'hotel',sleepLabel:'Hotel Val Gardena',intensity:2,intensityLabel:'Moderate',hours:'~4–6 hrs',elevation:'~700m',notes:'Take the Ortisei cable car up to Seceda (2,519m). The ridgeline walk is one of the most dramatic in the Dolomites — the vertical Odle/Geisler peaks are directly above you for the entire hike. September light is extraordinary up here. Optional extensions toward the Odle huts. Lunch at Rifugio Firenze on the ridge. Descend by gondola, dinner in Ortisei.',highlights:['Seceda cable car to 2,519m','Odle peaks directly overhead — most dramatic ridge in the Dolomites','Lunch at Rifugio Firenze on the ridge'],tags:[{l:'Hike',c:'dtag-green'},{l:'Cable Car',c:'dtag-stone'}],bookings:[{title:'Seceda gondola — confirm hours',note:'Confirm September 2026 operating hours and first gondola time from Ortisei.',link:'https://www.seceda.it',linkLabel:'seceda.it'}]},
+  {day:9,date:'Sep 26',type:'hike',location:'Alpe di Siusi → Venice',region:'South Tyrol → Veneto',activity:'Alpe di Siusi + Drive to Venice',activitySub:'Early start required (9am curfew) · Adolf Munkel Trail · ~3 hr drive',sleep:'city',sleepLabel:'Hotel Venice TBD',intensity:1,intensityLabel:'Easy',hours:'~2–3 hrs',elevation:'~300m',notes:'Early start — arrive Alpe di Siusi before 9am. Driving curfew is strictly enforced 9am–5pm: arrive early or take the cable car. Walk the Adolf Munkel Trail along the base of the Odle peaks — flat, beautiful, 2hrs with the Sassolungo massif ahead of you. On the road to Venice by noon. ~3 hrs drive. Check in, walk to Dorsoduro for aperitivo. Easy dinner.',highlights:['Arrive Alpe di Siusi before 9am — curfew strictly enforced','Adolf Munkel Trail — flat, stunning, under the Odle peaks','Drive to Venice, aperitivo in Dorsoduro'],tags:[{l:'Hike',c:'dtag-green'},{l:'Early Start',c:'dtag-gold'},{l:'Travel Day',c:'dtag-stone'}],bookings:[{title:'Venice hotel — 1 night',note:'1 night Sep 26. 3 people, 2 rooms. Dorsoduro or Cannaregio preferred.',link:'',linkLabel:''}]},
+  {day:10,date:'Sep 27',type:'depart',location:'Venice',region:'Veneto, Italy',activity:'Venice Morning + Fly Home',activitySub:'Rialto · quiet neighborhoods · VCE → NYC',sleep:'transit',sleepLabel:'Flight Home',intensity:0,intensityLabel:'—',hours:'~2 hrs walking',elevation:'Flat',notes:'Lazy morning. Walk to Rialto before the crowds. Cross a few bridges, get lost in Cannaregio or Castello. Coffee at a bar standing at the counter — the Italian way. Get to Venice Marco Polo by early afternoon. Fly home.',highlights:['Rialto before 9am — no crowds','Wander Cannaregio or Castello','VCE → NYC afternoon flight'],tags:[{l:'Departure',c:'dtag-gold'},{l:'Venice',c:'dtag-blue'}],bookings:[{title:'Flights home VCE → NYC Sep 27',note:'Afternoon departure preferred. Delta, United, Lufthansa via Frankfurt. Coordinate all three.',link:'https://www.google.com/flights',linkLabel:'google.com/flights'}]},
 ];
 
 const actionItems=[
-  {id:'locatelli',priority:'urgent',title:'Rifugio Locatelli — overnight booking',detail:'Most in-demand rifugio in the Dolomites. 3 people, half board, night of Sep 21. Specify beds or dorm + alternative preference. €40pp non-refundable deposit. Cash only at the hut.',day:'Day 8 · Sep 21',cost:'~€70pp half board',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com',tags:[{l:'Book Today',c:'atag-red'},{l:'Rifugio',c:'atag-purple'}]},
-  {id:'guide',priority:'urgent',title:'Guide Alpine Cortina — via ferrata guide',detail:'Email info@guidecortina.com — 3 people, beginners, English-speaking guide, Sep 19, Via Ferrata Averau or similar easy-moderate route. All gear provided. Alternative: Enrico Maioni at guidedolomiti.com — born in Cortina, IFMGA certified, fluent English.',day:'Day 6 · Sep 19',cost:'~€300–400 total',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com',tags:[{l:'Book Now',c:'atag-red'},{l:'Via Ferrata',c:'atag-red'}]},
-  {id:'testiere',priority:'urgent',title:'Osteria alle Testiere — Venice dinner',detail:'Only 11 tables. Reservation only — no walk-ins. Call +39 041 522 7220. Open Tue–Sat. Request 21:30 slot on Sep 15. Seafood-only menu, changes daily.',day:'Day 2 · Sep 15',cost:'~€70–80pp',link:'tel:+390415227220',linkLabel:'+39 041 522 7220',tags:[{l:'Call to Book',c:'atag-red'},{l:'Venice',c:'atag-blue'}]},
-  {id:'rentalcar',priority:'urgent',title:'Rental car — VCE pickup → MXP drop-off',detail:'AutoEurope or Rentalcars.com. Automatic. Pick up Venice Marco Polo Sep 14, drop off Milan Malpensa Sep 23. One-way fee ~€100–150 extra. September books out early.',day:'Sep 14–23',cost:'TBD + ~€150 one-way',link:'https://www.autoeurope.com',linkLabel:'autoeurope.com',tags:[{l:'Book Now',c:'atag-red'},{l:'Logistics',c:'atag-stone'}]},
-  {id:'cavallino',priority:'soon',title:"Hotel Cavallino d'Oro — Castelrotto (Base 1)",detail:'3 nights Sep 16–19. Request 2 rooms: 1 twin + 1 single. Specify twin (two separate beds) not double. Book directly.',day:'Days 3–5 · Sep 16–19',cost:'~$180–250/night',link:'https://www.cavallino.it',linkLabel:'cavallino.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Base 1',c:'atag-green'}]},
-  {id:'rosapetra',priority:'soon',title:'Rosapetra Spa Resort — Cortina (Base 2)',detail:'2 nights Sep 19–21. Request 2 rooms: 1 twin + 1 single. Secluded, all rooms mountain-facing. CNT Readers\' Choice 2025.',day:'Days 6–7 · Sep 19–21',cost:'~$350–500/night',link:'https://www.rosapetra.it',linkLabel:'rosapetra.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Base 2',c:'atag-green'}]},
-  {id:'venice-hotel',priority:'soon',title:'Venice hotel — 2 nights (TBD)',detail:'Still need to select. 2 nights Sep 14–16, 3 people, 2 rooms. Dorsoduro or Cannaregio preferred.',day:'Days 1–2 · Sep 14–16',cost:'TBD',link:'',linkLabel:'',tags:[{l:'Decide First',c:'atag-gold'},{l:'Venice',c:'atag-blue'}]},
-  {id:'eltoula',priority:'soon',title:'El Toulà — Cortina dinner reservation',detail:'Classic Cortina dining, white tablecloths, exceptional local game. Dinner Sep 19 — arrival night. Book via website or call ahead.',day:'Day 6 · Sep 19',cost:'~€60–80pp',link:'https://www.eltoula.it',linkLabel:'eltoula.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Cortina',c:'atag-green'}]},
-  {id:'parking',priority:'plan',title:'Tre Cime parking — 2 × 12hr reservations',detail:'Book at auronzo.info — opens late April/May 2026. Need two back-to-back slots (overnighting = 24hrs). €40/car each. Can update rental plate until 11:59pm night before. Tip: set device to Milan timezone when booking.',day:'Day 8 · Sep 21',cost:'€40 × 2 = €80',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info',tags:[{l:'Opens Late April',c:'atag-blue'},{l:'Mandatory',c:'atag-red'}]},
-  {id:'lagazuoi',priority:'plan',title:'Lagazuoi cable car — confirm booking',detail:'Confirm September operating dates and whether advance booking is required. Also confirm horse-drawn carriage descent from Armentarola is running in September.',day:'Day 7 · Sep 20',cost:'~€15–20pp',link:'https://www.lagazuoi5torri.it',linkLabel:'lagazuoi5torri.it',tags:[{l:'Confirm',c:'atag-blue'},{l:'Day 7',c:'atag-stone'}]},
-  {id:'gondola',priority:'plan',title:'Ortisei / Seceda gondola — confirm dates',detail:'Confirm Seceda gondola is running mid-September 2026 and check first gondola time. Also confirm Alpe di Siusi gondola for Day 4.',day:'Days 4–5 · Sep 17–18',cost:'~€20–25pp',link:'https://www.funivie-seceda.com',linkLabel:'funivie-seceda.com',tags:[{l:'Confirm',c:'atag-blue'},{l:'Base 1',c:'atag-green'}]},
-  {id:'liners',priority:'plan',title:'Sleeping bag liners × 3',detail:'Mandatory at Rifugio Locatelli. Lightweight silk or cotton. Cocoon or Sea to Summit are standard. Buy at REI before departure.',day:'Pre-trip',cost:'~$30–50 each',link:'https://www.rei.com/search?q=sleeping+bag+liner',linkLabel:'rei.com',tags:[{l:'Buy Pre-trip',c:'atag-blue'},{l:'Gear',c:'atag-stone'}]},
-  {id:'flights',priority:'plan',title:'Flights — JFK → VCE and MXP → JFK',detail:'Sep 14 outbound JFK → Venice Marco Polo (VCE). Sep 22 return Milan Malpensa (MXP) → JFK. Coordinate all three. Delta, United, Lufthansa via Frankfurt are main options.',day:'Sep 14 & Sep 22',cost:'TBD',link:'https://www.google.com/flights',linkLabel:'google.com/flights',tags:[{l:'Coordinate Group',c:'atag-blue'},{l:'Logistics',c:'atag-stone'}]},
+  {id:'parking',priority:'urgent',title:'Tre Cime parking — 2 × 12hr reservations',detail:'Book at auronzo.info — MAY BE OPEN NOW (opens late April/May 2026). Need two back-to-back 12hr slots (overnighting = 24hrs). €40/car each. Can update rental plate until 11:59pm night before. Set device to Milan timezone when booking.',day:'Day 5 · Sep 22',cost:'€80 total',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info',tags:[{l:'Check Today',c:'atag-red'},{l:'Mandatory',c:'atag-red'}]},
+  {id:'guide',priority:'urgent',title:'Guide Alpine Cortina — via ferrata guide',detail:'Email info@guidecortina.com — 3 people, beginners, English-speaking guide, Sep 24. Via Ferrata Averau or similar easy-moderate route. All gear provided. Alternative: Enrico Maioni at guidedolomiti.com.',day:'Day 7 · Sep 24',cost:'~€300–400 total',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com',tags:[{l:'Book Now',c:'atag-red'},{l:'Via Ferrata',c:'atag-red'}]},
+  {id:'cortina-hotel',priority:'urgent',title:'Cortina hotel — 1 night + bag storage Sep 22–23',detail:'Need Sep 21 night. Critical: hotel must agree to store main bags for 2 nights (Sep 22–23) while you are at the rifugios. 3 people, 2 rooms. Confirm storage policy when booking.',day:'Day 4 · Sep 21',cost:'~€200–350/night',link:'',linkLabel:'',tags:[{l:'Book Now',c:'atag-red'},{l:'Bag Storage Critical',c:'atag-red'}]},
+  {id:'flights',priority:'urgent',title:'Flights — JFK → VCE Sep 18 + VCE → JFK Sep 27',detail:'Overnight departure Sep 18, arrive Venice Sep 19. Return Sep 27 VCE → JFK. Delta, United, Lufthansa via Frankfurt. Coordinate all three travelers.',day:'Sep 18 & Sep 27',cost:'TBD',link:'https://www.google.com/flights',linkLabel:'google.com/flights',tags:[{l:'Book Now',c:'atag-red'},{l:'Coordinate Group',c:'atag-blue'}]},
+  {id:'bologna-hotel',priority:'soon',title:'Bologna hotel — 2 nights',detail:'2 nights Sep 19–21. Central location near Piazza Maggiore or Quadrilatero. 3 people, 2 rooms.',day:'Days 2–3 · Sep 19–21',cost:'~€150–250/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Bologna',c:'atag-blue'}]},
+  {id:'valgardena-hotel',priority:'soon',title:'Val Gardena hotel — 2 nights',detail:'2 nights Sep 24–26. Ortisei or Santa Cristina preferred. 3 people, 2 rooms.',day:'Days 7–8 · Sep 24–26',cost:'~€180–280/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Val Gardena',c:'atag-green'}]},
+  {id:'venice-hotel',priority:'soon',title:'Venice hotel — 1 night',detail:'1 night Sep 26. 3 people, 2 rooms. Dorsoduro or Cannaregio preferred.',day:'Day 9 · Sep 26',cost:'~€250–400/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Venice',c:'atag-blue'}]},
+  {id:'eltoula',priority:'soon',title:'El Toulà — Cortina arrival dinner',detail:'Dinner Sep 21 — arrival night in Cortina. Classic white tablecloths, exceptional local game. Book in advance.',day:'Day 4 · Sep 21',cost:'~€60–80pp',link:'https://www.eltoula.it',linkLabel:'eltoula.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Cortina',c:'atag-green'}]},
+  {id:'rentalcar',priority:'plan',title:'Rental car — pickup Sep 21, drop VCE Sep 27',detail:'Pick up in Bologna or Venice Marco Polo Sep 21. Drop off Venice Marco Polo Sep 27. Automatic. AutoEurope or Rentalcars.com.',day:'Sep 21–27',cost:'TBD',link:'https://www.autoeurope.com',linkLabel:'autoeurope.com',tags:[{l:'Coordinate',c:'atag-blue'},{l:'Logistics',c:'atag-stone'}]},
+  {id:'seceda',priority:'plan',title:'Seceda gondola — confirm September hours',detail:'Confirm Seceda cable car (Ortisei) is running Sep 25, 2026 and check first gondola time.',day:'Day 8 · Sep 25',cost:'~€20–25pp',link:'https://www.seceda.it',linkLabel:'seceda.it',tags:[{l:'Confirm',c:'atag-blue'},{l:'Val Gardena',c:'atag-green'}]},
+  {id:'liners',priority:'plan',title:'Sleeping bag liners × 3',detail:'Mandatory at both Rifugio Locatelli AND Rifugio Croda da Lago. Lightweight silk or cotton. Cocoon or Sea to Summit. Buy at REI before departure.',day:'Pre-trip',cost:'~$30–50 each',link:'https://www.rei.com/search?q=sleeping+bag+liner',linkLabel:'rei.com',tags:[{l:'Buy Pre-trip',c:'atag-blue'},{l:'Gear',c:'atag-stone'}]},
+  {id:'locatelli',priority:'plan',title:'Rifugio Locatelli — Sep 22 night',detail:'✅ BOOKED — 3 people, half board. Cash only at the hut. Sleeping bag liner mandatory.',day:'Day 5 · Sep 22',cost:'~€70pp half board',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com',tags:[{l:'✓ Booked',c:'atag-green'},{l:'Rifugio',c:'atag-purple'}]},
+  {id:'crodadalago',priority:'plan',title:'Rifugio Croda da Lago — Sep 23 night',detail:'✅ BOOKED — 3 people, half board.',day:'Day 6 · Sep 23',cost:'~€60–70pp half board',link:'https://www.rifugiocrodadalago.it',linkLabel:'rifugiocrodadalago.it',tags:[{l:'✓ Booked',c:'atag-green'},{l:'Rifugio',c:'atag-purple'}]},
 ];
 
 const GROUPS=[
@@ -453,9 +468,9 @@ const GROUPS=[
   {key:'plan',label:'Plan & Confirm',sub:'Research, coordinate, or purchase pre-trip',color:'var(--blue)'},
 ];
 
-let done={};
-try{const s=localStorage.getItem('dolomites-done-v3');if(s)done=JSON.parse(s);}catch(e){}
-const save=()=>{try{localStorage.setItem('dolomites-done-v3',JSON.stringify(done));}catch(e){}};
+let done={locatelli:true,crodadalago:true};
+try{const s=localStorage.getItem('dolomites-done-v4');if(s)done=Object.assign(done,JSON.parse(s));}catch(e){}
+const save=()=>{try{localStorage.setItem('dolomites-done-v4',JSON.stringify(done));}catch(e){}};
 
 function intHTML(lvl){
   return '<div class="int-bar int-'+lvl+'">'+'<div class="int-pip"></div>'.repeat(4)+'</div>'
@@ -577,24 +592,22 @@ function renderActions(){
 }
 
 const DAY_COORDS=[
-  [45.4418,12.3135],
-  [45.4395,12.3175],
-  [46.5667,11.5500],
-  [46.5319,11.6292],
-  [46.6167,11.7167],
-  [46.4953,12.0183],
-  [46.5164,12.0211],
-  [46.6173,12.3014],
-  [46.6944,12.0833],
+  [45.5051,12.3519],  // Venice Marco Polo (Day 1 flight)
+  [44.4949,11.3426],  // Bologna
+  [44.4949,11.3426],  // Bologna
+  [46.5369,12.1356],  // Cortina d'Ampezzo
+  [46.6173,12.3014],  // Tre Cime / Rifugio Locatelli
+  [46.4694,12.1047],  // Lago Federa / Rifugio Croda da Lago
+  [46.5319,11.7292],  // Cinque Torri → Val Gardena
+  [46.5667,11.7000],  // Seceda / Ortisei
+  [45.4408,12.3155],  // Venice
+  [45.4408,12.3155],  // Venice (fly home)
 ];
 
 const SLEEP_LINKS={
-  2:'https://www.cavallino.it',
-  3:'https://www.cavallino.it',
-  4:'https://www.cavallino.it',
-  5:'https://www.rosapetra.it',
-  6:'https://www.rosapetra.it',
-  7:'https://www.dreizinnenhuette.com/booking/index_en.php',
+  4:'https://www.dreizinnenhuette.com/booking/index_en.php',
+  5:'https://www.rifugiocrodadalago.it',
+  8:'https://www.airbnb.com/s/Milan--Italy',
 };
 
 const TYPE_HEX={city:'#284468',travel:'#7c6c5c',hike:'#3a6644',via:'#842020',culture:'#284468',rifugio:'#582870',depart:'#a07818'};
@@ -842,8 +855,10 @@ const budgetData=[
   {id:'accomm',label:'Accommodation',hex:'#3a6644',items:[
     {id:'a-venice',label:'Venice hotel (2 nights, 2 rooms)',note:'TBD — Dorsoduro or Cannaregio preferred',pp:false,est:700},
     {id:'a-cav',label:"Cavallino d'Oro, Castelrotto (3 nights)",note:'2 rooms × 3 nights · Sep 16–19',pp:false,est:660},
-    {id:'a-rosa',label:'Rosapetra Spa Resort, Cortina (2 nights)',note:'2 rooms × 2 nights · Sep 19–21',pp:false,est:900},
+    {id:'a-rosa',label:'Rosapetra Spa Resort, Cortina (1 night)',note:'2 rooms × 1 night · Sep 19–20',pp:false,est:450},
+    {id:'a-lag-rif',label:'Rifugio Lagazuoi — half board × 3',note:'~€65pp incl. dinner + breakfast · Sep 20',pp:false,est:195},
     {id:'a-loc',label:'Rifugio Locatelli — half board × 3',note:'~€70pp incl. dinner + breakfast · cash only',pp:false,est:210},
+    {id:'a-milan',label:'Milan Airbnb — 1 night',note:'Sep 22 · Brera, Navigli, or Porta Nuova',pp:false,est:220},
   ]},
   {id:'transport',label:'Transport',hex:'#284468',items:[
     {id:'t-car',label:'Rental car VCE → MXP (9 days)',note:'Incl. one-way fee ~€150 · AutoEurope',pp:false,est:950},
@@ -873,7 +888,7 @@ const saveBudget=()=>{try{localStorage.setItem('dolomites-budget-v1',JSON.string
 function calcBudget(){
   let est=0,actual=0,booked=0,total=0;
   budgetData.forEach(cat=>cat.items.forEach(item=>{
-    est+=(item.pp?item.est*TRIP_PPL:item.est);total++;
+    est+=(item.pp?item.est:Math.round(item.est/TRIP_PPL));total++;
     const a=budgetActuals[item.id];
     if(a!==undefined&&a!==''&&!isNaN(parseFloat(a))){actual+=parseFloat(a);booked++;}
   }));
@@ -885,10 +900,9 @@ function renderBudget(){
   const{est,actual,booked,total}=calcBudget();
   page.innerHTML=`<div style="max-width:900px">
     <div class="budget-title">Budget Tracker</div>
-    <div class="budget-sub">3 PEOPLE · SEP 14–23, 2026 · AMOUNTS IN USD (APPROX) · CLICK ACTUAL COLUMN TO ENTER COSTS</div>
+    <div class="budget-sub">PER PERSON · SEP 14–23, 2026 · USD (APPROX) · CLICK ACTUAL COLUMN TO ENTER YOUR COSTS</div>
     <div class="budget-summary">
-      <div class="bsumm"><div class="bsumm-label">Total Estimated</div><div class="bsumm-val">$${est.toLocaleString()}</div><div class="bsumm-sub">for 3 people</div></div>
-      <div class="bsumm"><div class="bsumm-label">Per Person</div><div class="bsumm-val">$${Math.round(est/TRIP_PPL).toLocaleString()}</div><div class="bsumm-sub">estimated</div></div>
+      <div class="bsumm"><div class="bsumm-label">Total per person</div><div class="bsumm-val">$${est.toLocaleString()}</div><div class="bsumm-sub">estimated</div></div>
       <div class="bsumm"><div class="bsumm-label">Booked / Paid</div><div class="bsumm-val" id="bsum-paid" style="color:var(--green)">$${Math.round(actual).toLocaleString()}</div><div class="bsumm-sub" id="bsum-paid-sub">${booked} of ${total} items</div></div>
       <div class="bsumm"><div class="bsumm-label">Remaining</div><div class="bsumm-val" id="bsum-rem" style="color:var(--gold)">$${Math.round(est-actual).toLocaleString()}</div><div class="bsumm-sub">to book / pay</div></div>
     </div>
@@ -896,16 +910,16 @@ function renderBudget(){
   </div>`;
   const cont=document.getElementById('budget-cats');
   budgetData.forEach(cat=>{
-    const catEst=cat.items.reduce((n,i)=>n+(i.pp?i.est*TRIP_PPL:i.est),0);
+    const catEst=cat.items.reduce((n,i)=>n+(i.pp?i.est:Math.round(i.est/TRIP_PPL)),0);
     const sec=document.createElement('div');
     sec.className='budget-section';
     const rows=cat.items.map(item=>{
-      const e=item.pp?item.est*TRIP_PPL:item.est;
+      const e=item.pp?item.est:Math.round(item.est/TRIP_PPL);
       const a=budgetActuals[item.id];
       const hasA=a!==undefined&&a!==''&&!isNaN(parseFloat(a));
       return `<tr>
         <td><div class="budget-item-name">${item.label}</div>${item.note?`<div class="budget-item-note">${item.note}</div>`:''}</td>
-        <td>${item.pp?'<span class="bpp-tag">×3 pp</span>':''}</td>
+        <td>${!item.pp?'<span class="bpp-tag">÷3 shared</span>':''}</td>
         <td class="right"><span class="budget-est">$${e.toLocaleString()}</span></td>
         <td class="right"><div class="budget-actual-wrap"><span class="budget-actual-prefix">$</span><input class="budget-actual-input${hasA?' filled':''}" placeholder="—" value="${hasA?a:''}" data-bid="${item.id}" onchange="onBudgetInput(this)" onblur="onBudgetInput(this)"/></div></td>
       </tr>`;
@@ -914,10 +928,10 @@ function renderBudget(){
       <div class="budget-sec-header">
         <div style="width:9px;height:9px;border-radius:2px;background:${cat.hex};flex-shrink:0"></div>
         <div class="budget-sec-label" style="color:${cat.hex}">${cat.label}</div>
-        <div class="budget-sec-total">Est. $${catEst.toLocaleString()}</div>
+        <div class="budget-sec-total">Your share ~$${catEst.toLocaleString()}</div>
       </div>
       <table class="budget-table">
-        <thead><tr><th>Item</th><th></th><th class="right">Estimated</th><th class="right">Actual / Paid</th></tr></thead>
+        <thead><tr><th>Item</th><th></th><th class="right">Your share</th><th class="right">Actual / Paid</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
     cont.appendChild(sec);
