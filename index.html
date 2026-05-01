@@ -7,388 +7,336 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#f2ede4;--surface:#e8e2d8;--card:#faf8f4;--dark:#18191a;
-  --border:#d4ccc0;--border-light:#e4dcd4;
-  --green:#3a6644;--green-light:#558060;--green-pale:#cfdfd4;
-  --stone:#7c6c5c;--stone-light:#b0a090;--stone-pale:#e8e0d4;
-  --gold:#a07818;--gold-pale:#f0e4bc;
-  --red:#842020;--red-pale:#f0d0d0;
-  --blue:#284468;--blue-pale:#ccd8ec;
-  --purple:#582870;--purple-pale:#e0ccf0;
-  --text:#201e18;--text-2:#504840;--text-3:#807870;--text-inv:#f2ede4;
-  --radius:5px;--topbar-h:60px;--sidebar-w:256px;
+  --bg:#EAE4D9; --surface:#F4F0E8; --card:#FFFFFF;
+  --ink:#1A130C; --ink-2:#4A3F36; --ink-3:#9C8C80; --ink-inv:#FAF8F4;
+  --border:#D2C8BB; --border-light:#E2DAD0;
+  --green:#1B5738; --green-mid:#27784E; --green-pale:#C8E4D2;
+  --gold:#8E6208; --gold-pale:#FDEEBB;
+  --red:#8A1818; --red-pale:#FAD8D8;
+  --blue:#1A3676; --blue-pale:#D6E2F8;
+  --purple:#561BAB; --purple-pale:#EAE3FE;
+  --stone:#78695C; --stone-pale:#E4DED6;
+  --r:16px; --r-sm:10px; --r-pill:100px;
+  --shadow:0 2px 20px rgba(26,19,12,.07),0 0 0 1px rgba(26,19,12,.04);
+  --shadow-md:0 6px 36px rgba(26,19,12,.11),0 0 0 1px rgba(26,19,12,.05);
+  --shadow-sm:0 1px 6px rgba(26,19,12,.05);
+  --topbar-h:62px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 a{color:inherit;text-decoration:none;}
-button{font-family:inherit;cursor:pointer;}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;}
 
-/* Shell */
-.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;height:100vh;overflow:hidden;}
+/* ── Topbar ── */
+.topbar{height:var(--topbar-h);background:rgba(250,248,244,.93);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;align-items:center;padding:0 28px;gap:16px;}
+.topbar-brand{display:flex;align-items:baseline;gap:9px;flex-shrink:0;margin-right:8px;}
+.topbar-brand-name{font-family:'Playfair Display',serif;font-size:19px;font-weight:400;color:var(--ink);letter-spacing:-.015em;white-space:nowrap;}
+.topbar-brand-tag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);}
+.tab-nav{display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;font-weight:500;padding:6px 16px;border:1.5px solid transparent;border-radius:var(--r-pill);color:var(--ink-3);transition:all .15s;white-space:nowrap;flex-shrink:0;}
+.tab-btn:hover:not(.active){color:var(--ink-2);border-color:var(--border);background:var(--surface);}
+.tab-btn.active{background:var(--ink);color:var(--ink-inv);border-color:var(--ink);}
+.topbar-meta{margin-left:auto;flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:var(--ink-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);padding:5px 14px;white-space:nowrap;}
 
-/* Topbar */
-.topbar{grid-column:1/-1;background:var(--dark);display:flex;align-items:center;padding:0 20px;gap:0;border-bottom:1px solid #2a2a2a;overflow:hidden;}
-.topbar-brand{display:flex;align-items:baseline;gap:10px;flex-shrink:0;margin-right:20px;padding-right:20px;border-right:1px solid #2e2e2e;}
-.topbar-brand h1{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--text-inv);letter-spacing:-0.01em;white-space:nowrap;}
-.topbar-brand span{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#888;letter-spacing:0.18em;text-transform:uppercase;}
-.tab-nav{display:flex;gap:4px;flex-shrink:0;}
-.tab-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border:1px solid transparent;border-radius:3px;background:none;color:#aaa;transition:all .15s;white-space:nowrap;}
-.tab-btn:hover{color:#999;border-color:#333;}
-.tab-btn.active{color:#c8e0cc;border-color:var(--green);background:rgba(58,102,68,.2);}
-.topbar-pills{display:flex;gap:8px;margin-left:auto;align-items:center;flex-wrap:nowrap;overflow:hidden;}
-.topbar-pill{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#888;letter-spacing:.1em;padding:3px 8px;border:1px solid #3a3a3a;border-radius:2px;white-space:nowrap;flex-shrink:0;}
-.topbar-pill.accent{border-color:var(--green);color:#7aaa80;}
+/* ── Main ── */
+.main{max-width:1040px;width:100%;margin:0 auto;padding:40px 24px 80px;}
+.itinerary-layout{display:flex;gap:20px;align-items:flex-start;}
 
-/* Sidebar */
-.sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;height:calc(100vh - var(--topbar-h));display:flex;flex-direction:column;}
-.sidebar-section{padding:14px 14px 0;margin-bottom:18px;}
-.sidebar-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-.day-nav{display:flex;flex-direction:column;gap:2px;}
-.day-nav-item{display:flex;align-items:center;gap:8px;padding:6px 7px;border-radius:var(--radius);cursor:pointer;transition:all .12s;border:1px solid transparent;}
-.day-nav-item:hover{background:var(--card);border-color:var(--border-light);}
-.day-nav-item.active{background:var(--card);border-color:var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05);}
-.day-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.day-nav-text{flex:1;min-width:0;}
-.day-nav-num{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--text-3);letter-spacing:.08em;}
-.day-nav-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;margin-top:1px;}
-.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border-light);font-size:12px;}
-.stat-row:last-child{border-bottom:none;}
-.stat-label{color:var(--text-2);}
-.stat-value{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--text);}
-.legend-items{display:flex;flex-direction:column;gap:5px;}
-.legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2);}
-.legend-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+/* ── Hero ── */
+.trip-hero{margin-bottom:36px;}
+.trip-hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;}
+.trip-hero-title{font-family:'Playfair Display',serif;font-size:46px;font-weight:400;letter-spacing:-.025em;color:var(--ink);margin-bottom:20px;line-height:1.1;}
+.trip-hero-stats{display:flex;flex-wrap:wrap;gap:6px;}
+.trip-stat{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);background:var(--card);border:1px solid var(--border);border-radius:var(--r-pill);padding:5px 13px;box-shadow:var(--shadow-sm);}
+.trip-stat-icon{font-size:12px;}
 
-/* Main */
-.main{overflow-y:auto;height:calc(100vh - var(--topbar-h));padding:22px 24px;background:var(--bg);}
-.col-headers{display:grid;grid-template-columns:72px 148px 1fr 128px 108px 36px;padding:0 16px 0 18px;margin-bottom:5px;}
-.col-header{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);font-weight:500;}
+/* ── Day Sidebar ── */
+.day-sidebar{width:148px;flex-shrink:0;position:sticky;top:calc(var(--topbar-h) + 16px);max-height:calc(100vh - var(--topbar-h) - 32px);overflow-y:auto;scrollbar-width:none;padding-right:4px;}
+.day-sidebar::-webkit-scrollbar{display:none;}
+.sidebar-item{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:all .15s;margin-bottom:2px;border-left:3px solid transparent;position:relative;}
+.sidebar-item:hover{background:var(--surface);}
+.sidebar-item.active{background:var(--surface);border-left-color:var(--tc,var(--border));box-shadow:var(--shadow-sm);}
+.sidebar-dot{width:8px;height:8px;border-radius:50%;background:var(--tc-hex,#78695C);flex-shrink:0;margin-top:4px;}
+.sidebar-info{}
+.sidebar-num{font-family:'IBM Plex Mono',monospace;font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px;}
+.sidebar-name{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.3;}
+.sidebar-date{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--ink-3);margin-top:2px;}
 
-/* Day cards */
-.day-cards{display:flex;flex-direction:column;gap:5px;}
-.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:box-shadow .15s,border-color .15s,transform .15s;position:relative;}
-.day-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:var(--radius) 0 0 var(--radius);}
-.day-card:hover{border-color:var(--stone-light);box-shadow:0 2px 12px rgba(0,0,0,.07);transform:translateY(-1px);}
-.day-card.expanded{border-color:var(--stone-light);box-shadow:0 4px 20px rgba(0,0,0,.09);}
-.type-city::before,.type-culture::before{background:var(--blue);}
-.type-travel::before{background:var(--stone);}
-.type-hike::before{background:var(--green);}
-.type-via::before{background:var(--red);}
-.type-rifugio::before{background:var(--purple);}
-.type-depart::before{background:var(--gold);}
+/* ── Type tokens ── */
+.type-city    {--tc:var(--blue);   --tc-hex:#1A3676; --header-tint:rgba(26,54,118,.05);}
+.type-culture {--tc:var(--blue);   --tc-hex:#1A3676; --header-tint:rgba(26,54,118,.05);}
+.type-travel  {--tc:var(--stone);  --tc-hex:#78695C; --header-tint:rgba(120,105,92,.05);}
+.type-hike    {--tc:var(--green);  --tc-hex:#1B5738; --header-tint:rgba(27,87,56,.05);}
+.type-via     {--tc:var(--red);    --tc-hex:#8A1818; --header-tint:rgba(138,24,24,.05);}
+.type-rifugio {--tc:var(--purple); --tc-hex:#561BAB; --header-tint:rgba(86,27,171,.06);}
+.type-depart  {--tc:var(--gold);   --tc-hex:#8E6208; --header-tint:rgba(142,98,8,.05);}
 
-/* Card row */
-.card-row{display:grid;grid-template-columns:72px 148px 1fr 128px 108px 36px;align-items:center;padding:13px 16px 13px 18px;}
-.day-num{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.06em;}
-.day-date{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);margin-top:2px;}
-.loc-name{font-size:12px;font-weight:600;color:var(--text);line-height:1.3;}
-.loc-region{font-size:10px;color:var(--text-3);margin-top:1px;}
-.cell-activity{padding-right:12px;}
-.act-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:400;color:var(--text);line-height:1.3;}
-.act-sub{font-size:11px;color:var(--text-2);margin-top:2px;line-height:1.4;}
-.cell-sleep{overflow:hidden;min-width:0;}
-.sleep-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:4px 9px;border-radius:3px;line-height:1;max-width:100%;overflow:hidden;white-space:nowrap;}
-.sleep-icon{flex-shrink:0;}
-.sleep-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* ── Day Cards ── */
+.day-cards{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;}
+.day-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);border-left:4px solid var(--tc,var(--border));box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s,transform .18s;}
+.day-card:not(.expanded):hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.day-card.expanded{box-shadow:var(--shadow-md);}
+
+.card-header{display:flex;align-items:center;gap:14px;padding:15px 20px;background:var(--header-tint,transparent);border-bottom:1px solid var(--border-light);cursor:pointer;}
+.card-num-circle{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;color:white;background:var(--tc-hex,#78695C);flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.card-header-info{flex:1;min-width:0;}
+.card-header-date{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px;}
+.card-header-location{font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.card-header-region{font-size:10.5px;color:var(--ink-3);margin-top:1px;}
+.card-header-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.card-type-badge{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:var(--r-pill);font-weight:500;}
+.expand-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);color:var(--ink-3);display:inline-flex;align-items:center;justify-content:center;transition:all .22s;flex-shrink:0;font-size:14px;line-height:1;}
+.day-card.expanded .expand-btn{background:var(--ink);color:white;border-color:var(--ink);transform:rotate(180deg);}
+
+.card-body{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:17px 20px;}
+.card-body-left{flex:1;min-width:0;}
+.act-name{font-family:'Playfair Display',serif;font-size:21px;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:5px;}
+.act-sub{font-size:12px;color:var(--ink-3);line-height:1.6;}
+.card-body-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+.sleep-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:5px 12px;border-radius:var(--r-pill);line-height:1;}
 .sleep-hotel{background:var(--green-pale);color:var(--green);}
 .sleep-rifugio{background:var(--purple-pale);color:var(--purple);}
 .sleep-transit{background:var(--stone-pale);color:var(--stone);}
 .sleep-city{background:var(--blue-pale);color:var(--blue);}
-.cell-intensity{display:flex;flex-direction:column;justify-content:center;}
-.int-bar{display:flex;gap:3px;margin-bottom:4px;}
-.int-pip{width:14px;height:3px;border-radius:2px;background:var(--border);}
-.int-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.04em;}
-.int-1 .int-pip:nth-child(-n+1){background:var(--green-light);}
+.int-bar{display:flex;gap:3px;margin-bottom:2px;}
+.int-pip{width:13px;height:3px;border-radius:2px;background:var(--border-light);}
+.int-1 .int-pip:nth-child(-n+1){background:var(--green-mid);}
 .int-2 .int-pip:nth-child(-n+2){background:var(--green);}
 .int-3 .int-pip:nth-child(-n+3){background:var(--gold);}
 .int-4 .int-pip:nth-child(-n+4){background:var(--red);}
-.expand-btn{width:22px;height:22px;border:1px solid var(--border);border-radius:50%;background:none;color:var(--text-3);font-size:14px;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;}
-.day-card.expanded .expand-btn{background:var(--dark);color:var(--text-inv);border-color:var(--dark);transform:rotate(45deg);}
+.int-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.04em;text-align:right;}
 
-/* Detail panel */
-.card-detail{display:none;border-top:1px solid var(--border-light);background:var(--bg);}
-.day-card.expanded .card-detail{display:block;}
-.detail-inner{display:grid;grid-template-columns:1fr 220px 260px;}
+/* ── Smooth expand ── */
+.card-detail-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.4,0,.2,1);}
+.day-card.expanded .card-detail-wrap{grid-template-rows:1fr;}
+.card-detail-inner{overflow:hidden;}
+.card-detail{background:var(--surface);border-top:1px solid var(--border-light);}
+.detail-inner{display:grid;grid-template-columns:1fr 210px 250px;}
 .detail-col{padding:20px 22px;border-right:1px solid var(--border-light);}
 .detail-col:last-child{border-right:none;}
-.detail-col-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;}
-.detail-body{font-size:13px;color:var(--text-2);line-height:1.8;}
+.detail-col-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;}
+.detail-body{font-size:13px;color:var(--ink-2);line-height:1.8;}
 .detail-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}
-.dtag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-weight:500;}
+.dtag{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-pill);font-weight:500;}
 .dtag-green{background:var(--green-pale);color:var(--green);}
 .dtag-red{background:var(--red-pale);color:var(--red);}
 .dtag-gold{background:var(--gold-pale);color:var(--gold);}
 .dtag-blue{background:var(--blue-pale);color:var(--blue);}
 .dtag-purple{background:var(--purple-pale);color:var(--purple);}
 .dtag-stone{background:var(--stone-pale);color:var(--stone);}
-.highlight-item{display:flex;gap:10px;margin-bottom:8px;font-size:12px;color:var(--text-2);line-height:1.5;}
+.highlight-item{display:flex;gap:10px;margin-bottom:8px;font-size:12px;color:var(--ink-2);line-height:1.55;}
 .hi-arrow{color:var(--green);flex-shrink:0;font-size:11px;margin-top:2px;}
 .stat-item{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border-light);font-size:12px;}
 .stat-item:last-child{border-bottom:none;}
-.stat-item-lbl{color:var(--text-2);}
-.stat-item-val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--text);}
+.stat-item-lbl{color:var(--ink-2);}
+.stat-item-val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--ink);}
 .booking-item{padding:10px 0;border-bottom:1px solid var(--border-light);}
 .booking-item:first-child{padding-top:0;}
 .booking-item:last-child{border-bottom:none;}
-.booking-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3;}
-.booking-note{font-size:11.5px;color:var(--text-2);line-height:1.6;}
+.booking-title{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;line-height:1.3;}
+.booking-note{font-size:11.5px;color:var(--ink-2);line-height:1.6;}
 .booking-link{display:inline-block;margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);border-bottom:1px solid var(--green-pale);padding-bottom:1px;letter-spacing:.04em;}
-.booking-link:hover{color:var(--green-light);border-color:var(--green-light);}
-.no-bookings{font-size:12px;color:var(--text-3);font-style:italic;}
+.booking-link:hover{color:var(--green-mid);}
+.no-bookings{font-size:12px;color:var(--ink-3);font-style:italic;}
 
-/* Action page */
-.action-page{display:none;overflow-y:auto;height:calc(100vh - var(--topbar-h));grid-column:1/-1;padding:32px 40px;background:var(--bg);}
+/* ── Map ── */
+.map-page{display:none;overflow:hidden;height:calc(100vh - var(--topbar-h));}
+.map-page.visible{display:grid;grid-template-columns:300px 1fr;}
+#map{height:100%;width:100%;z-index:0;}
+.map-sidebar{background:var(--card);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;height:100%;}
+.map-sidebar-header{padding:20px 18px 14px;border-bottom:1px solid var(--border);}
+.map-sidebar-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--ink);margin-bottom:3px;}
+.map-sidebar-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.12em;}
+.map-day-list{padding:10px;display:flex;flex-direction:column;gap:4px;}
+.map-day-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .12s;}
+.map-day-item:hover{background:var(--surface);border-color:var(--border-light);}
+.map-day-item.active{background:var(--surface);border-color:var(--border);box-shadow:var(--shadow-sm);}
+.map-day-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,.4);}
+.map-day-text{flex:1;min-width:0;}
+.map-day-num{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--ink-3);letter-spacing:.08em;}
+.map-day-name{font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.map-day-act{font-size:10px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.map-detail-panel{margin:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:none;}
+.map-detail-panel.visible{display:block;}
+.map-detail-header{padding:14px 16px 10px;}
+.map-detail-type{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
+.map-detail-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:400;color:var(--ink);line-height:1.3;}
+.map-detail-sub{font-size:11px;color:var(--ink-2);margin-top:3px;}
+.map-detail-body{padding:10px 16px 14px;font-size:12px;color:var(--ink-2);line-height:1.7;border-top:1px solid var(--border-light);}
+.map-detail-stats{display:flex;border-top:1px solid var(--border-light);}
+.map-stat{flex:1;padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);}
+.map-stat:last-child{border-right:none;}
+.map-stat-val{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--ink);}
+.map-stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;}
+.map-route-legend{padding:12px 16px;border-top:1px solid var(--border);margin-top:auto;}
+.map-legend-title{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;}
+.map-legend-items{display:flex;flex-direction:column;gap:5px;}
+.map-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-2);}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.map-popup{padding:14px 16px;}
+.map-popup-day{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px;}
+.map-popup-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:400;color:var(--ink);margin-bottom:3px;}
+.map-popup-sub{font-size:11px;color:var(--ink-2);margin-bottom:8px;}
+
+/* ── Action page ── */
+.action-page{display:none;background:var(--bg);min-height:calc(100vh - var(--topbar-h));padding:40px 28px 80px;}
 .action-page.visible{display:block;}
-.action-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;letter-spacing:-.02em;color:var(--text);margin-bottom:4px;}
-.action-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.1em;margin-bottom:28px;}
-.action-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px;max-width:560px;}
-.asumm{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;}
-.asumm-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;line-height:1;margin-bottom:5px;}
-.asumm-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);}
+.action-page-inner{max-width:840px;margin:0 auto;}
+.action-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:400;letter-spacing:-.02em;color:var(--ink);margin-bottom:4px;}
+.action-sub{font-size:12px;color:var(--ink-3);letter-spacing:.03em;margin-bottom:28px;}
+.action-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px;max-width:580px;}
+.asumm{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 14px;text-align:center;box-shadow:var(--shadow-sm);}
+.asumm-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:400;line-height:1;margin-bottom:6px;}
+.asumm-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);}
 .s-urgent .asumm-num{color:var(--red);}
 .s-soon .asumm-num{color:var(--gold);}
 .s-done .asumm-num{color:var(--green);}
-.s-total .asumm-num{color:var(--text);}
+.s-total .asumm-num{color:var(--ink);}
 .action-section{margin-bottom:28px;}
-.action-section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.action-section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border);}
 .action-section-label{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;}
-.action-section-sub{font-size:11px;color:var(--text-3);}
-.action-list{display:flex;flex-direction:column;gap:7px;}
-.aitem{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);display:grid;grid-template-columns:20px 1fr auto;gap:14px;align-items:start;padding:14px 16px;cursor:pointer;transition:all .12s;position:relative;overflow:hidden;}
-.aitem::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.aitem.urgent::before{background:var(--red);}
-.aitem.soon::before{background:var(--gold);}
-.aitem.plan::before{background:var(--blue);}
-.aitem.done{opacity:.45;}
-.aitem.done::before{background:var(--green);}
-.aitem:hover{border-color:var(--stone-light);box-shadow:0 2px 8px rgba(0,0,0,.06);}
-.acheck{width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:10px;color:transparent;transition:all .12s;}
+.action-section-sub{font-size:11px;color:var(--ink-3);}
+.action-list{display:flex;flex-direction:column;gap:8px;}
+.aitem{background:var(--card);border:1px solid var(--border);border-left:3.5px solid transparent;border-radius:var(--r);display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:start;padding:14px 18px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-sm);}
+.aitem.urgent{border-left-color:var(--red);}
+.aitem.soon{border-left-color:var(--gold);}
+.aitem.plan{border-left-color:var(--blue);}
+.aitem.done{opacity:.44;}
+.aitem.done.urgent,.aitem.done.soon,.aitem.done.plan{border-left-color:var(--green);}
+.aitem:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.acheck{width:20px;height:20px;border:1.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:10px;color:transparent;transition:all .12s;}
 .aitem.done .acheck{background:var(--green);border-color:var(--green);color:white;}
-.aitem-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
-.aitem.done .aitem-title{text-decoration:line-through;color:var(--text-3);}
-.aitem-detail{font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:7px;}
+.aitem-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.3;}
+.aitem.done .aitem-title{text-decoration:line-through;color:var(--ink-3);}
+.aitem-detail{font-size:12px;color:var(--ink-2);line-height:1.7;margin-bottom:7px;}
 .aitem-tags{display:flex;flex-wrap:wrap;gap:5px;}
-.atag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:500;}
+.atag{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-pill);font-weight:500;}
 .atag-red{background:var(--red-pale);color:var(--red);}
 .atag-gold{background:var(--gold-pale);color:var(--gold);}
 .atag-blue{background:var(--blue-pale);color:var(--blue);}
 .atag-green{background:var(--green-pale);color:var(--green);}
 .atag-stone{background:var(--stone-pale);color:var(--stone);}
 .atag-purple{background:var(--purple-pale);color:var(--purple);}
-.aitem-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;min-width:120px;}
-.aitem-day{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.08em;white-space:nowrap;text-align:right;}
-.aitem-cost{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text-2);white-space:nowrap;}
+.aitem-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;min-width:110px;}
+.aitem-day{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.08em;white-space:nowrap;text-align:right;}
+.aitem-cost{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--ink-2);white-space:nowrap;}
 .aitem-link{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);border-bottom:1px solid var(--green-pale);padding-bottom:1px;letter-spacing:.04em;white-space:nowrap;}
-.aitem-link:hover{color:var(--green-light);}
-
-/* Map page */
-.map-page{display:none;overflow:hidden;height:calc(100vh - var(--topbar-h));grid-column:1/-1;background:var(--bg);}
-.map-page.visible{display:grid;grid-template-columns:300px 1fr;}
-#map{height:100%;width:100%;z-index:0;}
-.map-sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;height:100%;}
-.map-sidebar-header{padding:18px 16px 12px;border-bottom:1px solid var(--border);}
-.map-sidebar-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--text);margin-bottom:2px;}
-.map-sidebar-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.12em;}
-.map-day-list{padding:10px 10px;display:flex;flex-direction:column;gap:3px;}
-.map-day-item{display:flex;align-items:center;gap:10px;padding:8px 9px;border-radius:var(--radius);cursor:pointer;border:1px solid transparent;transition:all .12s;}
-.map-day-item:hover{background:var(--card);border-color:var(--border-light);}
-.map-day-item.active{background:var(--card);border-color:var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.map-day-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,.4);}
-.map-day-text{flex:1;min-width:0;}
-.map-day-num{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text-3);letter-spacing:.08em;}
-.map-day-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
-.map-day-act{font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.map-detail-panel{margin:10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none;}
-.map-detail-panel.visible{display:block;}
-.map-detail-header{padding:14px 16px 10px;}
-.map-detail-type{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;}
-.map-detail-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:400;color:var(--text);line-height:1.3;}
-.map-detail-sub{font-size:11px;color:var(--text-2);margin-top:3px;}
-.map-detail-body{padding:0 16px 14px;font-size:12px;color:var(--text-2);line-height:1.7;border-top:1px solid var(--border-light);padding-top:10px;}
-.map-detail-stats{display:flex;gap:0;border-top:1px solid var(--border-light);}
-.map-stat{flex:1;padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);}
-.map-stat:last-child{border-right:none;}
-.map-stat-val{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text);}
-.map-stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;}
-.map-route-legend{padding:12px 16px;border-top:1px solid var(--border);margin-top:auto;}
-.map-legend-title{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;}
-.map-legend-items{display:flex;flex-direction:column;gap:5px;}
-.map-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2);}
-.map-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-
-/* Leaflet popup override */
-.leaflet-popup-content-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 20px rgba(0,0,0,.15);padding:0;}
-.leaflet-popup-content{margin:0;font-family:'IBM Plex Sans',sans-serif;}
-.leaflet-popup-tip{background:var(--card);}
-.map-popup{padding:14px 16px;}
-.map-popup-day{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
-.map-popup-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:3px;}
-.map-popup-sub{font-size:11px;color:var(--text-2);margin-bottom:8px;}
-.map-popup-stats{display:flex;gap:12px;border-top:1px solid var(--border-light);padding-top:8px;margin-top:4px;}
-.map-popup-stat{font-size:10px;color:var(--text-3);}
-.map-popup-stat span{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--text);}
-
-/* Packing page */
-.packing-page{display:none;overflow-y:auto;height:calc(100vh - var(--topbar-h));grid-column:1/-1;padding:32px 40px;background:var(--bg);}
-.packing-page.visible{display:block;}
-.pack-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;letter-spacing:-.02em;color:var(--text);}
-.pack-progress-wrap{margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;}
-.pack-progress-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;display:flex;justify-content:space-between;}
-.pack-progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
-.pack-progress-fill{height:100%;background:var(--green);border-radius:3px;transition:width .4s;}
-.pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
-.pack-category{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.pack-cat-header{padding:11px 15px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
-.pack-cat-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--text);}
-.pack-cat-count{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);letter-spacing:.06em;}
-.pack-cat-bar{height:2px;background:var(--border-light);}
-.pack-cat-fill{height:100%;background:var(--green);transition:width .4s;}
-.pack-items{padding:6px 0;}
-.pack-item{display:flex;align-items:flex-start;gap:9px;padding:6px 15px;cursor:pointer;transition:background .1s;}
-.pack-item:hover{background:rgba(0,0,0,.025);}
-.pack-checkbox{width:15px;height:15px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all .12s;}
-.pack-item.checked .pack-checkbox{background:var(--green);border-color:var(--green);color:white;}
-.pack-item-text{font-size:12px;color:var(--text-2);line-height:1.5;transition:color .12s;}
-.pack-item.checked .pack-item-text{text-decoration:line-through;color:var(--text-3);}
-.pack-urgent .pack-item-text{color:var(--red);font-weight:500;}
-.pack-urgent.checked .pack-item-text{color:var(--text-3);font-weight:400;}
-
-/* Budget page */
-.budget-page{display:none;overflow-y:auto;height:calc(100vh - var(--topbar-h));grid-column:1/-1;padding:32px 40px;background:var(--bg);}
-.weather-tip{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;max-width:860px;}
-.weather-tip-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.weather-tip-icon{font-size:16px;}
+.aitem-link:hover{color:var(--green-mid);}
+.weather-tip{background:var(--card);border:1px solid var(--border);border-left:3.5px solid var(--blue);border-radius:var(--r);padding:18px 22px;margin-bottom:28px;box-shadow:var(--shadow-sm);}
+.weather-tip-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.weather-tip-icon{font-size:18px;}
 .weather-tip-title{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);}
-.weather-tip-rules{display:flex;flex-direction:column;gap:6px;}
-.weather-rule{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;color:var(--text-2);}
-.weather-rule-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:6px;}
-.weather-rule strong{color:var(--text);font-weight:600;}
+.weather-tip-rules{display:flex;flex-direction:column;gap:8px;}
+.weather-rule{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.6;color:var(--ink-2);}
+.weather-rule-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:6px;}
+.weather-rule strong{color:var(--ink);font-weight:600;}
 .weather-rule.warn .weather-rule-dot{background:var(--gold);}
 .weather-rule.ok .weather-rule-dot{background:var(--green);}
 .weather-rule.lock .weather-rule-dot{background:var(--purple);}
+
+/* ── Packing ── */
+.packing-page{display:none;background:var(--bg);min-height:calc(100vh - var(--topbar-h));padding:40px 28px 80px;}
+.packing-page.visible{display:block;}
+.packing-page-inner{max-width:980px;margin:0 auto;}
+.pack-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:400;letter-spacing:-.02em;color:var(--ink);}
+.pack-progress-wrap{margin:16px 0 24px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;box-shadow:var(--shadow-sm);}
+.pack-progress-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;display:flex;justify-content:space-between;}
+.pack-progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.pack-progress-fill{height:100%;background:var(--green);border-radius:3px;transition:width .4s;}
+.pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.pack-category{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);}
+.pack-cat-header{padding:12px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
+.pack-cat-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);}
+.pack-cat-count{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.06em;}
+.pack-cat-bar{height:2px;background:var(--border-light);}
+.pack-cat-fill{height:100%;background:var(--green);transition:width .4s;}
+.pack-items{padding:6px 0;}
+.pack-item{display:flex;align-items:flex-start;gap:10px;padding:7px 16px;cursor:pointer;transition:background .1s;min-height:38px;}
+.pack-item:hover{background:rgba(0,0,0,.02);}
+.pack-checkbox{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all .12s;}
+.pack-item.checked .pack-checkbox{background:var(--green);border-color:var(--green);color:white;}
+.pack-item-text{font-size:12px;color:var(--ink-2);line-height:1.5;}
+.pack-item.checked .pack-item-text{text-decoration:line-through;color:var(--ink-3);}
+.pack-urgent .pack-item-text{color:var(--red);font-weight:500;}
+.pack-urgent.checked .pack-item-text{color:var(--ink-3);font-weight:400;}
+
+/* ── Budget ── */
+.budget-page{display:none;background:var(--bg);min-height:calc(100vh - var(--topbar-h));padding:40px 28px 80px;}
 .budget-page.visible{display:block;}
-.budget-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;letter-spacing:-.02em;color:var(--text);margin-bottom:4px;}
-.budget-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.1em;margin-bottom:24px;}
-.budget-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;max-width:640px;}
-.bsumm{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
-.bsumm-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
-.bsumm-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;line-height:1;color:var(--text);}
-.bsumm-sub{font-size:10px;color:var(--text-3);margin-top:4px;}
-.budget-section{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.budget-sec-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-light);}
+.budget-page-inner{max-width:840px;margin:0 auto;}
+.budget-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:400;letter-spacing:-.02em;color:var(--ink);margin-bottom:4px;}
+.budget-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.1em;margin-bottom:24px;}
+.budget-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;max-width:600px;}
+.bsumm{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.bsumm-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;}
+.bsumm-val{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;line-height:1;color:var(--ink);}
+.bsumm-sub{font-size:10px;color:var(--ink-3);margin-top:4px;}
+.budget-section{margin-bottom:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);}
+.budget-sec-header{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border-light);}
 .budget-sec-label{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;}
-.budget-sec-total{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);}
+.budget-sec-total{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-3);}
 .budget-table{width:100%;border-collapse:collapse;}
-.budget-table th{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);padding:7px 16px;text-align:left;border-bottom:1px solid var(--border-light);font-weight:500;}
+.budget-table th{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:8px 18px;text-align:left;border-bottom:1px solid var(--border-light);font-weight:500;}
 .budget-table th.right,.budget-table td.right{text-align:right;}
-.budget-table td{padding:9px 16px;font-size:12px;color:var(--text-2);border-bottom:1px solid var(--border-light);}
+.budget-table td{padding:10px 18px;font-size:12px;color:var(--ink-2);border-bottom:1px solid var(--border-light);}
 .budget-table tr:last-child td{border-bottom:none;}
 .budget-table tr:hover td{background:rgba(0,0,0,.015);}
-.budget-item-name{font-size:12px;font-weight:500;color:var(--text);}
-.budget-item-note{font-size:10.5px;color:var(--text-3);margin-top:2px;line-height:1.4;}
+.budget-item-name{font-size:12px;font-weight:500;color:var(--ink);}
+.budget-item-note{font-size:10.5px;color:var(--ink-3);margin-top:2px;line-height:1.4;}
 .budget-est{font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap;}
-.bpp-tag{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:2px;background:var(--stone-pale);color:var(--stone);white-space:nowrap;}
+.bpp-tag{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:var(--r-pill);background:var(--stone-pale);color:var(--stone);white-space:nowrap;}
 .budget-actual-wrap{display:inline-flex;align-items:center;gap:2px;justify-content:flex-end;}
-.budget-actual-prefix{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);}
-.budget-actual-input{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);background:none;border:none;border-bottom:1px dashed var(--border);outline:none;text-align:right;width:72px;padding:1px 2px;cursor:pointer;transition:all .15s;}
-.budget-actual-input:focus{background:var(--surface);border:1px solid var(--green);border-radius:2px;padding:1px 4px;cursor:text;}
+.budget-actual-prefix{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-3);}
+.budget-actual-input{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink);background:none;border:none;border-bottom:1px dashed var(--border);outline:none;text-align:right;width:72px;padding:1px 2px;cursor:pointer;transition:all .15s;}
+.budget-actual-input:focus{background:var(--surface);border:1px solid var(--green);border-radius:4px;padding:1px 5px;cursor:text;}
 .budget-actual-input::placeholder{color:var(--border);}
 .budget-actual-input.filled{color:var(--green);border-bottom-color:var(--green-pale);}
 
-/* Mobile */
+/* ── Mobile ── */
 @media(max-width:860px){
-  :root{--topbar-h:94px;}
-
-  /* ── App shell ── */
-  .app{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) auto;height:auto;min-height:100vh;overflow:visible;}
-
-  /* ── Topbar: brand row + scrollable tab row ── */
-  .topbar{flex-wrap:wrap;padding:0;height:var(--topbar-h);overflow:hidden;flex-shrink:0;}
-  .topbar-brand{width:100%;height:50px;padding:0 16px;margin-right:0;border-right:none;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;flex-shrink:0;}
-  .topbar-brand h1{font-size:16px;}
-  .topbar-brand span{display:none;}
-  /* Tab row: 44px tall, horizontally scrollable, no visible scrollbar */
-  .tab-nav{width:100%;height:44px;padding:0 10px;gap:4px;overflow-x:auto;overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:center;flex-shrink:0;}
-  .tab-nav::-webkit-scrollbar{display:none;}
-  /* Each tab button: full 34px height, bigger padding for easy tapping */
-  .tab-btn{flex-shrink:0;font-size:9.5px;padding:0 13px;height:32px;display:inline-flex;align-items:center;}
-  .topbar-pills{display:none;}
-
-  /* ── Sidebar hidden on mobile ── */
-  .sidebar{display:none;}
-
-  /* ── Itinerary (main) ── */
-  .main{height:auto;overflow:visible;padding:12px;grid-column:1;}
-  .col-headers{display:none;}
-  /* 2-col card: day number + location | activity spans full width | expand button visible */
-  .card-row{
-    grid-template-columns:58px 1fr 36px;
-    grid-template-rows:auto auto;
-    gap:4px 8px;
-    padding:12px 12px 12px 14px;
-  }
-  .cell-day{grid-column:1;grid-row:1;}
-  .cell-location{grid-column:2;grid-row:1;}
-  .cell-activity{grid-column:1/-1;grid-row:2;padding-right:0;}
-  .cell-sleep,.cell-intensity{display:none;}
-  /* Keep expand button — gives users a clear tap target */
-  .cell-expand{grid-column:3;grid-row:1;display:flex;align-items:center;justify-content:center;}
-  .expand-btn{width:28px;height:28px;font-size:16px;}
-  .act-name{font-size:13px;}
-  .act-sub{font-size:10px;}
+  :root{--topbar-h:96px;}
+  .topbar{flex-wrap:wrap;padding:0;overflow:hidden;}
+  .topbar-brand{width:100%;height:52px;padding:0 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;}
+  .topbar-meta{display:none;}
+  .tab-nav{width:100%;height:44px;padding:0 10px;flex-shrink:0;flex:none;}
+  .tab-btn{font-size:11.5px;padding:6px 14px;}
+  .main{padding:20px 14px 60px;}
+  .trip-hero-title{font-size:32px;}
+  .itinerary-layout{gap:14px;}
+  .day-sidebar{width:120px;}
+  .card-body{flex-direction:column;gap:10px;}
+  .card-body-right{flex-direction:row;align-items:center;width:100%;}
+  .card-header-right .card-type-badge{display:none;}
   .detail-inner{grid-template-columns:1fr;}
-  .detail-col{border-right:none;border-bottom:1px solid var(--border-light);padding:14px 16px;}
+  .detail-col{border-right:none;border-bottom:1px solid var(--border-light);padding:16px;}
   .detail-col:last-child{border-bottom:none;}
-
-  /* ── Action Items page ── */
-  .action-page{height:auto;overflow-y:visible;padding:20px 14px;grid-column:1;}
-  .action-summary{grid-template-columns:repeat(2,1fr);max-width:100%;margin-bottom:20px;}
-  .asumm{padding:11px 12px;}
-  .asumm-num{font-size:22px;}
-  .aitem{grid-template-columns:22px 1fr;gap:10px;padding:12px 14px;}
+  .action-page,.packing-page,.budget-page{padding:20px 14px 60px;}
+  .action-page-inner,.packing-page-inner,.budget-page-inner{max-width:100%;}
+  .action-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
+  .aitem{grid-template-columns:22px 1fr;gap:10px;}
   .aitem-right{display:none;}
-  .weather-tip{margin-bottom:20px;padding:14px 16px;}
-
-  /* ── Packing page ── */
-  .packing-page{height:auto;overflow-y:visible;padding:20px 14px;grid-column:1;}
   .pack-grid{grid-template-columns:1fr;}
-  /* Larger touch targets for pack checkboxes */
-  .pack-item{padding:8px 14px;min-height:40px;}
-  .pack-checkbox{width:18px;height:18px;font-size:11px;}
-
-  /* ── Budget page ── */
-  .budget-page{height:auto;overflow-y:visible;padding:20px 14px;grid-column:1;}
-  .budget-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
+  .pack-item{min-height:42px;}
+  .budget-summary{grid-template-columns:repeat(2,1fr);}
   .budget-table th:nth-child(2),.budget-table td:nth-child(2){display:none;}
-  /* Make budget input easier to tap */
-  .budget-actual-input{width:64px;font-size:12px;}
-
-  /* ── Map page: give it a defined height so Google Maps renders ── */
-  .map-page.visible{
-    display:grid;
-    grid-template-columns:1fr;
-    grid-template-rows:190px 1fr;
-    height:calc(100vh - var(--topbar-h));
-    grid-column:1;
-    overflow:hidden;
-  }
-  .map-sidebar{
-    border-right:none;
-    border-bottom:1px solid var(--border);
-    height:190px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-  }
+  .map-page.visible{display:grid;grid-template-columns:1fr;grid-template-rows:190px 1fr;height:calc(100vh - var(--topbar-h));overflow:hidden;}
+  .map-sidebar{border-right:none;border-bottom:1px solid var(--border);height:190px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;}
   .map-day-list{flex-direction:row;padding:8px;gap:4px;height:100%;}
   .map-day-item{flex-direction:column;align-items:flex-start;min-width:120px;max-width:120px;flex-shrink:0;padding:6px 8px;}
-  .map-day-name{font-size:11px;}
-  .map-day-act{font-size:9px;}
-  .map-detail-panel{display:none!important;} /* hidden on mobile — popup is enough */
+  .map-detail-panel{display:none!important;}
   .map-route-legend{display:none;}
-  /* Map fills remaining grid row — parent has defined height so 1fr works */
   #map{height:100%;width:100%;}
+}
+@media(max-width:580px){
+  .itinerary-layout{flex-direction:column;gap:10px;}
+  .day-sidebar{width:100%;position:static;max-height:none;display:flex;flex-direction:row;overflow-x:auto;padding-right:0;padding-bottom:4px;scrollbar-width:none;}
+  .sidebar-item{flex-direction:column;align-items:center;min-width:68px;border-left:none;border-bottom:3px solid transparent;padding:8px 5px;}
+  .sidebar-item.active{border-left-color:transparent;border-bottom-color:var(--tc,var(--border));}
+  .sidebar-dot{margin-top:0;margin-bottom:3px;}
+  .sidebar-name{font-size:10px;text-align:center;}
+  .sidebar-date{text-align:center;}
 }
 </style>
 </head>
@@ -396,7 +344,10 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 <div class="app">
 
 <div class="topbar">
-  <div class="topbar-brand"><h1>Dolomites '26</h1><span>Trip Planner</span></div>
+  <div class="topbar-brand">
+    <div class="topbar-brand-name">Dolomites '26</div>
+    <div class="topbar-brand-tag">Trip Planner</div>
+  </div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('itinerary',this)">Itinerary</button>
     <button class="tab-btn" onclick="switchTab('map',this)">🗺 Map</button>
@@ -404,54 +355,25 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <button class="tab-btn" onclick="switchTab('packing',this)">📦 Packing</button>
     <button class="tab-btn" onclick="switchTab('budget',this)">💰 Budget</button>
   </div>
-  <div class="topbar-pills">
-    <div class="topbar-pill">Will · Jack · Jon</div>
-    <div class="topbar-pill">Sep 18–27, 2026</div>
-    <div class="topbar-pill">10 days · 9 nights</div>
-    <div class="topbar-pill accent">VCE · Bologna · Dolomites · VCE</div>
-  </div>
-</div>
-
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-section" style="margin-top:8px">
-    <div class="sidebar-label">Days</div>
-    <div class="day-nav" id="day-nav"></div>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Trip Stats</div>
-    <div class="stat-row"><span class="stat-label">Total nights</span><span class="stat-value">9</span></div>
-    <div class="stat-row"><span class="stat-label">Bologna</span><span class="stat-value">2 nights</span></div>
-    <div class="stat-row"><span class="stat-label">Dolomites</span><span class="stat-value">5 nights</span></div>
-    <div class="stat-row"><span class="stat-label">Venice</span><span class="stat-value">1 night</span></div>
-    <div class="stat-row"><span class="stat-label">Rifugio nights</span><span class="stat-value">2 ✓ booked</span></div>
-    <div class="stat-row"><span class="stat-label">Hiking days</span><span class="stat-value">5</span></div>
-    <div class="stat-row"><span class="stat-label">Via ferrata</span><span class="stat-value">1 guided day</span></div>
-    <div class="stat-row"><span class="stat-label">Max elevation</span><span class="stat-value">2,519m</span></div>
-    <div class="stat-row"><span class="stat-label">Fly in / out</span><span class="stat-value">VCE / VCE</span></div>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Legend</div>
-    <div class="legend-items">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>City</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--stone)"></div>Travel / drive</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Hike</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Via ferrata</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Rifugio night</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Departure</div>
-    </div>
-  </div>
+  <div class="topbar-meta">Will · Jack · Jon · Sep 18–27</div>
 </div>
 
 <div class="main" id="main">
-  <div class="col-headers">
-    <div class="col-header">Day</div>
-    <div class="col-header">Location</div>
-    <div class="col-header">Activity</div>
-    <div class="col-header">Sleep</div>
-    <div class="col-header">Intensity</div>
-    <div class="col-header"></div>
+  <div class="trip-hero">
+    <div class="trip-hero-eyebrow">Sep 18 – 27, 2026</div>
+    <div class="trip-hero-title">Bologna · Dolomites · Venice</div>
+    <div class="trip-hero-stats">
+      <div class="trip-stat"><span class="trip-stat-icon">📅</span>10 days · 9 nights</div>
+      <div class="trip-stat"><span class="trip-stat-icon">⛺</span>2 rifugio nights · booked</div>
+      <div class="trip-stat"><span class="trip-stat-icon">🥾</span>5 hiking days</div>
+      <div class="trip-stat"><span class="trip-stat-icon">🧗</span>1 via ferrata</div>
+      <div class="trip-stat"><span class="trip-stat-icon">✈️</span>JFK → VCE</div>
+    </div>
   </div>
-  <div class="day-cards" id="day-cards"></div>
+  <div class="itinerary-layout">
+    <div class="day-sidebar" id="day-sidebar"></div>
+    <div class="day-cards" id="day-cards"></div>
+  </div>
 </div>
 
 <div class="map-page" id="map-page">
@@ -459,21 +381,21 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="map-sidebar-header">
       <div style="display:flex;align-items:baseline;justify-content:space-between;">
         <div class="map-sidebar-title">Route Map</div>
-        <button onclick="if(window._map&&window._mapBounds)window._map.fitBounds(window._mapBounds,60)" style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:2px;color:var(--text-3);padding:3px 8px;cursor:pointer;">Reset View</button>
+        <button onclick="if(window._map&&window._mapBounds)window._map.fitBounds(window._mapBounds,60)" style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:var(--r-pill);color:var(--ink-3);padding:4px 10px;cursor:pointer;">Reset</button>
       </div>
-      <div class="map-sidebar-sub">Sep 14–23 · VCE → Dolomites → MXP</div>
+      <div class="map-sidebar-sub">Sep 18–27 · VCE → Bologna → Dolomites → VCE</div>
     </div>
     <div class="map-day-list" id="map-day-list"></div>
     <div class="map-detail-panel" id="map-detail-panel"></div>
     <div class="map-route-legend">
       <div class="map-legend-title">Legend</div>
       <div class="map-legend-items">
-        <div class="map-legend-item"><div class="map-legend-dot" style="background:#284468"></div>City</div>
-        <div class="map-legend-item"><div class="map-legend-dot" style="background:#7c6c5c"></div>Travel / Drive</div>
-        <div class="map-legend-item"><div class="map-legend-dot" style="background:#3a6644"></div>Hike</div>
-        <div class="map-legend-item"><div class="map-legend-dot" style="background:#842020"></div>Via Ferrata</div>
-        <div class="map-legend-item"><div class="map-legend-dot" style="background:#582870"></div>Rifugio Night</div>
-        <div class="map-legend-item"><div class="map-legend-dot" style="background:#a07818"></div>Departure</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#1A3676"></div>City</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#78695C"></div>Travel / Drive</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#1B5738"></div>Hike</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#8A1818"></div>Via Ferrata</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#561BAB"></div>Rifugio Night</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#8E6208"></div>Departure</div>
       </div>
     </div>
   </div>
@@ -481,37 +403,40 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 </div>
 
 <div class="action-page" id="action-page">
-  <div class="action-title">Will's Action Items</div>
-  <div class="action-sub">Bologna · Dolomites · Venice · Sep 18–27 · Click any item to mark complete</div>
-  <div class="action-summary">
-    <div class="asumm s-urgent"><div class="asumm-num" id="c-urgent">0</div><div class="asumm-label">Book Now</div></div>
-    <div class="asumm s-soon"><div class="asumm-num" id="c-soon">0</div><div class="asumm-label">Book Soon</div></div>
-    <div class="asumm s-done"><div class="asumm-num" id="c-done">0</div><div class="asumm-label">Done</div></div>
-    <div class="asumm s-total"><div class="asumm-num" id="c-total">0</div><div class="asumm-label">Total</div></div>
-  </div>
-  <div class="weather-tip">
-    <div class="weather-tip-header"><span class="weather-tip-icon">⛅</span><span class="weather-tip-title">Weather Decision Rules</span></div>
-    <div class="weather-tip-rules">
-      <div class="weather-rule ok"><div class="weather-rule-dot"></div><span><strong>Clear sky in Val Gardena</strong> → do Seceda that day</span></div>
-      <div class="weather-rule warn"><div class="weather-rule-dot"></div><span><strong>Partial cloud in Val Gardena</strong> → do Alpe di Siusi, save Seceda for clearer day</span></div>
-      <div class="weather-rule warn"><div class="weather-rule-dot"></div><span><strong>Bad weather on drive day (Sep 21)</strong> → skip Lagazuoi, go straight to Cortina, no regret</span></div>
-      <div class="weather-rule"><div class="weather-rule-dot"></div><span><strong>Cloudy sunset at Tre Cime</strong> → set alarm for 6am, sunrise often clears</span></div>
-      <div class="weather-rule"><div class="weather-rule-dot"></div><span><strong>Morning fog at Seceda</strong> → wait, lifts run all day, fog usually burns off by 10am</span></div>
-      <div class="weather-rule lock"><div class="weather-rule-dot"></div><span><strong>Tre Cime (Sep 22) + Croda da Lago (Sep 23) are non-negotiable</strong> — rifugios are booked and non-refundable, go regardless of weather</span></div>
-      <div class="weather-rule ok"><div class="weather-rule-dot"></div><span><strong>Sunrise beats sunset at Tre Cime</strong> — if Sep 22 evening is cloudy, Sep 23 at 6am is your best shot at clear skies</span></div>
-      <div class="weather-rule warn"><div class="weather-rule-dot"></div><span><strong>Use Bergfex or MeteoBlue — not Apple Weather or Google</strong>. Mountain weather is hyper-local and changes by the hour. Standard apps are useless above 2,000m. Bergfex gives hourly summit forecasts. Aim to be back at the rifugio or car by early afternoon before any weather shift.</span></div>
+  <div class="action-page-inner">
+    <div class="action-title">Will's Action Items</div>
+    <div class="action-sub">Bologna · Dolomites · Venice · Sep 18–27 · Click any item to mark complete</div>
+    <div class="action-summary">
+      <div class="asumm s-urgent"><div class="asumm-num" id="c-urgent">0</div><div class="asumm-label">Book Now</div></div>
+      <div class="asumm s-soon"><div class="asumm-num" id="c-soon">0</div><div class="asumm-label">Book Soon</div></div>
+      <div class="asumm s-done"><div class="asumm-num" id="c-done">0</div><div class="asumm-label">Done</div></div>
+      <div class="asumm s-total"><div class="asumm-num" id="c-total">0</div><div class="asumm-label">Total</div></div>
     </div>
+    <div class="weather-tip">
+      <div class="weather-tip-header"><span class="weather-tip-icon">⛅</span><span class="weather-tip-title">Weather Decision Rules</span></div>
+      <div class="weather-tip-rules">
+        <div class="weather-rule ok"><div class="weather-rule-dot"></div><span><strong>Clear sky in Val Gardena</strong> → do Seceda that day</span></div>
+        <div class="weather-rule warn"><div class="weather-rule-dot"></div><span><strong>Partial cloud in Val Gardena</strong> → do Alpe di Siusi, save Seceda for clearer day</span></div>
+        <div class="weather-rule warn"><div class="weather-rule-dot"></div><span><strong>Bad weather on drive day (Sep 21)</strong> → skip Lagazuoi, go straight to Cortina, no regret</span></div>
+        <div class="weather-rule"><div class="weather-rule-dot"></div><span><strong>Cloudy sunset at Tre Cime</strong> → set alarm for 6am, sunrise often clears</span></div>
+        <div class="weather-rule"><div class="weather-rule-dot"></div><span><strong>Morning fog at Seceda</strong> → wait, lifts run all day, fog usually burns off by 10am</span></div>
+        <div class="weather-rule lock"><div class="weather-rule-dot"></div><span><strong>Tre Cime (Sep 22) + Croda da Lago (Sep 23) are non-negotiable</strong> — rifugios are booked and non-refundable, go regardless of weather</span></div>
+        <div class="weather-rule ok"><div class="weather-rule-dot"></div><span><strong>Sunrise beats sunset at Tre Cime</strong> — if Sep 22 evening is cloudy, Sep 23 at 6am is your best shot at clear skies</span></div>
+        <div class="weather-rule warn"><div class="weather-rule-dot"></div><span><strong>Use Bergfex or MeteoBlue — not Apple Weather or Google</strong>. Mountain weather is hyper-local and changes by the hour. Standard apps are useless above 2,000m. Bergfex gives hourly summit forecasts. Aim to be back at the rifugio or car by early afternoon before any weather shift.</span></div>
+      </div>
+    </div>
+    <div id="action-sections"></div>
   </div>
-  <div id="action-sections"></div>
 </div>
 
 <div class="packing-page" id="packing-page"></div>
 <div class="budget-page" id="budget-page"></div>
 
 </div>
-
 <script>
 const TYPE_COLOR={city:'blue',travel:'stone',hike:'green',via:'red',culture:'blue',rifugio:'purple',depart:'gold'};
+const TYPE_HEX={city:'#1A3676',travel:'#78695C',hike:'#1B5738',via:'#8A1818',culture:'#1A3676',rifugio:'#561BAB',depart:'#8E6208'};
+const TYPE_LABEL={city:'City',travel:'Drive',hike:'Hike',via:'Via Ferrata',culture:'Culture',rifugio:'Rifugio',depart:'Depart'};
 
 const days=[
   {day:1,date:'Sep 18',type:'depart',location:'New York City',region:'JFK → VCE',activity:'Fly to Italy',activitySub:'Overnight flight · land Venice Marco Polo Sep 19',sleep:'transit',sleepLabel:'Overnight Flight',intensity:0,intensityLabel:'—',hours:'~9 hrs',elevation:'—',notes:'Overnight flight from JFK to Venice Marco Polo (VCE). Land Saturday morning Sep 19. Clear customs, grab a coffee, take the high-speed Frecciarossa to Bologna (~1hr 15min). Arriving on a Saturday means the city is alive — markets open, restaurants full. Do not sleep until 10pm local time.',highlights:['Overnight flight — arrive Sat Sep 19','Train Venice → Bologna on arrival','Saturday arrival — city is alive'],tags:[{l:'Departure',c:'dtag-gold'},{l:'Travel',c:'dtag-stone'}],bookings:[{title:'Flights JFK → VCE Sep 18',note:'Overnight departure Sep 18, arrive Venice Sep 19. Delta, United, Lufthansa via Frankfurt. Coordinate all three travelers.',link:'https://www.google.com/flights',linkLabel:'google.com/flights'}]},
@@ -521,7 +446,7 @@ const days=[
   {day:5,date:'Sep 22',type:'rifugio',location:'Tre Cime di Lavaredo',region:'Sesto Dolomites',activity:'Lagazuoi Tunnels + Tre Cime Loop + Rifugio Locatelli',activitySub:'WWI ridge walk · cable car to 2,835m · Tre Cime loop · rifugio night',sleep:'rifugio',sleepLabel:'Rifugio Locatelli (2,405m)',intensity:3,intensityLabel:'Hard',hours:'~7–8 hrs total',elevation:'~1,200m combined',notes:'This is the big day of the trip — everyone should know that going in. Morning: drive 20min from Cortina to Passo Falzarego. Cable car to Lagazuoi at 2,835m (highest point of the trip). Walk the southern ridge through WWI tunnels cut into the rock face — original trenches and artillery positions still intact. Cable car back down. No horse carriage. Back in Cortina by noon. Drive to Tre Cime parking (timed entry pre-booked — mandatory). Walk 1.5hrs to Rifugio Locatelli. Drop packs. Full Tre Cime loop (3hrs). Back for dinner at 7pm sharp — fixed time. Then go outside and stay there until dark. The north faces at sunset are the moment of the entire trip. Cash only at the rifugio.',highlights:['Lagazuoi from Cortina — 20min drive, cable car up, tunnels, back by noon','WWI tunnels cut into the rock face — still intact','Tre Cime north faces at sunset — the moment of the trip'],tags:[{l:'Rifugio Night',c:'dtag-purple'},{l:'✓ Booked',c:'dtag-green'},{l:'WWI Tunnels',c:'dtag-blue'},{l:'Big Day',c:'dtag-red'}],bookings:[{title:'Lagazuoi cable car — confirm early opening',note:'Done as morning activity from Cortina before Tre Cime. Confirm cable car opens by 8am. Passo Falzarego is 20min from Cortina.',link:'https://www.lagazuoi5torri.it',linkLabel:'lagazuoi5torri.it'},{title:'Rifugio Locatelli — overnight',note:'✅ BOOKED — Sep 22 night. 3 people, half board. Cash only at the hut. Sleeping bag liner mandatory.',link:'https://www.dreizinnenhuette.com/booking/index_en.php',linkLabel:'dreizinnenhuette.com'},{title:'Tre Cime parking — 2 × 12hr reservations',note:'Need TWO back-to-back 12hr slots (overnighting = 24hrs). Book at auronzo.info — may be open NOW (opens late April/May). €40/car each.',link:'https://auronzo.info/en/parking-tre-cime-di-lavaredo/',linkLabel:'auronzo.info'}]},
   {day:6,date:'Sep 23',type:'rifugio',location:'Lago Federa',region:'Ampezzano Dolomites',activity:'Sunrise at Tre Cime + Lago Federa + Rifugio Croda da Lago',activitySub:'6am sunrise on north walls · glacial lake · 2,046m',sleep:'rifugio',sleepLabel:'Rifugio Croda da Lago (2,046m)',intensity:2,intensityLabel:'Moderate',hours:'~4–6 hrs',elevation:'~600m',notes:'Set alarm for 6am — sunrise on the Tre Cime north walls from outside the rifugio. Breakfast at 7:30am. Descend to car by 9:30am. Drive to Lago Federa trailhead near Cortina (~30 min). Hike up through forest and open terrain to the glacial lake. The Croda da Lago massif rises above you the whole way. Far less crowded than Tre Cime. Arrive Rifugio Croda da Lago by late afternoon. Evening on the terrace.',highlights:['6am sunrise on Tre Cime north walls','Lago Federa — glacial lake, far fewer crowds than Tre Cime','Evening on the terrace at 2,046m'],tags:[{l:'Rifugio Night',c:'dtag-purple'},{l:'✓ Booked',c:'dtag-green'},{l:'Less Crowded',c:'dtag-blue'}],bookings:[{title:'Rifugio Croda da Lago — overnight',note:'✅ BOOKED — Sep 23 night. 3 people, half board.',link:'https://www.rifugiocrodadalago.it',linkLabel:'rifugiocrodadalago.it'}]},
   {day:7,date:'Sep 24',type:'via',location:'Cinque Torri → Val Gardena',region:'Ampezzano → Val Gardena',activity:'Via Ferrata Averau + Drive to Val Gardena',activitySub:'Guided via ferrata · scenic mountain passes · arrive evening',sleep:'hotel',sleepLabel:'Hotel Val Gardena TBD',intensity:3,intensityLabel:'Moderate+',hours:'~3–4 hrs climbing',elevation:'~500m',notes:'Morning light at Lago Federa then descend. Swing by Cortina hotel to collect main bags. Drive to Cinque Torri area. Guided Via Ferrata Averau — rated easy-to-moderate, 3–4 hours, all gear (harness, helmet, carabiners) provided by guide. Drive the Falzarego, Valparola, and Gardena passes to Val Gardena. Arrive evening. Long shower, dinner, rest.',highlights:['Collect main bags from Cortina hotel','Via Ferrata Averau with English-speaking guide','Scenic drive over mountain passes to Val Gardena'],tags:[{l:'Via Ferrata',c:'dtag-red'},{l:'Guided',c:'dtag-gold'},{l:'Val Gardena Base',c:'dtag-green'}],bookings:[{title:'Guide Alpine Cortina — via ferrata',note:'Email info@guidecortina.com. 3 people, beginners, English guide, Sep 24. Via Ferrata Averau or similar easy-moderate route. All gear provided.',link:'https://guidecortina.com/en/activities/summer/via-ferratas/',linkLabel:'guidecortina.com'},{title:'Val Gardena hotel — 2 nights',note:'2 nights Sep 24–26. Ortisei or Santa Cristina. 3 people, 2 rooms.',link:'',linkLabel:''}]},
-  {day:8,date:'Sep 25',type:'hike',location:'Val Gardena',region:'Val Gardena, South Tyrol',activity:'Seceda Ridgeline',activitySub:'Lift from Ortisei · Odle peaks overhead · ~4–6 hrs',sleep:'hotel',sleepLabel:'Hotel Val Gardena',intensity:2,intensityLabel:'Moderate',hours:'~4–6 hrs',elevation:'~700m',notes:'Take the Ortisei cable car up to Seceda (2,519m). The ridgeline walk is one of the most dramatic in the Dolomites — the vertical Odle/Geisler peaks are directly above you for the entire hike. September light is extraordinary up here. Optional extensions toward the Odle huts. Lunch at Rifugio Firenze on the ridge. Descend by gondola, dinner in Ortisei. Check forecast the night before. Best weather day = Seceda. If partial cloud, swap with Alpe di Siusi (Day 9) — it reads well even in overcast. Clouds often burn off by 10am — consider waiting before committing to the gondola.',highlights:['Seceda cable car to 2,519m','Odle peaks directly overhead — most dramatic ridge in the Dolomites','Lunch at Rifugio Firenze on the ridge'],tags:[{l:'Hike',c:'dtag-green'},{l:'Cable Car',c:'dtag-stone'}],bookings:[{title:'Seceda gondola — confirm hours',note:'Confirm September 2026 operating hours and first gondola time from Ortisei.',link:'https://www.seceda.it',linkLabel:'seceda.it'}]},
+  {day:8,date:'Sep 25',type:'hike',location:'Val Gardena',region:'Val Gardena, South Tyrol',activity:'Seceda Ridgeline',activitySub:'Lift from Ortisei · Odle peaks overhead · ~4–6 hrs',sleep:'hotel',sleepLabel:'Hotel Val Gardena',intensity:2,intensityLabel:'Moderate',hours:'~4–6 hrs',elevation:'~700m',notes:'Take the Ortisei cable car up to Seceda (2,519m). The ridgeline walk is one of the most dramatic in the Dolomites — the vertical Odle/Geisler peaks are directly above you for the entire hike. September light is extraordinary up here. Optional extensions toward the Odle huts. Lunch at Rifugio Firenze on the ridge. Descend by gondola, dinner in Ortisei. Check forecast the night before. Best weather day = Seceda. If partial cloud, swap with Alpe di Siusi (Day 9) — it reads well even in overcast. Clouds often burn off by 10am — consider waiting before committing to the gondola.',highlights:['Seceda cable car to 2,519m','Odle peaks directly overhead — most dramatic ridge in the Dolomites','Lunch at Rifugio Firenze on the ridge'],tags:[{l:'Hike',c:'dtag-green'},{l:'Cable Car',c:'dtag-stone'}],bookings:[{title:'Seceda gondola — confirm hours',note:'Confirm September 2026 operating hours and first gondola time from Ortisei.',link:'https://www.seceda.it',linkLabel:'seceda.it'},{title:'Gardena Card — buy before Day 8',note:'Covers unlimited lifts across Val Gardena for Days 8–9. Saves money vs individual tickets.',link:'https://www.valgardena.it/en/summer/gardena-card/',linkLabel:'valgardena.it'}]},
   {day:9,date:'Sep 26',type:'hike',location:'Alpe di Siusi → Venice',region:'South Tyrol → Veneto',activity:'Alpe di Siusi + Drive to Venice',activitySub:'Early start required (9am curfew) · Adolf Munkel Trail · ~3 hr drive',sleep:'city',sleepLabel:'Hotel Venice TBD',intensity:1,intensityLabel:'Easy',hours:'~2–3 hrs',elevation:'~300m',notes:'Early start — arrive Alpe di Siusi before 9am. Driving curfew is strictly enforced 9am–5pm: arrive early or take the cable car. Walk the Adolf Munkel Trail along the base of the Odle peaks — flat, beautiful, 2hrs with the Sassolungo massif ahead of you. On the road to Venice by noon. ~3 hrs drive. Check in, walk to Dorsoduro for aperitivo. Easy dinner. This is your weather flex day. If Day 8 had better skies, you already did Seceda — do Alpe di Siusi today. If not, swap the order. Alpe di Siusi looks beautiful in partial cloud — lower stakes than Seceda. Either way, leave the plateau before 9am (driving curfew strictly enforced).',highlights:['Arrive Alpe di Siusi before 9am — curfew strictly enforced','Adolf Munkel Trail — flat, stunning, under the Odle peaks','Drive to Venice, aperitivo in Dorsoduro'],tags:[{l:'Hike',c:'dtag-green'},{l:'Early Start',c:'dtag-gold'},{l:'Travel Day',c:'dtag-stone'}],bookings:[{title:'Venice hotel — 1 night',note:'1 night Sep 26. 3 people, 2 rooms. Dorsoduro or Cannaregio preferred.',link:'',linkLabel:''}]},
   {day:10,date:'Sep 27',type:'depart',location:'Venice',region:'Veneto, Italy',activity:'Venice Morning + Fly Home',activitySub:'Rialto · quiet neighborhoods · VCE → NYC',sleep:'transit',sleepLabel:'Flight Home',intensity:0,intensityLabel:'—',hours:'~2 hrs walking',elevation:'Flat',notes:'Lazy morning. Walk to Rialto before the crowds. Cross a few bridges, get lost in Cannaregio or Castello. Coffee at a bar standing at the counter — the Italian way. Get to Venice Marco Polo by early afternoon. Fly home.',highlights:['Rialto before 9am — no crowds','Wander Cannaregio or Castello','VCE → NYC afternoon flight'],tags:[{l:'Departure',c:'dtag-gold'},{l:'Venice',c:'dtag-blue'}],bookings:[{title:'Flights home VCE → NYC Sep 27',note:'Afternoon departure preferred. Delta, United, Lufthansa via Frankfurt. Coordinate all three.',link:'https://www.google.com/flights',linkLabel:'google.com/flights'}]},
 ];
@@ -532,7 +457,7 @@ const actionItems=[
   {id:'cortina-hotel',priority:'urgent',title:'Cortina hotel — 1 night + bag storage Sep 22–23',detail:'Need Sep 21 night. Critical: hotel must agree to store main bags for 2 nights (Sep 22–23) while you are at the rifugios. 3 people, 2 rooms. Confirm storage policy when booking.',day:'Day 4 · Sep 21',cost:'~€200–350/night',link:'',linkLabel:'',tags:[{l:'Book Now',c:'atag-red'},{l:'Bag Storage Critical',c:'atag-red'}]},
   {id:'flights',priority:'urgent',title:'Flights — JFK → VCE Sep 18 + VCE → JFK Sep 27',detail:'Overnight departure Sep 18, arrive Venice Sep 19. Return Sep 27 VCE → JFK. Delta, United, Lufthansa via Frankfurt. Coordinate all three travelers.',day:'Sep 18 & Sep 27',cost:'TBD',link:'https://www.google.com/flights',linkLabel:'google.com/flights',tags:[{l:'Book Now',c:'atag-red'},{l:'Coordinate Group',c:'atag-blue'}]},
   {id:'bologna-hotel',priority:'soon',title:'Bologna hotel — 2 nights',detail:'2 nights Sep 19–21. Central location near Piazza Maggiore or Quadrilatero. 3 people, 2 rooms.',day:'Days 2–3 · Sep 19–21',cost:'~€150–250/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Bologna',c:'atag-blue'}]},
-  {id:'valgardena-hotel',priority:'soon',title:'Val Gardena hotel — 2 nights',detail:'2 nights Sep 24–26. Ortisei or Santa Cristina preferred. 3 people, 2 rooms.',day:'Days 7–8 · Sep 24–26',cost:'~€180–280/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Val Gardena',c:'atag-green'}]},
+  {id:'valgardena-hotel',priority:'soon',title:'Val Gardena hotel — 2 nights',detail:'2 nights Sep 24–26. Ortisei or Santa Cristina preferred. 3 people, 2 rooms.',day:'Days 7–8 · Sep 24–26',cost:'~€180–280/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Val Gardena',c:'dtag-green'}]},
   {id:'venice-hotel',priority:'soon',title:'Venice hotel — 1 night',detail:'1 night Sep 26. 3 people, 2 rooms. Dorsoduro or Cannaregio preferred.',day:'Day 9 · Sep 26',cost:'~€250–400/night',link:'',linkLabel:'',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Venice',c:'atag-blue'}]},
   {id:'eltoula',priority:'soon',title:'El Toulà — Cortina arrival dinner',detail:'Dinner Sep 21 — arrival night in Cortina. Classic white tablecloths, exceptional local game. Book in advance.',day:'Day 4 · Sep 21',cost:'~€60–80pp',link:'https://www.eltoula.it',linkLabel:'eltoula.it',tags:[{l:'Book Soon',c:'atag-gold'},{l:'Cortina',c:'atag-green'}]},
   {id:'lagazuoi',priority:'soon',title:'Lagazuoi cable car — confirm early opening',detail:'Done as morning activity from Cortina base before driving to Tre Cime. Confirm cable car opens by 8am. Passo Falzarego is 20min drive from Cortina. No need to book in advance — pay on the day.',day:'Day 5 · Sep 22 (morning)',cost:'~€20–25pp',link:'https://www.lagazuoi5torri.it',linkLabel:'lagazuoi5torri.it',tags:[{l:'Confirm',c:'atag-blue'},{l:'Cortina',c:'atag-green'}]},
@@ -556,75 +481,100 @@ const save=()=>{try{localStorage.setItem('dolomites-done-v4',JSON.stringify(done
 
 function intHTML(lvl){
   return '<div class="int-bar int-'+lvl+'">'+'<div class="int-pip"></div>'.repeat(4)+'</div>'
-    +'<div class="int-label">'+['—','Easy','Moderate','Solid','Hard'][lvl]+'</div>';
+    +'<div class="int-label">'+['—','Easy','Moderate','Moderate+','Hard'][lvl]+'</div>';
 }
+
 function sleepHTML(type,label,link){
   const cls={hotel:'sleep-hotel',rifugio:'sleep-rifugio',transit:'sleep-transit',city:'sleep-city'}[type]||'sleep-hotel';
   const icon={hotel:'🏨',rifugio:'⛺',transit:'✈️',city:'🏙'}[type]||'🏨';
-  const inner='<div class="sleep-badge '+cls+'"><span class="sleep-icon">'+icon+'</span><span class="sleep-text">'+label+'</span></div>';
+  const inner='<div class="sleep-badge '+cls+'"><span>'+icon+'</span><span>'+label+'</span></div>';
   return link?'<a href="'+link+'" target="_blank" onclick="event.stopPropagation()" style="text-decoration:none;">'+inner+'</a>':inner;
 }
 
 function switchTab(tab,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const sb=document.getElementById('sidebar'),m=document.getElementById('main'),ap=document.getElementById('action-page'),mp=document.getElementById('map-page'),pp=document.getElementById('packing-page'),bp=document.getElementById('budget-page');
-  sb.style.display='none';m.style.display='none';ap.classList.remove('visible');mp.classList.remove('visible');pp.classList.remove('visible');bp.classList.remove('visible');
-  if(tab==='itinerary'){sb.style.display='';m.style.display='';}
+  const m=document.getElementById('main'),ap=document.getElementById('action-page'),mp=document.getElementById('map-page'),pp=document.getElementById('packing-page'),bp=document.getElementById('budget-page');
+  m.style.display='none';ap.classList.remove('visible');mp.classList.remove('visible');pp.classList.remove('visible');bp.classList.remove('visible');
+  if(tab==='itinerary'){m.style.display='';}
   else if(tab==='map'){mp.classList.add('visible');setTimeout(()=>{if(window._map)google.maps.event.trigger(window._map,'resize');},50);}
   else if(tab==='actions'){ap.classList.add('visible');}
   else if(tab==='packing'){pp.classList.add('visible');if(!pp.dataset.rendered){renderPacking();pp.dataset.rendered='1';}}
   else if(tab==='budget'){bp.classList.add('visible');if(!bp.dataset.rendered){renderBudget();bp.dataset.rendered='1';}}
 }
 
-function renderCards(){
-  const cont=document.getElementById('day-cards'),nav=document.getElementById('day-nav');
-  days.forEach((d,i)=>{
-    const col=TYPE_COLOR[d.type]||'stone';
-    const navEl=document.createElement('div');
-    navEl.className='day-nav-item';
-    navEl.innerHTML='<div class="day-dot" style="background:var(--'+col+')"></div><div class="day-nav-text"><div class="day-nav-num">DAY '+d.day+' · '+d.date+'</div><div class="day-nav-name">'+d.location+'</div></div>';
-    navEl.addEventListener('click',()=>scrollTo(i));
-    nav.appendChild(navEl);
+const SLEEP_LINKS={4:'https://www.dreizinnenhuette.com/booking/index_en.php',5:'https://www.rifugiocrodadalago.it'};
 
+function renderCards(){
+  const cont=document.getElementById('day-cards');
+  const sidebar=document.getElementById('day-sidebar');
+  days.forEach((d,i)=>{
+    const hex=TYPE_HEX[d.type]||'#78695C';
+    const typeLbl=TYPE_LABEL[d.type]||d.type;
+    const shortName=d.location.split('→')[0].split(',')[0].trim();
+    const sidebarItem=document.createElement('div');
+    sidebarItem.className='sidebar-item type-'+d.type;
+    sidebarItem.innerHTML=
+      '<div class="sidebar-dot"></div>'
+      +'<div class="sidebar-info">'
+      +'<div class="sidebar-num">Day '+d.day+'</div>'
+      +'<div class="sidebar-name">'+shortName+'</div>'
+      +'<div class="sidebar-date">'+d.date+'</div>'
+      +'</div>';
+    sidebarItem.addEventListener('click',()=>scrollTo(i));
+    sidebar.appendChild(sidebarItem);
     const tagsHTML=d.tags.map(t=>'<span class="dtag '+t.c+'">'+t.l+'</span>').join('');
     const hlHTML=d.highlights.map(h=>'<div class="highlight-item"><span class="hi-arrow">→</span><span>'+h+'</span></div>').join('');
     const bkHTML=d.bookings.length
       ?d.bookings.map(b=>'<div class="booking-item"><div class="booking-title">'+b.title+'</div><div class="booking-note">'+b.note+'</div>'+(b.link?'<a href="'+b.link+'" target="_blank" class="booking-link" onclick="event.stopPropagation()">'+b.linkLabel+' ↗</a>':'')+'</div>').join('')
       :'<div class="no-bookings">No advance bookings required</div>';
-
     const card=document.createElement('div');
     card.className='day-card type-'+d.type;
     card.id='card-'+i;
     card.innerHTML=
-      '<div class="card-row">'
-      +'<div class="cell-day"><div class="day-num">DAY '+d.day+'</div><div class="day-date">'+d.date+'</div></div>'
-      +'<div class="cell-location"><div class="loc-name">'+d.location+'</div><div class="loc-region">'+d.region+'</div></div>'
-      +'<div class="cell-activity"><div class="act-name">'+d.activity+'</div><div class="act-sub">'+d.activitySub+'</div></div>'
-      +'<div class="cell-sleep">'+sleepHTML(d.sleep,d.sleepLabel,SLEEP_LINKS[i])+'</div>'
-      +'<div class="cell-intensity">'+intHTML(d.intensity)+'</div>'
-      +'<div class="cell-expand"><button class="expand-btn">+</button></div>'
+      '<div class="card-header">'
+      +'<div class="card-num-circle">'+d.day+'</div>'
+      +'<div class="card-header-info">'
+      +'<div class="card-header-date">'+d.date+'</div>'
+      +'<div class="card-header-location">'+d.location+'</div>'
+      +'<div class="card-header-region">'+d.region+'</div>'
       +'</div>'
-      +'<div class="card-detail"><div class="detail-inner">'
+      +'<div class="card-header-right">'
+      +'<span class="card-type-badge dtag-'+TYPE_COLOR[d.type]+'">'+typeLbl+'</span>'
+      +'<button class="expand-btn" aria-label="expand">▾</button>'
+      +'</div>'
+      +'</div>'
+      +'<div class="card-body">'
+      +'<div class="card-body-left">'
+      +'<div class="act-name">'+d.activity+'</div>'
+      +'<div class="act-sub">'+d.activitySub+'</div>'
+      +'</div>'
+      +'<div class="card-body-right">'
+      +sleepHTML(d.sleep,d.sleepLabel,SLEEP_LINKS[i])
+      +intHTML(d.intensity)
+      +'</div>'
+      +'</div>'
+      +'<div class="card-detail-wrap"><div class="card-detail-inner"><div class="card-detail"><div class="detail-inner">'
       +'<div class="detail-col"><div class="detail-col-label">Overview</div><div class="detail-body">'+d.notes+'</div><div class="detail-tags">'+tagsHTML+'</div></div>'
-      +'<div class="detail-col"><div class="detail-col-label">Highlights</div>'+hlHTML+'<div class="detail-col-label" style="margin-top:16px">Stats</div>'
+      +'<div class="detail-col"><div class="detail-col-label">Highlights</div>'+hlHTML
+      +'<div class="detail-col-label" style="margin-top:16px">Stats</div>'
       +'<div class="stat-item"><span class="stat-item-lbl">Duration</span><span class="stat-item-val">'+d.hours+'</span></div>'
       +'<div class="stat-item"><span class="stat-item-lbl">Elevation</span><span class="stat-item-val">'+d.elevation+'</span></div>'
       +'<div class="stat-item"><span class="stat-item-lbl">Intensity</span><span class="stat-item-val">'+d.intensityLabel+'</span></div>'
       +'<div class="stat-item"><span class="stat-item-lbl">Sleep</span><span class="stat-item-val">'+d.sleepLabel+'</span></div>'
       +'</div>'
       +'<div class="detail-col"><div class="detail-col-label">Bookings & Notes</div>'+bkHTML+'</div>'
-      +'</div></div>';
-
+      +'</div></div></div></div>';
     const toggle=(e)=>{
       if(e)e.stopPropagation();
       const open=card.classList.contains('expanded');
       document.querySelectorAll('.day-card.expanded').forEach(c=>c.classList.remove('expanded'));
-      document.querySelectorAll('.day-nav-item.active').forEach(n=>n.classList.remove('active'));
-      if(!open){card.classList.add('expanded');navEl.classList.add('active');}
+      document.querySelectorAll('.sidebar-item.active').forEach(r=>r.classList.remove('active'));
+      if(!open){card.classList.add('expanded');sidebarItem.classList.add('active');}
     };
     card.querySelector('.expand-btn').addEventListener('click',toggle);
-    card.addEventListener('click',toggle);
+    card.querySelector('.card-header').addEventListener('click',toggle);
+    card.querySelector('.card-body').addEventListener('click',toggle);
     cont.appendChild(card);
   });
 }
@@ -633,7 +583,12 @@ function scrollTo(i){
   const c=document.getElementById('card-'+i);
   if(!c)return;
   c.scrollIntoView({behavior:'smooth',block:'center'});
-  if(!c.classList.contains('expanded'))c.querySelector('.expand-btn').click();
+  if(!c.classList.contains('expanded')){
+    document.querySelectorAll('.day-card.expanded').forEach(x=>x.classList.remove('expanded'));
+    document.querySelectorAll('.sidebar-item.active').forEach(r=>r.classList.remove('active'));
+    c.classList.add('expanded');
+    document.querySelectorAll('.sidebar-item')[i]?.classList.add('active');
+  }
 }
 
 function updateCounts(){
@@ -673,42 +628,9 @@ function renderActions(){
   updateCounts();
 }
 
-const DAY_COORDS=[
-  [45.5051,12.3519],  // Venice Marco Polo (Day 1 flight)
-  [44.4949,11.3426],  // Bologna
-  [44.4949,11.3426],  // Bologna
-  [46.5369,12.1356],  // Cortina d'Ampezzo
-  [46.6173,12.3014],  // Tre Cime / Rifugio Locatelli
-  [46.4694,12.1047],  // Lago Federa / Rifugio Croda da Lago
-  [46.5319,11.7292],  // Cinque Torri → Val Gardena
-  [46.5667,11.7000],  // Seceda / Ortisei
-  [45.4408,12.3155],  // Venice
-  [45.4408,12.3155],  // Venice (fly home)
-];
-
-const SLEEP_LINKS={
-  4:'https://www.dreizinnenhuette.com/booking/index_en.php',
-  5:'https://www.rifugiocrodadalago.it',
-  8:'https://www.airbnb.com/s/Milan--Italy',
-};
-
-const TYPE_HEX={city:'#284468',travel:'#7c6c5c',hike:'#3a6644',via:'#842020',culture:'#284468',rifugio:'#582870',depart:'#a07818'};
-
-const MAP_STYLE=[
-  {elementType:'geometry',stylers:[{color:'#f0ebe0'}]},
-  {elementType:'labels.text.fill',stylers:[{color:'#504840'}]},
-  {elementType:'labels.text.stroke',stylers:[{color:'#faf8f4'}]},
-  {featureType:'administrative',elementType:'geometry.stroke',stylers:[{color:'#c9b9a8'}]},
-  {featureType:'landscape.natural',elementType:'geometry',stylers:[{color:'#ddd5c0'}]},
-  {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
-  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#cfdfd4'}]},
-  {featureType:'road',elementType:'geometry',stylers:[{color:'#d6c9b8'}]},
-  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#c4b49e'}]},
-  {featureType:'road.highway',elementType:'geometry.stroke',stylers:[{color:'#b0a090'}]},
-  {featureType:'transit',stylers:[{visibility:'off'}]},
-  {featureType:'water',elementType:'geometry',stylers:[{color:'#a8c4d8'}]},
-  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#284468'}]},
-];
+// ── MAP ──────────────────────────────────────────────────────────
+const DAY_COORDS=[[45.5051,12.3519],[44.4949,11.3426],[44.4949,11.3426],[46.5369,12.1356],[46.6173,12.3014],[46.4694,12.1047],[46.5319,11.7292],[46.5667,11.7000],[45.4408,12.3155],[45.4408,12.3155]];
+const MAP_STYLE=[{elementType:'geometry',stylers:[{color:'#f0ebe0'}]},{elementType:'labels.text.fill',stylers:[{color:'#504840'}]},{elementType:'labels.text.stroke',stylers:[{color:'#faf8f4'}]},{featureType:'administrative',elementType:'geometry.stroke',stylers:[{color:'#c9b9a8'}]},{featureType:'landscape.natural',elementType:'geometry',stylers:[{color:'#ddd5c0'}]},{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#cfdfd4'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#d6c9b8'}]},{featureType:'road.highway',elementType:'geometry',stylers:[{color:'#c4b49e'}]},{featureType:'road.highway',elementType:'geometry.stroke',stylers:[{color:'#b0a090'}]},{featureType:'transit',stylers:[{visibility:'off'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#a8c4d8'}]},{featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#284468'}]}];
 
 function markerSVG(num,hex){
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="${hex}" stroke="white" stroke-width="3"/><text x="17" y="21.5" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="white">${num}</text></svg>`;
@@ -716,52 +638,24 @@ function markerSVG(num,hex){
 }
 
 window.initMap=function(){
-  const map=new google.maps.Map(document.getElementById('map'),{
-    center:{lat:46.3,lng:11.9},zoom:7,
-    styles:MAP_STYLE,
-    mapTypeControl:false,streetViewControl:false,fullscreenControl:true,
-    zoomControlOptions:{position:google.maps.ControlPosition.RIGHT_TOP},
-  });
+  const map=new google.maps.Map(document.getElementById('map'),{center:{lat:46.3,lng:11.9},zoom:7,styles:MAP_STYLE,mapTypeControl:false,streetViewControl:false,fullscreenControl:true,zoomControlOptions:{position:google.maps.ControlPosition.RIGHT_TOP}});
   window._map=map;
-
   const bounds=new google.maps.LatLngBounds();
   const infoWin=new google.maps.InfoWindow({maxWidth:260});
-
   const routePath=DAY_COORDS.map(c=>({lat:c[0],lng:c[1]}));
-  new google.maps.Polyline({
-    path:routePath,map,
-    strokeColor:'#3a6644',strokeOpacity:0.18,strokeWeight:3,
-  });
-  new google.maps.Polyline({
-    path:routePath,map,
-    strokeColor:'#3a6644',strokeOpacity:0,strokeWeight:0,
-    icons:[
-      {icon:{path:'M 0,-1 0,1',strokeOpacity:.5,strokeColor:'#3a6644',scale:3},offset:'0',repeat:'12px'},
-      {icon:{path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,strokeColor:'#3a6644',strokeWeight:1,fillColor:'#3a6644',fillOpacity:.5,scale:2.5},offset:'100%',repeat:'80px'},
-    ],
-  });
-
+  new google.maps.Polyline({path:routePath,map,strokeColor:'#1B5738',strokeOpacity:0.18,strokeWeight:3});
+  new google.maps.Polyline({path:routePath,map,strokeColor:'#1B5738',strokeOpacity:0,strokeWeight:0,icons:[{icon:{path:'M 0,-1 0,1',strokeOpacity:.5,strokeColor:'#1B5738',scale:3},offset:'0',repeat:'12px'},{icon:{path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,strokeColor:'#1B5738',strokeWeight:1,fillColor:'#1B5738',fillOpacity:.5,scale:2.5},offset:'100%',repeat:'80px'}]});
   days.forEach((d,i)=>{
-    const coord=DAY_COORDS[i];
-    if(!coord)return;
+    const coord=DAY_COORDS[i];if(!coord)return;
     const pos={lat:coord[0],lng:coord[1]};
     bounds.extend(pos);
-    const hex=TYPE_HEX[d.type]||'#7c6c5c';
-    const marker=new google.maps.Marker({
-      position:pos,map,
-      icon:{url:markerSVG(d.day,hex),scaledSize:new google.maps.Size(34,34),anchor:new google.maps.Point(17,17)},
-      title:d.location,zIndex:d.day,
-    });
+    const hex=TYPE_HEX[d.type]||'#78695C';
+    const marker=new google.maps.Marker({position:pos,map,icon:{url:markerSVG(d.day,hex),scaledSize:new google.maps.Size(34,34),anchor:new google.maps.Point(17,17)},title:d.location,zIndex:d.day});
     const sleepLink=SLEEP_LINKS[i];
-    const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;font-size:9px;font-family:monospace;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:`<span style="font-size:10px;color:#807870;">${d.sleepLabel}</span>`;
+    const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#1B5738;font-size:9px;font-family:monospace;border-bottom:1px solid #C8E4D2;">${d.sleepLabel} ↗</a>`:`<span style="font-size:10px;color:#807870;">${d.sleepLabel}</span>`;
     const popup=`<div class="map-popup"><div class="map-popup-day">DAY ${d.day} · ${d.date}</div><div class="map-popup-title">${d.location}</div><div class="map-popup-sub">${d.activity}</div><div style="font-size:11px;color:#504840;margin:6px 0 8px;line-height:1.6;">${d.activitySub}</div><div style="border-top:1px solid #e4dcd4;padding-top:8px;display:flex;justify-content:space-between;align-items:center;">${sleepEl}<span style="font-family:monospace;font-size:9px;color:#807870;">${d.hours}</span></div></div>`;
-    marker.addListener('click',()=>{
-      infoWin.setContent(popup);
-      infoWin.open(map,marker);
-      highlightMapDay(i);
-    });
+    marker.addListener('click',()=>{infoWin.setContent(popup);infoWin.open(map,marker);highlightMapDay(i);});
   });
-
   window._mapBounds=bounds;
   map.fitBounds(bounds,60);
   renderMapDayList();
@@ -773,9 +667,9 @@ function highlightMapDay(i){
   document.querySelectorAll('.map-day-item').forEach((el,idx)=>el.classList.toggle('active',idx===i));
   const d=days[i];
   const panel=document.getElementById('map-detail-panel');
-  const hex=TYPE_HEX[d.type]||'#7c6c5c';
+  const hex=TYPE_HEX[d.type]||'#78695C';
   const sleepLink=SLEEP_LINKS[i];
-  const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#3a6644;border-bottom:1px solid #cfdfd4;">${d.sleepLabel} ↗</a>`:d.sleepLabel;
+  const sleepEl=sleepLink?`<a href="${sleepLink}" target="_blank" style="color:#1B5738;border-bottom:1px solid #C8E4D2;">${d.sleepLabel} ↗</a>`:d.sleepLabel;
   panel.innerHTML=`<div class="map-detail-header"><div class="map-detail-type" style="color:${hex};">${d.type.toUpperCase()} · DAY ${d.day} · ${d.date}</div><div class="map-detail-title">${d.activity}</div><div class="map-detail-sub">${d.location} — ${d.region}</div></div><div class="map-detail-body">${d.notes.substring(0,200)}…</div><div class="map-detail-stats"><div class="map-stat"><div class="map-stat-val">${d.hours}</div><div class="map-stat-lbl">Duration</div></div><div class="map-stat"><div class="map-stat-val">${d.elevation||'—'}</div><div class="map-stat-lbl">Elevation</div></div><div class="map-stat"><div class="map-stat-val" style="font-size:9px;">${sleepEl}</div><div class="map-stat-lbl">Sleep</div></div></div>`;
   panel.classList.add('visible');
 }
@@ -783,77 +677,22 @@ function highlightMapDay(i){
 function renderMapDayList(){
   const cont=document.getElementById('map-day-list');
   days.forEach((d,i)=>{
-    const hex=TYPE_HEX[d.type]||'#7c6c5c';
+    const hex=TYPE_HEX[d.type]||'#78695C';
     const el=document.createElement('div');
     el.className='map-day-item';
     el.innerHTML=`<div style="display:flex;align-items:center;gap:7px;width:100%;"><div class="map-day-dot" style="background:${hex};"></div><div class="map-day-text"><div class="map-day-num">DAY ${d.day} · ${d.date}</div><div class="map-day-name">${d.location}</div><div class="map-day-act">${d.activity}</div></div></div>`;
-    el.addEventListener('click',()=>{
-      highlightMapDay(i);
-      if(window._map){window._map.panTo({lat:DAY_COORDS[i][0],lng:DAY_COORDS[i][1]});window._map.setZoom(13);}
-    });
+    el.addEventListener('click',()=>{highlightMapDay(i);if(window._map){window._map.panTo({lat:DAY_COORDS[i][0],lng:DAY_COORDS[i][1]});window._map.setZoom(13);}});
     cont.appendChild(el);
   });
 }
 
-// ── PACKING LIST ──────────────────────────────────────────
+// ── PACKING ──────────────────────────────────────────────────────
 const packCats=[
-  {id:'docs',label:'Documents & Money',icon:'📋',items:[
-    {id:'passport',t:'Passport (valid 6+ months past Sep 2026)'},
-    {id:'license',t:'Driving licence — required for rental car'},
-    {id:'insurance',t:'Travel insurance (printed + digital)'},
-    {id:'confirmations',t:'All hotel, rifugio & activity confirmations'},
-    {id:'euros',t:'Cash euros — ~€200pp for rifugio + tips'},
-    {id:'cards',t:'Credit/debit cards (notify bank of travel)'},
-  ]},
-  {id:'clothing',label:'Clothing',icon:'👕',items:[
-    {id:'merino',t:'Merino base layer ×2'},
-    {id:'hpants',t:'Hiking pants ×2'},
-    {id:'fleece',t:'Fleece mid-layer'},
-    {id:'shell-j',t:'Waterproof shell jacket'},
-    {id:'shell-p',t:'Waterproof shell pants'},
-    {id:'down',t:'Down puffy jacket — needed for rifugio night'},
-    {id:'dinner',t:'Smart-casual dinner outfit (Cortina restaurants)'},
-    {id:'undies',t:'Underwear ×5'},
-    {id:'hsocks',t:'Hiking socks ×4'},
-    {id:'csocks',t:'Casual socks ×2'},
-    {id:'sunhat',t:'Sun hat'},
-    {id:'beanie',t:'Warm beanie'},
-    {id:'gloves',t:'Light gloves'},
-    {id:'shades',t:'Sunglasses'},
-    {id:'hboots',t:'Hiking boots — must be broken in before trip'},
-    {id:'cshoes',t:'Casual shoes / sneakers'},
-  ]},
-  {id:'hiking',label:'Hiking & Gear',icon:'🥾',items:[
-    {id:'daypack',t:'Daypack 25–30L'},
-    {id:'rifbag',t:'Small overnight bag for rifugio night'},
-    {id:'poles',t:'Trekking poles'},
-    {id:'headlamp',t:'Headlamp + spare batteries'},
-    {id:'liner',t:'Sleeping bag liner ×3 — MANDATORY at Rifugio Locatelli',u:true},
-    {id:'sunsc',t:'Sunscreen SPF50+'},
-    {id:'lipbalm',t:'Lip balm with SPF'},
-    {id:'first-aid',t:'First aid kit — include moleskin for blisters'},
-    {id:'waterbottle',t:'Water bottle or hydration bladder (1.5L+)'},
-    {id:'snacks',t:'Trail snacks / energy bars'},
-    {id:'offlinemaps',t:'Komoot or Maps.me downloaded offline'},
-  ]},
-  {id:'tech',label:'Tech',icon:'📱',items:[
-    {id:'phone',t:'Phone + charger'},
-    {id:'battery',t:'Portable battery bank (charged)'},
-    {id:'camera',t:'Camera + charger + memory card'},
-    {id:'adapter',t:'EU power adapter (Type F/L — Italy)'},
-    {id:'earbuds',t:'Earbuds / headphones'},
-    {id:'kindle',t:'Kindle or book for the rifugio evening'},
-  ]},
-  {id:'health',label:'Toiletries & Health',icon:'🧴',items:[
-    {id:'teeth',t:'Toothbrush + toothpaste'},
-    {id:'shampoo',t:'Shampoo + conditioner (travel size)'},
-    {id:'deo',t:'Deodorant'},
-    {id:'ibuprof',t:'Ibuprofen / paracetamol'},
-    {id:'antihistamine',t:'Antihistamine'},
-    {id:'bandaids',t:'Band-aids + moleskin blister pads'},
-    {id:'insect',t:'Insect repellent'},
-    {id:'handsan',t:'Hand sanitizer'},
-  ]},
+  {id:'docs',label:'Documents & Money',icon:'📋',items:[{id:'passport',t:'Passport (valid 6+ months past Sep 2026)'},{id:'license',t:'Driving licence — required for rental car'},{id:'insurance',t:'Travel insurance (printed + digital)'},{id:'confirmations',t:'All hotel, rifugio & activity confirmations'},{id:'euros',t:'Cash euros — ~€200pp for rifugio + tips'},{id:'cards',t:'Credit/debit cards (notify bank of travel)'}]},
+  {id:'clothing',label:'Clothing',icon:'👕',items:[{id:'merino',t:'Merino base layer ×2'},{id:'hpants',t:'Hiking pants ×2'},{id:'fleece',t:'Fleece mid-layer'},{id:'shell-j',t:'Waterproof shell jacket'},{id:'shell-p',t:'Waterproof shell pants'},{id:'down',t:'Down puffy jacket — needed for rifugio night'},{id:'dinner',t:'Smart-casual dinner outfit (Cortina restaurants)'},{id:'undies',t:'Underwear ×5'},{id:'hsocks',t:'Hiking socks ×4'},{id:'csocks',t:'Casual socks ×2'},{id:'sunhat',t:'Sun hat'},{id:'beanie',t:'Warm beanie'},{id:'gloves',t:'Light gloves'},{id:'shades',t:'Sunglasses'},{id:'hboots',t:'Hiking boots — must be broken in before trip'},{id:'cshoes',t:'Casual shoes / sneakers'}]},
+  {id:'hiking',label:'Hiking & Gear',icon:'🥾',items:[{id:'daypack',t:'Daypack 25–30L'},{id:'rifbag',t:'Small overnight bag for rifugio night'},{id:'poles',t:'Trekking poles'},{id:'headlamp',t:'Headlamp + spare batteries'},{id:'liner',t:'Sleeping bag liner ×3 — MANDATORY at Rifugio Locatelli',u:true},{id:'sunsc',t:'Sunscreen SPF50+'},{id:'lipbalm',t:'Lip balm with SPF'},{id:'first-aid',t:'First aid kit — include moleskin for blisters'},{id:'waterbottle',t:'Water bottle or hydration bladder (1.5L+)'},{id:'snacks',t:'Trail snacks / energy bars'},{id:'offlinemaps',t:'Komoot or Maps.me downloaded offline'}]},
+  {id:'tech',label:'Tech',icon:'📱',items:[{id:'phone',t:'Phone + charger'},{id:'battery',t:'Portable battery bank (charged)'},{id:'camera',t:'Camera + charger + memory card'},{id:'adapter',t:'EU power adapter (Type F/L — Italy)'},{id:'earbuds',t:'Earbuds / headphones'},{id:'kindle',t:'Kindle or book for the rifugio evening'}]},
+  {id:'health',label:'Toiletries & Health',icon:'🧴',items:[{id:'teeth',t:'Toothbrush + toothpaste'},{id:'shampoo',t:'Shampoo + conditioner (travel size)'},{id:'deo',t:'Deodorant'},{id:'ibuprof',t:'Ibuprofen / paracetamol'},{id:'antihistamine',t:'Antihistamine'},{id:'bandaids',t:'Band-aids + moleskin blister pads'},{id:'insect',t:'Insect repellent'},{id:'handsan',t:'Hand sanitizer'}]},
 ];
 
 let packDone={};
@@ -863,12 +702,12 @@ const savePack=()=>{try{localStorage.setItem('dolomites-pack-v1',JSON.stringify(
 function renderPacking(){
   const page=document.getElementById('packing-page');
   const total=packCats.reduce((n,c)=>n+c.items.length,0);
-  page.innerHTML=`<div style="max-width:1100px">
-    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+  page.innerHTML=`<div class="packing-page-inner">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;">
       <div class="pack-title">Packing List</div>
-      <button onclick="resetPacking()" style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:2px;color:var(--text-3);padding:4px 10px;cursor:pointer;margin-left:16px;">Reset all</button>
+      <button onclick="resetPacking()" style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:var(--r-pill);color:var(--ink-3);padding:5px 12px;cursor:pointer;">Reset all</button>
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:.1em;margin-bottom:20px;">Sep 14–23, 2026 · Will · Jack · Jon</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.1em;margin-bottom:4px;">Sep 18–27, 2026 · Will · Jack · Jon</div>
     <div class="pack-progress-wrap">
       <div class="pack-progress-label"><span>Overall progress</span><span id="pack-prog-text">0 / ${total}</span></div>
       <div class="pack-progress-bar"><div class="pack-progress-fill" id="pack-prog-fill" style="width:0%"></div></div>
@@ -927,40 +766,15 @@ function resetPacking(){
   packDone={};savePack();renderPacking();
 }
 
-// ── BUDGET TRACKER ────────────────────────────────────────
+// ── BUDGET ────────────────────────────────────────────────────────
 const TRIP_PPL=3;
 const budgetData=[
-  {id:'flights',label:'Flights',hex:'#7c6c5c',items:[
-    {id:'f-out',label:'JFK → VCE outbound flights',note:'Sep 14 · coordinate all three travelers',pp:true,est:950},
-    {id:'f-home',label:'MXP → JFK return flights',note:'Sep 22 · Delta / United / Lufthansa via FRA',pp:true,est:950},
-  ]},
-  {id:'accomm',label:'Accommodation',hex:'#3a6644',items:[
-    {id:'a-venice',label:'Venice hotel (2 nights, 2 rooms)',note:'TBD — Dorsoduro or Cannaregio preferred',pp:false,est:700},
-    {id:'a-cav',label:"Cavallino d'Oro, Castelrotto (3 nights)",note:'2 rooms × 3 nights · Sep 16–19',pp:false,est:660},
-    {id:'a-rosa',label:'Rosapetra Spa Resort, Cortina (1 night)',note:'2 rooms × 1 night · Sep 19–20',pp:false,est:450},
-    {id:'a-lag-rif',label:'Rifugio Lagazuoi — half board × 3',note:'~€65pp incl. dinner + breakfast · Sep 20',pp:false,est:195},
-    {id:'a-loc',label:'Rifugio Locatelli — half board × 3',note:'~€70pp incl. dinner + breakfast · cash only',pp:false,est:210},
-    {id:'a-milan',label:'Milan Airbnb — 1 night',note:'Sep 22 · Brera, Navigli, or Porta Nuova',pp:false,est:220},
-  ]},
-  {id:'transport',label:'Transport',hex:'#284468',items:[
-    {id:'t-car',label:'Rental car VCE → MXP (9 days)',note:'Incl. one-way fee ~€150 · AutoEurope',pp:false,est:950},
-    {id:'t-fuel',label:'Fuel (estimated)',note:'~900km total driving',pp:false,est:110},
-    {id:'t-venice',label:'Venice water taxi + vaporetto passes',note:'Arrival taxi + day use',pp:true,est:50},
-    {id:'t-park',label:'Tre Cime timed parking (2 × 12hr)',note:'€40/slot · opens late April 2026',pp:false,est:80},
-  ]},
-  {id:'activities',label:'Activities',hex:'#842020',items:[
-    {id:'act-guide',label:'Via ferrata guide, Cinque Torri (3 pax)',note:'Sep 19 · all gear included · Guide Alpine Cortina',pp:false,est:380},
-    {id:'act-lag',label:'Lagazuoi cable car (×3)',note:'Sep 20 · Passo Falzarego',pp:false,est:60},
-    {id:'act-gond',label:'Ortisei / Seceda gondola (×3)',note:'Sep 17 · Alpe di Siusi access',pp:false,est:75},
-  ]},
-  {id:'food',label:'Food & Drink',hex:'#a07818',items:[
-    {id:'food-ven',label:'Venice dining — 2 days',note:'~$80pp/day · incl. Alle Testiere dinner',pp:true,est:160},
-    {id:'food-dol',label:'Dolomites dining — 7 days',note:'~$50pp/day · rifugios, restaurants, lunch stops',pp:true,est:350},
-  ]},
-  {id:'gear',label:'Gear & Extras',hex:'#582870',items:[
-    {id:'g-liners',label:'Sleeping bag liners ×3',note:'Mandatory at Rifugio Locatelli · ~$40ea at REI',pp:false,est:120},
-    {id:'g-misc',label:'Misc gear, clothing & extras',note:'Per person allowance',pp:true,est:100},
-  ]},
+  {id:'flights',label:'Flights',hex:'#78695C',items:[{id:'f-out',label:'JFK → VCE outbound flights',note:'Sep 18 · overnight departure · coordinate all three travelers',pp:true,est:950},{id:'f-home',label:'VCE → JFK return flights',note:'Sep 27 · Delta / United / Lufthansa via FRA',pp:true,est:950}]},
+  {id:'accomm',label:'Accommodation',hex:'#1B5738',items:[{id:'a-bologna',label:'Bologna hotel (2 nights, 2 rooms)',note:'Sep 19–21 · near Piazza Maggiore',pp:false,est:400},{id:'a-cortina',label:'Cortina hotel (1 night + bag storage)',note:'Sep 21 · confirm storage Sep 22–23',pp:false,est:320},{id:'a-loc',label:'Rifugio Locatelli — half board × 3',note:'✅ BOOKED · Sep 22 · cash only',pp:false,est:210},{id:'a-croda',label:'Rifugio Croda da Lago — half board × 3',note:'✅ BOOKED · Sep 23',pp:false,est:200},{id:'a-vg',label:'Val Gardena hotel (2 nights, 2 rooms)',note:'Sep 24–26 · Ortisei or Santa Cristina',pp:false,est:520},{id:'a-venice',label:'Venice hotel (1 night, 2 rooms)',note:'Sep 26 · Dorsoduro or Cannaregio preferred',pp:false,est:380}]},
+  {id:'transport',label:'Transport',hex:'#1A3676',items:[{id:'t-car',label:'Rental car (Sep 21–27)',note:'Bologna or VCE pickup · drop VCE · AutoEurope',pp:false,est:650},{id:'t-fuel',label:'Fuel (estimated)',note:'~900km total driving',pp:false,est:110},{id:'t-train',label:'Train VCE → Bologna (arrival day)',note:'Frecciarossa · Sep 19 · 3 tickets',pp:true,est:45},{id:'t-park',label:'Tre Cime timed parking (2 × 12hr)',note:'€40/slot · auronzo.info',pp:false,est:80}]},
+  {id:'activities',label:'Activities',hex:'#8A1818',items:[{id:'act-guide',label:'Via ferrata guide, Cinque Torri (3 pax)',note:'Sep 24 · all gear included · Guide Alpine Cortina',pp:false,est:380},{id:'act-lag',label:'Lagazuoi cable car (×3)',note:'Sep 22 morning · Passo Falzarego',pp:false,est:70},{id:'act-gard',label:'Gardena Card (2 days × 3 people)',note:'Days 8–9 · covers Seceda + Alpe di Siusi lifts',pp:false,est:240}]},
+  {id:'food',label:'Food & Drink',hex:'#8E6208',items:[{id:'food-bol',label:'Bologna dining — 2 days',note:'~€50pp/day · trattorias, aperitivo',pp:true,est:100},{id:'food-cort',label:'El Toulà arrival dinner',note:'Sep 21 · ~€70pp',pp:true,est:70},{id:'food-dol',label:'Dolomites dining — 5 days',note:'~€45pp/day · rifugios, mountain restaurants',pp:true,est:225},{id:'food-ven',label:'Venice dining — 1 day',note:'~€80pp · splurge dinner',pp:true,est:80}]},
+  {id:'gear',label:'Gear & Extras',hex:'#561BAB',items:[{id:'g-liners',label:'Sleeping bag liners ×3',note:'Mandatory at both rifugios · ~$40ea at REI',pp:false,est:120},{id:'g-misc',label:'Misc gear, clothing & extras',note:'Per person allowance',pp:true,est:100}]},
 ];
 
 let budgetActuals={};
@@ -980,9 +794,9 @@ function calcBudget(){
 function renderBudget(){
   const page=document.getElementById('budget-page');
   const{est,actual,booked,total}=calcBudget();
-  page.innerHTML=`<div style="max-width:900px">
+  page.innerHTML=`<div class="budget-page-inner">
     <div class="budget-title">Budget Tracker</div>
-    <div class="budget-sub">PER PERSON · SEP 14–23, 2026 · USD (APPROX) · CLICK ACTUAL COLUMN TO ENTER YOUR COSTS</div>
+    <div class="budget-sub">PER PERSON · SEP 18–27, 2026 · USD (APPROX) · CLICK ACTUAL COLUMN TO ENTER YOUR COSTS</div>
     <div class="budget-summary">
       <div class="bsumm"><div class="bsumm-label">Total per person</div><div class="bsumm-val">$${est.toLocaleString()}</div><div class="bsumm-sub">estimated</div></div>
       <div class="bsumm"><div class="bsumm-label">Booked / Paid</div><div class="bsumm-val" id="bsum-paid" style="color:var(--green)">$${Math.round(actual).toLocaleString()}</div><div class="bsumm-sub" id="bsum-paid-sub">${booked} of ${total} items</div></div>
