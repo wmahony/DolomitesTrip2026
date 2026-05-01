@@ -638,26 +638,38 @@ function renderActions(){
 
 // ── MAP ──────────────────────────────────────────────────────────
 const DAY_COORDS=[[45.5051,12.3519],[44.4949,11.3426],[44.4949,11.3426],[46.5369,12.1356],[46.6173,12.3014],[46.4694,12.1047],[46.5319,11.7292],[46.5667,11.7000],[45.4408,12.3155],[45.4408,12.3155]];
-/* Airbnb-style map: near-white base, minimal roads, soft water, no POI clutter */
+/* Airbnb-style map: cool neutral gray base, bright water, white roads, green parks */
 const MAP_STYLE=[
-  {elementType:'geometry',stylers:[{color:'#f9f7f4'}]},
-  {elementType:'labels.text.fill',stylers:[{color:'#706860'}]},
-  {elementType:'labels.text.stroke',stylers:[{color:'#ffffff'}]},
-  {featureType:'administrative',elementType:'geometry',stylers:[{visibility:'off'}]},
-  {featureType:'administrative.country',elementType:'geometry.stroke',stylers:[{color:'#ddd4c8'},{visibility:'on'}]},
-  {featureType:'administrative.province',elementType:'geometry.stroke',stylers:[{color:'#e4dcd4'},{visibility:'on'}]},
-  {featureType:'landscape',elementType:'geometry',stylers:[{color:'#f2ede6'}]},
-  {featureType:'landscape.natural.terrain',elementType:'geometry',stylers:[{color:'#ebe4d8'}]},
+  /* Base — cool light gray, not warm */
+  {elementType:'geometry',stylers:[{color:'#f5f5f5'}]},
+  {elementType:'labels.text.fill',stylers:[{color:'#616161'}]},
+  {elementType:'labels.text.stroke',stylers:[{color:'#f5f5f5'}]},
+  /* Administrative labels visible (city/country names) */
+  {featureType:'administrative',elementType:'geometry',stylers:[{color:'#e0e0e0'}]},
+  {featureType:'administrative.country',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]},
+  {featureType:'administrative.locality',elementType:'labels.text.fill',stylers:[{color:'#424242'}]},
+  {featureType:'administrative.neighborhood',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
+  /* Landscape — neutral gray */
+  {featureType:'landscape',elementType:'geometry',stylers:[{color:'#f5f5f5'}]},
+  {featureType:'landscape.natural',elementType:'geometry',stylers:[{color:'#eeeeee'}]},
+  /* POI — off except parks */
   {featureType:'poi',stylers:[{visibility:'off'}]},
-  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#ddebd8'},{visibility:'on'}]},
-  {featureType:'road',elementType:'geometry',stylers:[{color:'#e8e0d4'}]},
+  {featureType:'poi.park',elementType:'geometry.fill',stylers:[{color:'#d4e8d0'},{visibility:'on'}]},
+  {featureType:'poi.park',elementType:'labels',stylers:[{visibility:'off'}]},
+  /* Roads — white fill, subtle gray stroke (Airbnb shows roads clearly) */
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+  {featureType:'road',elementType:'geometry.stroke',stylers:[{color:'#e0e0e0'},{weight:0.5}]},
   {featureType:'road',elementType:'labels',stylers:[{visibility:'off'}]},
-  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#dfd5c4'}]},
-  {featureType:'road.highway',elementType:'geometry.stroke',stylers:[{color:'#d0c8b8'}]},
-  {featureType:'road.local',stylers:[{visibility:'off'}]},
+  {featureType:'road.arterial',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#fce8a8'}]},
+  {featureType:'road.highway',elementType:'geometry.stroke',stylers:[{color:'#f0d870'},{weight:0.8}]},
+  {featureType:'road.highway',elementType:'labels',stylers:[{visibility:'off'}]},
+  {featureType:'road.local',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+  /* Transit — off */
   {featureType:'transit',stylers:[{visibility:'off'}]},
-  {featureType:'water',elementType:'geometry',stylers:[{color:'#cce0ec'}]},
-  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#4a7498'}]}
+  /* Water — bright Airbnb blue */
+  {featureType:'water',elementType:'geometry.fill',stylers:[{color:'#aed4e8'}]},
+  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#5a8fa8'}]}
 ];
 
 /* Airbnb-style pill marker: rounded rectangle, day number centered */
