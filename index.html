@@ -301,15 +301,21 @@ body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-seri
 .budget-actual-input::placeholder{color:var(--border);}
 .budget-actual-input.filled{color:var(--green);border-bottom-color:var(--green-pale);}
 
-/* ── Mobile ── */
+/* ────────────────────────────────────────────────────────────
+   BREAKPOINT STRATEGY
+   > 860px  : full desktop — single-row topbar, sidebar column
+   640–860px: tablet / small window — single-row topbar, layout adjustments
+   ≤ 640px  : phone portrait — two-row topbar (brand + tabs)
+   ≤ 580px  : small phone — horizontal sticky day nav, compact everything
+   ──────────────────────────────────────────────────────────── */
+
+/* ── Tablet / small browser window (≤860px) ──────────────────
+   Topbar stays SINGLE ROW. Only layout / content adjusts.    */
 @media(max-width:860px){
-  :root{--topbar-h:96px;}
-  .topbar{flex-wrap:wrap;padding:0;overflow:hidden;}
-  .topbar-brand{width:100%;height:52px;padding:0 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;}
   .topbar-meta{display:none;}
-  .tab-nav{width:100%;height:44px;padding:0 10px;flex-shrink:0;flex:none;}
-  .tab-btn{font-size:11.5px;padding:6px 14px;}
-  .main{padding:20px 14px 60px;}
+  .topbar{padding:0 18px;}
+  .tab-btn{font-size:11.5px;padding:6px 12px;}
+  .main{padding:20px 16px 60px;}
   .trip-hero-title{font-size:32px;}
   .itinerary-layout{gap:14px;}
   .day-sidebar{width:120px;}
@@ -319,7 +325,7 @@ body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-seri
   .detail-inner{grid-template-columns:1fr;}
   .detail-col{border-right:none;border-bottom:1px solid var(--border-light);padding:16px;}
   .detail-col:last-child{border-bottom:none;}
-  .action-page,.packing-page,.budget-page{padding:20px 14px 60px;}
+  .action-page,.packing-page,.budget-page{padding:20px 16px 60px;}
   .action-page-inner,.packing-page-inner,.budget-page-inner{max-width:100%;}
   .action-summary{grid-template-columns:repeat(2,1fr);max-width:100%;}
   .aitem{grid-template-columns:22px 1fr;gap:10px;}
@@ -336,38 +342,45 @@ body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-seri
   .map-route-legend{display:none;}
   #map{height:100%;width:100%;}
 }
-@media(max-width:580px){
-  /* ── Tab bar: hide emoji icons, all 5 labels fit at 375px ── */
-  .tab-icon{display:none;}
-  .tab-nav{gap:3px;padding:0 8px;}
-  .tab-btn{font-size:11px;padding:5px 12px;}
 
-  /* ── Hero: compact for small screens ── */
+/* ── Phone portrait (≤640px): TWO-ROW topbar ─────────────────
+   Brand row on top, tab row below. --topbar-h updates to 96px */
+@media(max-width:640px){
+  :root{--topbar-h:96px;}
+  .topbar{flex-wrap:wrap;padding:0;overflow:hidden;}
+  .topbar-brand{width:100%;height:52px;padding:0 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;}
+  .tab-nav{width:100%;height:44px;padding:0 8px;flex-shrink:0;flex:none;gap:3px;}
+  /* Hide emoji so all 5 text labels fit comfortably */
+  .tab-icon{display:none;}
+  .tab-btn{font-size:11px;padding:5px 12px;}
+  .main{padding:20px 14px 60px;}
+}
+
+/* ── Small phone (≤580px): horizontal sticky day nav ─────────
+   Sidebar flips to a full-width pinned chip strip.            */
+@media(max-width:580px){
+  /* Hero */
   .trip-hero{margin-bottom:16px;}
   .trip-hero-title{font-size:22px;margin-bottom:12px;letter-spacing:-.02em;}
   .trip-hero-eyebrow{margin-bottom:6px;}
   .trip-stat{font-size:11px;padding:4px 10px;gap:5px;}
 
-  /* ── Card photo: slightly shorter strip ── */
+  /* Card photo */
   .card-photo-wrap{height:148px;}
 
-  /* ── Itinerary layout: single column ── */
+  /* Stack itinerary to single column */
   .itinerary-layout{flex-direction:column;gap:0;}
 
-  /* ── STICKY DAY NAV: pins below topbar while scrolling cards ── */
+  /* ── STICKY DAY NAV ── */
   .day-sidebar{
-    /* bleed to full viewport width */
     width:calc(100% + 28px);
     margin-left:-14px;
-    /* sticky below topbar */
     position:sticky;
     top:var(--topbar-h);
     z-index:50;
-    /* opaque background so cards don't bleed through */
     background:var(--bg);
     border-bottom:1px solid var(--border-light);
     box-shadow:0 3px 14px rgba(26,19,12,.07);
-    /* horizontal scroll strip */
     max-height:none;
     display:flex;
     flex-direction:row;
@@ -378,56 +391,32 @@ body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-seri
   }
   .day-sidebar::-webkit-scrollbar{display:none;}
 
-  /* ── Sidebar items: compact chips ── */
-  .sidebar-item{
-    flex-direction:column;
-    align-items:center;
-    min-width:54px;
-    max-width:54px;
-    border-left:none;
-    border-bottom:3px solid transparent;
-    border-radius:8px;
-    padding:5px 3px 4px;
-    margin-bottom:0;
-    gap:0;
-  }
-  .sidebar-item.active{
-    background:var(--surface);
-    border-left-color:transparent;
-    border-bottom-color:var(--tc,var(--border));
-    box-shadow:var(--shadow-sm);
-  }
+  /* Sidebar chips */
+  .sidebar-item{flex-direction:column;align-items:center;min-width:54px;max-width:54px;border-left:none;border-bottom:3px solid transparent;border-radius:8px;padding:5px 3px 4px;margin-bottom:0;gap:0;}
+  .sidebar-item.active{background:var(--surface);border-left-color:transparent;border-bottom-color:var(--tc,var(--border));box-shadow:var(--shadow-sm);}
   .sidebar-dot{margin-top:0;margin-bottom:2px;width:6px;height:6px;}
   .sidebar-num{font-size:6.5px;letter-spacing:.12em;margin-bottom:1px;}
   .sidebar-name{font-size:8.5px;text-align:center;line-height:1.25;font-weight:600;}
   .sidebar-date{font-size:7px;text-align:center;margin-top:1px;}
 
-  /* ── Cards below sticky nav ── */
+  /* Cards */
   .day-cards{padding-top:10px;}
-
-  /* ── Card header: tighter ── */
   .card-header{padding:12px 14px;gap:10px;}
   .card-num-circle{width:36px;height:36px;font-size:12px;}
   .card-header-location{font-size:14px;}
   .card-header-region{font-size:9.5px;}
   .expand-btn{width:26px;height:26px;font-size:13px;}
-
-  /* ── Card body: tighter ── */
   .card-body{padding:13px 14px;}
   .act-name{font-size:17px;}
   .act-sub{font-size:11.5px;}
-
-  /* ── Detail cols ── */
   .detail-col{padding:13px 14px;}
 
-  /* ── Action items ── */
+  /* Other pages */
   .action-title,.pack-title,.budget-title{font-size:26px;}
   .action-sub{margin-bottom:18px;}
   .aitem{padding:11px 14px;}
   .aitem-title{font-size:12px;}
   .aitem-detail{font-size:11px;}
-
-  /* ── Budget: 1-col summary on phones ── */
   .budget-summary{grid-template-columns:1fr;max-width:320px;}
   .budget-table td,.budget-table th{padding:8px 12px;}
   .budget-table td{font-size:11.5px;}
