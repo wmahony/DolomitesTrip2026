@@ -337,9 +337,10 @@ body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-seri
   #map{height:100%;width:100%;}
 }
 @media(max-width:580px){
-  /* ── Tab bar: compact so all 5 tabs fit at 375px ── */
-  .tab-nav{gap:2px;padding:0 6px;}
-  .tab-btn{font-size:10px;padding:4px 8px;}
+  /* ── Tab bar: hide emoji icons, all 5 labels fit at 375px ── */
+  .tab-icon{display:none;}
+  .tab-nav{gap:3px;padding:0 8px;}
+  .tab-btn{font-size:11px;padding:5px 12px;}
 
   /* ── Hero: compact for small screens ── */
   .trip-hero{margin-bottom:16px;}
@@ -443,10 +444,10 @@ body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-seri
   </div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('itinerary',this)">Itinerary</button>
-    <button class="tab-btn" onclick="switchTab('map',this)">🗺 Map</button>
-    <button class="tab-btn" onclick="switchTab('actions',this)">⚡ Action Items</button>
-    <button class="tab-btn" onclick="switchTab('packing',this)">📦 Packing</button>
-    <button class="tab-btn" onclick="switchTab('budget',this)">💰 Budget</button>
+    <button class="tab-btn" onclick="switchTab('map',this)"><span class="tab-icon">🗺</span> Map</button>
+    <button class="tab-btn" onclick="switchTab('actions',this)"><span class="tab-icon">⚡</span> Actions</button>
+    <button class="tab-btn" onclick="switchTab('packing',this)"><span class="tab-icon">📦</span> Packing</button>
+    <button class="tab-btn" onclick="switchTab('budget',this)"><span class="tab-icon">💰</span> Budget</button>
   </div>
   <div class="topbar-meta">Will · Jack · Jon · Sep 18–27</div>
 </div>
